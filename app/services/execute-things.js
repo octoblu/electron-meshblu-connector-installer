@@ -1,10 +1,9 @@
-import {exec} from 'child_process'
-import path from 'path'
-import async from 'async'
+import { exec } from 'child_process';
+import async from 'async';
 
 class ExecuteThings {
   constructor(config) {
-    this.config = config
+    this.config = config;
   }
 
   installDeps(callback) {
@@ -12,96 +11,95 @@ class ExecuteThings {
       this.installNode,
       this.installNpm,
       this.installNssm
-    ], callback)
+    ], callback);
   }
 
   installNode = (callback) => {
-    const {binPath, versions} = this.config
-    const {node} = versions
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`
+    const { binPath, versions } = this.config;
+    const { node } = versions;
+    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
-      "--type",
-      "node",
-      "--tag",
-      `"${node}"`
-    ]
-    this.execute({executable, args, cwd: binPath}, callback)
+      '--type',
+      'node',
+      '--tag',
+      `'${node}'`
+    ];
+    this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installNpm = (callback) => {
-    if(process.os !== "windows") {
-      return callback()
+    if (process.os !== 'windows') {
+      return callback();
     }
-    const {binPath, versions} = this.config
-    const {npm} = versions
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`
+    const { binPath, versions } = this.config;
+    const { npm } = versions;
+    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
-      "--type",
-      "npm",
-      "--tag",
-      `"${npm}"`
-    ]
-    this.execute({executable, args, cwd: binPath}, callback)
+      '--type',
+      'npm',
+      '--tag',
+      `'${npm}'`
+    ];
+    this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installNssm = (callback) => {
-    if(process.os !== "windows") {
-      return callback()
+    if (process.os !== 'windows') {
+      return callback();
     }
-    const {binPath, versions} = this.config
-    const {nssm} = versions
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`
+    const { binPath, versions } = this.config;
+    const { nssm } = versions;
+    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
-      "--type",
-      "nssm",
-      "--tag",
-      `"${nssm}"`
-    ]
-    this.execute({executable, args, cwd: binPath}, callback)
+      '--type',
+      'nssm',
+      '--tag',
+      `'${nssm}'`
+    ];
+    this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installConnector(callback) {
-    const {binPath, uuid, token, connector} = this.config
-    const executable = `meshblu-connector-installer${this.getExt()}`
+    const { binPath, uuid, token, connector } = this.config;
+    const executable = `meshblu-connector-installer${this.getExt()}`;
     const args = [
-      "--connector",
-      `"${connector}"`,
-      "--uuid",
-      `"${uuid}"`,
-      "--token",
-      `"${token}"`,
+      '--connector',
+      `'${connector}'`,
+      '--uuid',
+      `'${uuid}'`,
+      '--token',
+      `'${token}'`,
       this.getLegacyArg()
-    ]
-    this.execute({executable, args, cwd: binPath}, callback)
+    ];
+    this.execute({ executable, args, cwd: binPath }, callback);
   }
 
-  execute({executable, args, cwd}, callback) {
-    const command = `./${executable} ${args.join(' ')}`
-    const options = {cwd}
-    const child = exec(command, options, (error, stdout, stderr) => {
-      if(error) {
-        return callback(error)
+  execute({ executable, args, cwd }, callback) {
+    const command = `./${executable} ${args.join(' ')}`;
+    exec(command, { cwd }, (error, stdout, stderr) => {
+      if (error) {
+        return callback(error);
       }
-      console.log('stdout', stdout)
-      console.log('stderr', stderr)
-      callback()
-    })
+      console.log('stdout', stdout);
+      console.log('stderr', stderr);
+      callback();
+    });
   }
 
   getExt() {
-    if(process.platform === "windows"){
-      return ".exe"
+    if (process.platform === 'windows') {
+      return '.exe';
     }
-    return ""
+    return '';
   }
 
   getLegacyArg() {
-    const legacy = this.config
-    if(legacy === true) {
-      return "--legacy"
+    const legacy = this.config;
+    if (legacy === true) {
+      return '--legacy';
     }
-    return ""
+    return '';
   }
 }
 
-export default ExecuteThings
+export default ExecuteThings;

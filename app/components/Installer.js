@@ -1,11 +1,10 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react';
 import styles from './Installer.css';
-import InstallerInfo from '../services/installer-info'
-import DependencyDownloader from '../services/dependency-downloader'
-import ExecuteThings from '../services/execute-things'
+import InstallerInfo from '../services/installer-info';
+import DependencyDownloader from '../services/dependency-downloader';
+import ExecuteThings from '../services/execute-things';
 
-const MAX_STEPS=5
+const MAX_STEPS = 5;
 
 class Installer extends Component {
   state = {
@@ -13,42 +12,47 @@ class Installer extends Component {
     config: null,
     configLoading: true,
     step: 1,
-    message: "Retrieving configuration..."
+    message: 'Retrieving configuration...'
   }
 
   componentDidMount() {
     new InstallerInfo().getInfo((error, config) => {
-      if(error) {
-        return this.setState({error})
+      if (error) {
+        return this.setState({ error });
       }
-      this.setState({config, step: 2, message: "Downloading dependencies...", configLoading: false})
+      this.setState({
+        config,
+        step: 2,
+        message: 'Downloading dependencies...',
+        configLoading: false
+      });
       new DependencyDownloader(config).downloadAll((error) => {
-        if(error) {
-          return this.setState({error})
+        if (error) {
+          return this.setState({ error });
         }
-        this.setState({step: 3, message: "Installing dependencies..."})
-        let executeThings = new ExecuteThings(config)
+        this.setState({ step: 3, message: 'Installing dependencies...' });
+        const executeThings = new ExecuteThings(config);
         executeThings.installDeps((error) => {
-          if(error) {
-            return this.setState({error})
+          if (error) {
+            return this.setState({ error });
           }
-          this.setState({step: 4, message: "Installing connector..."})
+          this.setState({ step: 4, message: 'Installing connector...' });
           executeThings.installConnector((error) => {
-            if(error) {
-              return this.setState({error})
+            if (error) {
+              return this.setState({ error });
             }
-            this.setState({step: 5, message: "Connector Installed!"})
-          })
-        })
-      })
-    })
+            this.setState({ step: 5, message: 'Connector Installed!' });
+          });
+        });
+      });
+    });
   }
 
   getDebug = () => {
-    if(process.env.NODE_ENV === "production") {
-      return <div></div>
+    if (process.env.NODE_ENV === 'production') {
+      return <div></div>;
     }
-    let debugStr = JSON.stringify(this.state.config, null, 2)
+    let debugStr = JSON.stringify(this.state.config, null, 2);
     return (
       <div className={styles.debuginfo}>
         <h5>Debug Info:</h5>
@@ -56,35 +60,35 @@ class Installer extends Component {
           {debugStr}
         </pre>
       </div>
-    )
+    );
   }
 
   render() {
     const { error, config, configLoading, message, step } = this.state;
-    if(error) {
+    if (error) {
       return (
         <div>
           <div className={styles.container}>
             <h2>Error {error.message}</h2>
           </div>
         </div>
-      )
+      );
     }
-    if(configLoading) {
+    if (configLoading) {
       return (
         <div>
           <div className={styles.container}>
             <h2>Loading...</h2>
           </div>
         </div>
-      )
+      );
     }
-    const { key, connector, legacy } = config
-    const debug = this.getDebug()
+    const { connector } = config;
+    const debug = this.getDebug();
     return (
       <div>
         <div className={styles.container}>
-          <h2>Installing...</h2>
+          <h2>Installing: <small>{connector}</small></h2>
           <h3>Step: {step} / {MAX_STEPS} {message}</h3>
           {debug}
         </div>

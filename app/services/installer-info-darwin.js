@@ -1,46 +1,46 @@
-import {exec} from 'child_process'
-import _      from 'lodash'
+import { exec } from 'child_process';
+import _ from 'lodash';
 
-export function darwinGetAppName({launchPath}, callback){
+export function darwinGetAppName({ launchPath }, callback) {
   const options = {
-    cwd: getVolumePath({launchPath})
-  }
-  const child = exec("hdiutil info", options, (error, stdout, stderr) => {
-    if(error) {
-      return callback(error)
+    cwd: getVolumePath({ launchPath })
+  };
+  exec('hdiutil info', options, (error, stdout) => {
+    if (error) {
+      return callback(error);
     }
-    let imagePath = getImagePath(stdout)
-    let appName = getAppNameFromImagePath(imagePath)
-    callback(null, appName)
-  })
+    const imagePath = getImagePath(stdout);
+    const appName = getAppNameFromImagePath(imagePath);
+    callback(null, appName);
+  });
 }
 
-function getVolumePath({launchPath}){
-  let parts = launchPath.split('/')
-  if(parts[1] === "Volumes") {
-    return `/${parts[1]}/${parts[2]}`
+function getVolumePath({ launchPath }) {
+  const parts = launchPath.split('/');
+  if (parts[1] === 'Volumes') {
+    return `/${parts[1]}/${parts[2]}`;
   }
-  return "/Volumes/MeshbluConnectorInstaller"
+  return '/Volumes/MeshbluConnectorInstaller';
 }
 
-function getImagePath(stdout){
-  const lines = stdout.split(/\r?\n/)
-  var imagePath
+function getImagePath(stdout) {
+  const lines = stdout.split(/\r?\n/);
+  var imagePath;
   _.some(lines, (line) => {
-    let parts = line.split(':')
-    let key = _.trim(parts[0])
-    let value = _.trim(parts[1])
-    if(key === "image-path" && value.indexOf('MeshbluConnectorInstaller-') > -1) {
-      imagePath = value
-      return true
+    const parts = line.split(':');
+    const key = _.trim(parts[0]);
+    const value = _.trim(parts[1]);
+    if (key === 'image-path' && value.indexOf('MeshbluConnectorInstaller-') > -1) {
+      imagePath = value;
+      return true;
     }
-  })
-  return imagePath
+  });
+  return imagePath;
 }
 
 function getAppNameFromImagePath(imagePath) {
-  let parts = imagePath.split("/")
+  const parts = imagePath.split('/');
   return _.find(parts, (part) => {
-    return /^MeshbluConnectorInstaller\-.+\.dmg$/.test(part)
-  })
+    return /^MeshbluConnectorInstaller\-.+\.dmg$/.test(part);
+  });
 }
