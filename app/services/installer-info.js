@@ -21,21 +21,8 @@ class InstallerInfo {
       if(!key) return callback(new Error('Invalid Key for Installation'))
       fakeExchange({key}, (error, response) => {
         if(error) return callback(error)
-        const {uuid, token, metadata} = response
-        const {legacy, connector, dependency_manager, connector_installer, node} = metadata
-        const platform = this.getPlatform()
-        const binPath = this.getBinPath()
-        callback(null, {
-          key,
-          uuid,
-          token,
-          connector,
-          dependency_manager,
-          connector_installer,
-          node,
-          platform,
-          binPath
-        })
+
+        callback(null, this.getConfig({key}, response))
       })
     })
   }
@@ -61,6 +48,38 @@ class InstallerInfo {
       return path.join(process.env.LOCALAPPDATA, "MeshbluConnectors", "bin")
     }
     return path.join(process.env.HOME, ".octoblu", "bin")
+  }
+
+  getConfig({key}, response) {
+    const {uuid, token, metadata} = response
+    const {
+      legacy,
+      connector,
+      dependency_manager,
+      connector_installer,
+      node,
+      npm,
+      nssm
+    } = metadata
+    const platform = this.getPlatform()
+    const binPath = this.getBinPath()
+
+    return {
+      key,
+      uuid,
+      token,
+      connector,
+      legacy,
+      platform,
+      binPath,
+      versions: {
+        dependency_manager,
+        connector_installer,
+        node,
+        npm,
+        nssm
+      }
+    }
   }
 
 }

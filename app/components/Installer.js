@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import styles from './Installer.css';
 import InstallerInfo from '../services/installer-info'
 import DependencyDownloader from '../services/dependency-downloader'
+import ExecuteThings from '../services/execute-things'
 
 const MAX_STEPS=5
 
@@ -12,16 +13,50 @@ class Installer extends Component {
     config: null,
     configLoading: true,
     step: 1,
-    message: "Retrieving configuration"
+    message: "Retrieving configuration..."
   }
 
   componentDidMount() {
     new InstallerInfo().getInfo((error, config) => {
-      this.setState({error, config, step: 2, message: "Downloading dependencies...", configLoading: false})
+      if(error) {
+        return this.setState({error})
+      }
+      this.setState({config, step: 2, message: "Downloading dependencies...", configLoading: false})
       new DependencyDownloader(config).downloadAll((error) => {
-        this.setState({error, step: 3, message: "Installing dependencies"})
+        if(error) {
+          return this.setState({error})
+        }
+        this.setState({step: 3, message: "Installing dependencies..."})
+        let executeThings = new ExecuteThings(config)
+        executeThings.installDeps((error) => {
+          if(error) {
+            return this.setState({error})
+          }
+          this.setState({step: 4, message: "Installing connector..."})
+          executeThings.installConnector((error) => {
+            if(error) {
+              return this.setState({error})
+            }
+            this.setState({step: 5, message: "Connector Installed!"})
+          })
+        })
       })
     })
+  }
+
+  getDebug = () => {
+    if(process.env.NODE_ENV === "production") {
+      return <div></div>
+    }
+    let debugStr = JSON.stringify(this.state.config, null, 2)
+    return (
+      <div className={styles.debuginfo}>
+        <h5>Debug Info:</h5>
+        <pre>
+          {debugStr}
+        </pre>
+      </div>
+    )
   }
 
   render() {
@@ -44,15 +79,14 @@ class Installer extends Component {
         </div>
       )
     }
-    const { appName, key, node, connector, connector_installer, dependency_manager, legacy } = config
-    const legacyStr = legacy ? "true" : "false"
+    const { key, connector, legacy } = config
+    const debug = this.getDebug()
     return (
       <div>
         <div className={styles.container}>
           <h2>Installing...</h2>
           <h3>Step: {step} / {MAX_STEPS} {message}</h3>
-          <h4>Key: {key}; Connector: {connector}; Legacy: {legacyStr};</h4>
-          <h4>Node {node}; ConnInstaller: {connector_installer}; DepManager: {dependency_manager};</h4>
+          {debug}
         </div>
       </div>
     );

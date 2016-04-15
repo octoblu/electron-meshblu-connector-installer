@@ -12,3 +12,10 @@
 .container a {
   font-size: 1.5rem;
 }
+
+.debuginfo {
+  text-align: left;
+  background-color: gray;
+  color: white;
+  padding: 0.5rem 1rem;
+}

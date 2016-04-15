@@ -20,7 +20,7 @@ class DependencyDownloader {
   }
 
   downloadCI = (callback) => {
-    const {connector_installer} = this.config
+    const {connector_installer} = this.config.versions
     const fileName = 'meshblu-connector-installer'
     const uri = this.getURL(fileName, connector_installer)
     console.log('downloading...', uri)
@@ -34,7 +34,7 @@ class DependencyDownloader {
   }
 
   downloadDepMan = (callback) => {
-    const {dependency_manager} = this.config
+    const {dependency_manager} = this.config.versions
     const fileName = 'meshblu-connector-dependency-manager'
     const uri = this.getURL(fileName, dependency_manager)
     console.log('downloading...', uri)
