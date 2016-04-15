@@ -8,8 +8,10 @@ export default class Home extends Component {
     return (
       <div>
         <div className={styles.container}>
-          <h2>Home</h2>
-          <Link to="/counter">to Counter</Link>
+          <h2>Meshblu Connector Installer</h2>
+          <div className={styles.actions}>
+            <Link to="/install" className={styles.installer}>Begin Install</Link>
+          </div>
         </div>
       </div>
     );

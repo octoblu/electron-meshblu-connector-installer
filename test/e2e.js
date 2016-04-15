@@ -4,7 +4,7 @@ import webdriver from 'selenium-webdriver';
 import { expect } from 'chai';
 import electronPath from 'electron-prebuilt';
 import homeStyles from '../app/components/Home.css';
-import counterStyles from '../app/components/Counter.css';
+import installerStyles from '../app/components/Installer.css';
 
 chromedriver.start(); // on port 9515
 process.on('exit', chromedriver.stop);
@@ -32,73 +32,73 @@ describe('main window', function spec() {
     await this.driver.quit();
   });
 
-  const findCounter = () => this.driver.findElement(webdriver.By.className(counterStyles.counter));
+  const findInstaller = () => this.driver.findElement(webdriver.By.className(installerStyles.installer));
 
-  const findButtons = () => this.driver.findElements(webdriver.By.className(counterStyles.btn));
+  const findButtons = () => this.driver.findElements(webdriver.By.className(installerStyles.btn));
 
   it('should open window', async () => {
     const title = await this.driver.getTitle();
     expect(title).to.equal('Hello Electron React!');
   });
 
-  it('should to Counter with click "to Counter" link', async () => {
+  it('should to Installer with click "to Installer" link', async () => {
     const link = await this.driver.findElement(webdriver.By.css(`.${homeStyles.container} > a`));
     link.click();
 
-    const counter = await findCounter();
-    expect(await counter.getText()).to.equal('0');
+    const installer = await findInstaller();
+    expect(await installer.getText()).to.equal('0');
   });
 
   it('should display updated count after increment button click', async () => {
     const buttons = await findButtons();
     buttons[0].click();
 
-    const counter = await findCounter();
-    expect(await counter.getText()).to.equal('1');
+    const installer = await findInstaller();
+    expect(await installer.getText()).to.equal('1');
   });
 
   it('should display updated count after descrement button click', async () => {
     const buttons = await findButtons();
-    const counter = await findCounter();
+    const installer = await findInstaller();
 
     buttons[1].click();  // -
 
-    expect(await counter.getText()).to.equal('0');
+    expect(await installer.getText()).to.equal('0');
   });
 
   it('shouldnt change if even and if odd button clicked', async () => {
     const buttons = await findButtons();
-    const counter = await findCounter();
+    const installer = await findInstaller();
     buttons[2].click();  // odd
 
-    expect(await counter.getText()).to.equal('0');
+    expect(await installer.getText()).to.equal('0');
   });
 
   it('should change if odd and if odd button clicked', async () => {
     const buttons = await findButtons();
-    const counter = await findCounter();
+    const installer = await findInstaller();
 
     buttons[0].click();  // +
     buttons[2].click();  // odd
 
-    expect(await counter.getText()).to.equal('2');
+    expect(await installer.getText()).to.equal('2');
   });
 
   it('should change if async button clicked and a second later', async () => {
     const buttons = await findButtons();
-    const counter = await findCounter();
+    const installer = await findInstaller();
     buttons[3].click();  // async
 
-    expect(await counter.getText()).to.equal('2');
+    expect(await installer.getText()).to.equal('2');
 
     await this.driver.wait(() =>
-      counter.getText().then(text => text === '3')
+      installer.getText().then(text => text === '3')
     , 1000, 'count not as expected');
   });
 
   it('should back to home if back button clicked', async () => {
     const link = await this.driver.findElement(
-      webdriver.By.css(`.${counterStyles.backButton} > a`)
+      webdriver.By.css(`.${installerStyles.backButton} > a`)
     );
     link.click();
 

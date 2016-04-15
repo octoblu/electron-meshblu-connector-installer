@@ -12,13 +12,3 @@
 .container a {
   font-size: 1.5rem;
 }
-
-.installer {
-  font-size: 2rem;
-  border: 2px solid #28B78D;
-  padding: 0.5rem 1rem;
-}
-
-.actions {
-  margin-top: 2rem;
-}
