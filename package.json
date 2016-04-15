@@ -91,9 +91,11 @@
     "webpack-target-electron-renderer": "^0.4.0"
   },
   "dependencies": {
+    "async": "^1.5.2",
     "css-modules-require-hook": "^4.0.0",
     "electron-debug": "^0.5.2",
     "font-awesome": "^4.5.0",
+    "fs-extra": "^0.27.0",
     "lodash": "^4.11.1",
     "postcss": "^5.0.19",
     "react": "^0.14.7",
@@ -103,8 +105,8 @@
     "react-router-redux": "^4.0.0",
     "redux": "^3.3.1",
     "redux-thunk": "^2.0.1",
-    "source-map-support": "^0.4.0",
-    "superagent": "^1.8.3"
+    "request": "^2.65.0",
+    "source-map-support": "^0.4.0"
   },
   "devEngines": {
     "node": "4.x || 5.x",

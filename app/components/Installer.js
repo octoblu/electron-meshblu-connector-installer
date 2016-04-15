@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import styles from './Installer.css';
 import InstallerInfo from '../services/installer-info'
+import DependencyDownloader from '../services/dependency-downloader'
 
 const MAX_STEPS=5
 
@@ -11,13 +12,15 @@ class Installer extends Component {
     config: null,
     configLoading: true,
     step: 1,
-    message: "Loading..."
+    message: "Retrieving configuration"
   }
 
   componentDidMount() {
-    this.installerInfo = new InstallerInfo()
-    this.installerInfo.getInfo((error, config) => {
-      this.setState({error, config, configLoading: false})
+    new InstallerInfo().getInfo((error, config) => {
+      this.setState({error, config, step: 2, message: "Downloading dependencies...", configLoading: false})
+      new DependencyDownloader(config).downloadAll((error) => {
+        this.setState({error, step: 3, message: "Installing dependencies"})
+      })
     })
   }
 
@@ -27,7 +30,7 @@ class Installer extends Component {
       return (
         <div>
           <div className={styles.container}>
-            <h2>Error {error.toString()}</h2>
+            <h2>Error {error.message}</h2>
           </div>
         </div>
       )
@@ -41,14 +44,15 @@ class Installer extends Component {
         </div>
       )
     }
-    const { appName, key } = config
-    
+    const { appName, key, node, connector, connector_installer, dependency_manager, legacy } = config
+    const legacyStr = legacy ? "true" : "false"
     return (
       <div>
         <div className={styles.container}>
           <h2>Installing...</h2>
-          <h4>Key: {key}</h4>
-          <h4>Step: {step} / {MAX_STEPS} {message}</h4>
+          <h3>Step: {step} / {MAX_STEPS} {message}</h3>
+          <h4>Key: {key}; Connector: {connector}; Legacy: {legacyStr};</h4>
+          <h4>Node {node}; ConnInstaller: {connector_installer}; DepManager: {dependency_manager};</h4>
         </div>
       </div>
     );
