@@ -17,7 +17,8 @@ const devDeps = Object.keys(pkg.devDependencies);
 const appName = argv.name || argv.n || pkg.productName;
 const shouldUseAsar = argv.asar || argv.a || false;
 const shouldBuildAll = argv.all || false;
-
+const buildPlatform = argv.platform || false;
+const buildArch = argv.arch || false;
 
 const DEFAULT_OPTS = {
   dir: './',
@@ -75,15 +76,21 @@ function startPack() {
     .then(() => build(cfg))
     .then(() => del('release'))
     .then(paths => {
+      const archs = ['ia32', 'x64'];
       if (shouldBuildAll) {
         // build for all platforms
-        const archs = ['ia32', 'x64'];
         const platforms = ['linux', 'win32', 'darwin'];
 
         platforms.forEach(plat => {
           archs.forEach(arch => {
             pack(plat, arch, log(plat, arch));
           });
+        });
+      } else if(buildArch && buildPlatform) {
+        pack(buildPlatform, buildArch, log(buildPlatform, buildArch));
+      } else if(buildPlatform) {
+        archs.forEach(arch => {
+          pack(buildPlatform, arch, log(buildPlatform, arch));
         });
       } else {
         // build for current platform only

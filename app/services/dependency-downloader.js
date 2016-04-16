@@ -45,7 +45,7 @@ class DependencyDownloader {
 
   getWriteStream(fileName) {
     const { binPath } = this.config;
-    const ext = process.platform === 'windows' ? '.exe' : '';
+    const ext = process.platform === 'win32' ? '.exe' : '';
     return fs.createWriteStream(path.join(binPath, `${fileName}${ext}`));
   }
 

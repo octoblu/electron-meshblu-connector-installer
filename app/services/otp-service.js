@@ -20,10 +20,13 @@ export function fakeExchange({ key }, callback) {
     token: '63cce0015a8308cf74e9eab02aeb275918adbd90',
     metadata: {
       legacy: false,
-      connector: 'bean',
+      connector: 'say-hello',
       dependency_manager: 'v1.0.2',
-      connector_installer: 'v5.0.1',
-      node: 'v5.5.0'
+      connector_installer: 'v5.1.0',
+      node: 'v5.5.0',
+      npm: 'v3.3.12',
+      nssm: '2.24',
+      tag: 'v2.0.19'
     }
   });
 }

@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import async from 'async';
+import path from 'path'
 
 class ExecuteThings {
   constructor(config) {
@@ -22,13 +23,13 @@ class ExecuteThings {
       '--type',
       'node',
       '--tag',
-      `'${node}'`
+      `${node}`
     ];
     this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installNpm = (callback) => {
-    if (process.os !== 'windows') {
+    if (process.os !== 'win32') {
       return callback();
     }
     const { binPath, versions } = this.config;
@@ -38,13 +39,13 @@ class ExecuteThings {
       '--type',
       'npm',
       '--tag',
-      `'${npm}'`
+      `${npm}`
     ];
     this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installNssm = (callback) => {
-    if (process.os !== 'windows') {
+    if (process.os !== 'win32') {
       return callback();
     }
     const { binPath, versions } = this.config;
@@ -54,28 +55,31 @@ class ExecuteThings {
       '--type',
       'nssm',
       '--tag',
-      `'${nssm}'`
+      `${nssm}`
     ];
     this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   installConnector(callback) {
-    const { binPath, uuid, token, connector } = this.config;
+    const { binPath, uuid, token, connector, versions } = this.config;
+    const { tag } = versions
     const executable = `meshblu-connector-installer${this.getExt()}`;
     const args = [
       '--connector',
-      `'${connector}'`,
+      `${connector}`,
       '--uuid',
-      `'${uuid}'`,
+      `${uuid}`,
       '--token',
-      `'${token}'`,
+      `${token}`,
+      '--tag',
+      `${tag}`,
       this.getLegacyArg()
     ];
     this.execute({ executable, args, cwd: binPath }, callback);
   }
 
   execute({ executable, args, cwd }, callback) {
-    const command = `./${executable} ${args.join(' ')}`;
+    const command = `.${path.sep}${executable} ${args.join(' ')}`;
     exec(command, { cwd }, (error, stdout, stderr) => {
       if (error) {
         return callback(error);
@@ -87,7 +91,7 @@ class ExecuteThings {
   }
 
   getExt() {
-    if (process.platform === 'windows') {
+    if (process.platform === 'win32') {
       return '.exe';
     }
     return '';

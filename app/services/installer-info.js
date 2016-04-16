@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { darwinGetAppName } from './installer-info-darwin';
+import { windowsGetAppName } from './installer-info-windows';
 import { exchange, fakeExchange } from './otp-service';
 import path from 'path';
 
@@ -8,7 +9,10 @@ class InstallerInfo {
     if (process.platform === 'darwin') {
       return darwinGetAppName(options, callback);
     }
-    return callback(new Error('Invalid platform'));
+    if (process.platform === 'win32') {
+      return windowsGetAppName(options, callback);
+    }
+    return callback(new Error(`Invalid platform ${process.platform}`));
   }
 
   getInfo(callback) {
@@ -16,6 +20,9 @@ class InstallerInfo {
     this.getAppName({ launchPath }, (error, appName) => {
       if (error) {
         return callback(error);
+      }
+      if (!appName) {
+        return callback(new Error(`Invalid FileName ${launchPath}`))
       }
       const key = this.getKey(appName);
       if (!key) return callback(new Error('Invalid Key for Installation'));
@@ -37,8 +44,9 @@ class InstallerInfo {
   getPlatform() {
     const os = process.platform;
     const arc = process.arch;
-    const goArch = arc === 'x86' ? '386' : 'amd64';
-    return `${os}-${goArch}`;
+    const goOS = os === 'win32' ? 'windows' : os;
+    const goArch = arc === 'ia32' ? '386' : 'amd64';
+    return `${goOS}-${goArch}`;
   }
 
   getBinPath() {
@@ -50,7 +58,7 @@ class InstallerInfo {
         'MeshbluConnectors',
         'bin'
       );
-    } else if (process.platform === 'windows') {
+    } else if (process.platform === 'win32') {
       return path.join(process.env.LOCALAPPDATA, 'MeshbluConnectors', 'bin');
     }
     return path.join(process.env.HOME, '.octoblu', 'bin');
@@ -65,7 +73,8 @@ class InstallerInfo {
       connector_installer,
       node,
       npm,
-      nssm
+      nssm,
+      tag
     } = metadata;
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
@@ -83,7 +92,8 @@ class InstallerInfo {
         connector_installer,
         node,
         npm,
-        nssm
+        nssm,
+        tag
       }
     };
   }

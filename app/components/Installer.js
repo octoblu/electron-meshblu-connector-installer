@@ -49,9 +49,9 @@ class Installer extends Component {
   }
 
   getDebug = () => {
-    if (process.env.NODE_ENV === 'production') {
-      return <div></div>;
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   return <div></div>;
+    // }
     let debugStr = JSON.stringify(this.state.config, null, 2);
     return (
       <div className={styles.debuginfo}>
@@ -78,7 +78,7 @@ class Installer extends Component {
       return (
         <div>
           <div className={styles.container}>
-            <h2>Loading...</h2>
+            <h2>{message}</h2>
           </div>
         </div>
       );
