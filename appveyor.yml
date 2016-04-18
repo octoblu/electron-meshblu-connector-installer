@@ -1,0 +1,41 @@
+environment:
+  nodejs_version: 5.5.0
+  BUILD_OS: "windows"
+  TAG: "%APPVEYOR_REPO_TAG_NAME%"
+platform:
+  - x64
+  - x86
+shallow_clone: true
+build:
+  parallel: true
+install:
+  - ps: Install-Product node $env:nodejs_version $env:Platform
+  - node --version
+  - npm --version
+  - node -e "console.log(process.arch);"
+  - FOR /F "delims=" %%a IN ('node -e "console.log(require('./package.json').version)"') DO SET PACKAGE_VERSION=%%~a
+  - SET PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;%PATH%
+  - SET GYP_MSVS_VERSION=2013
+  - if "%PLATFORM%" == "x64" set PATH=C:\Python27-x64;%PATH%
+  - if "%PLATFORM%" == "x86" SET PATH=C:\python27;%PATH%
+  - npm install
+test:
+  - npm run test
+  - npm run build
+build_script:
+  - npm run package
+  - ps: . .\deploy\build.ps1
+after_script:
+  - ps: $root = Resolve-Path dpl_s3; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName S3.Connector }
+deploy:
+  - provider: S3
+    access_key_id: AKIAJH2D5IPIRHYJT5IA
+    secret_access_key:
+      secure: cFwATEkycF0yVPBsMBevUntX0ylOMsjvSbnaePjbONDOpxV/7QvU7aOt/zoPwHmI
+    bucket: meshblu-connector
+    folder: installer
+    artifact: S3.Connector
+    set_public: true
+    on:
+      branch: master
+      appveyor_repo_tag: true
