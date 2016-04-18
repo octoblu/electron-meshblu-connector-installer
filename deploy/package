@@ -1,0 +1,11 @@
+#!/bin/bash
+
+main() {
+  echo "### packaging"
+  mkdir -p "dpl_s3/installer/latest"
+  mkdir -p "dpl_s3/installer/${TRAVIS_TAG}"
+  cp ./release/MeshbluConnectorInstaller* "dpl_s3/installer/latest"
+  cp ./release/MeshbluConnectorInstaller* "dpl_s3/installer/${TRAVIS_TAG}"
+}
+
+main "$@"

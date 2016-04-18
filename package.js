@@ -28,6 +28,7 @@ const DEFAULT_OPTS = {
     '/test($|/)',
     '/tools($|/)',
     '/release($|/)',
+    '/deploy($|/)',
     '/main.development.js'
   ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
@@ -122,8 +123,9 @@ function pack(plat, arch, cb) {
     platform: plat,
     arch,
     prune: true,
+    'app-bundle-id': pkg.appBundleId,
     'app-version': pkg.version || DEFAULT_OPTS.version,
-    out: `release/${plat}-${arch}`
+    out: `release`
   });
 
   packager(opts, cb);

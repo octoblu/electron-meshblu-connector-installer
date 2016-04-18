@@ -5,7 +5,7 @@ main() {
   local platform="win32"
   rm -rf "./release/${platform}-${arch}"
   npm run package -- --platform "$platform" --arch "$arch"
-  pushd "./release/${platform}-${arch}/MeshbluConnectorInstaller-${platform}-${arch}"
+  pushd "./release/MeshbluConnectorInstaller-${platform}-${arch}"
     zip -r -X MeshbluConnectorInstaller.zip *
     cp MeshbluConnectorInstaller.zip ~/Documents/SharedWithWindows/MeshbluConnectorInstaller-1234.zip
   popd

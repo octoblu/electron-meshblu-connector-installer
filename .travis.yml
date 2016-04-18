@@ -1,10 +1,18 @@
 sudo: false
 language: node_js
-node_js:
-  - "5"
-cache:
-  directories:
-    - node_modules
+os:
+- linux
+- osx
+env:
+  matrix:
+  - ARCH="amd64" MAIN_BUILD=true
+  - ARCH="386"
+  global:
+    secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
+matrix:
+  exclude:
+  - os: osx
+    env: ARCH="386"
 addons:
   apt:
     sources:
@@ -14,7 +22,8 @@ addons:
 install:
 - export CXX="g++-4.8"
 - npm install
-- "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
+- "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile
+  --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
@@ -22,8 +31,22 @@ before_script:
 script:
 - npm run test
 - npm run build
+before_deploy:
+- "./deploy/build"
+- "./deploy/package"
 deploy:
-  provider: npm
+- provider: s3
+  access_key_id: AKIAJH2D5IPIRHYJT5IA
+  secret_access_key:
+    secure: ZMKMxvhA8x3WFSabPSNVy9FwTeBrM9Zgu+qpw4iJIjlPhzBThEc+0eZ8UPvaGegHAYd9oMeMwchMA0XfjKBAtgrhz9r+qEirFVBCK33jToGDKAo+OC7I+k2hnfiqVFPZUIGBqbPKHT9YLiI+RwmX0tO8J5VBv68ywcIUiG/5mjV+DL4oieWewWI/8iCrUTvhxWItnFdmClrFYm7KWXRnsjZCZCKB+gOWi0Kc/oTkkqMVuyWYlEV4t8hBdJv1mSyLP43ciXu6/fWMxk/shDNKU+Dcch2KCu6CziNwPTphsbH0VuZyFE5s0gSjRVnMYXPMYztNLXepInG270R6ZyZWtgM9Du0zAqyMJzpNw6XSJzE0TYTwLibcPZeKKFHl5kzwcZYXBe3LLkN7KAQIlpvBZ8Rd0f5rUXMiKedDj8pQhS++SPphC63jV+V+DAnpG0juTdVC1gwrNOimScCY2nKVHQQyeOlFIS1s3ARH7BCQ9MZWR7y1S9qt09M6Dx8o6ROmQRPVx2RZmOhR2KQWo9pV5Duh+/lxfYJYtaAm7sR3lOQL12t6T7bqZT610W0UBnkD7pvkxYCjN7QVtncd39ZK7AslXrmW2ml/VZV8T6s2rJdhzaHoqpeBKrubqBFU7mfZ7NKB7mXUYucRet8+PGYEtsBarzWMb7X6RfAdlGiVhFw=
+  bucket: meshblu-connector
+  upload-dir: apps
+  region: us-west-2
+  skip_cleanup: true
+  local-dir: dpl_s3
+  on:
+    tags: true
+- provider: npm
   email: serveradmin@octoblu.com
   api_key:
     secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
