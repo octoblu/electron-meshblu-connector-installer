@@ -26,7 +26,7 @@ if ($node_arch -eq "x86") {
 if ($node_arch -eq  "ia32") {
   $go_arch="386"
 } else {
-  $go_arch="x64"
+  $go_arch="amd64"
 }
 $build_dir="$project_dir\release\MeshbluConnectorInstaller-win32-$node_arch"
 
@@ -37,8 +37,8 @@ pushd "$build_dir"
 popd
 
 echo "### packaging..."
-mkdir "$project_dir\dpl_s3\$env:TAG_NAME" | Out-Null
-mkdir "$project_dir\dpl_s3\latest" | Out-Null
+mkdir "$project_dir\dpl_s3\installer\$env:TAG_NAME" | Out-Null
+mkdir "$project_dir\dpl_s3\installer\latest" | Out-Null
 
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\$env:TAG_NAME\$zip_name"
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\latest\$zip_name"
