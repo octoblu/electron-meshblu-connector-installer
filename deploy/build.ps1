@@ -41,17 +41,17 @@ $dpl_s3="$project_dir\dpl_s3"
 If (Test-Path "$dpl_s3"){
   Remove-Item "$dpl_s3" -Recurse -Force -ErrorAction Stop
 }
-If (!(Test-Path $dpl_s3)){
-  mkdir "$dpl_s3" | Out-Null
+if(!(Test-Path -Path $dpl_s3 )){
+  New-Item -Force -ItemType directory -Path $dpl_s3
 }
-If (!(Test-Path "$dpl_s3\installer" )){
-  mkdir "$dpl_s3\installer"
+if(!(Test-Path -Path "$dpl_s3\installer" )){
+  New-Item -Force -ItemType directory -Path "$dpl_s3\installer"
 }
-If (!(Test-Path "$dpl_s3\installer\$env:TAG_NAME" )){
-  mkdir "$dpl_s3\installer\$env:TAG_NAME"
+if(!(Test-Path -Path "$dpl_s3\installer\$env:TAG_NAME" )){
+  New-Item -Force -ItemType directory -Path "$dpl_s3\installer\$env:TAG_NAME"
 }
-If (!(Test-Path "$dpl_s3\installer\latest" )){
-  mkdir "$dpl_s3\installer\latest"
+if(!(Test-Path -Path "$dpl_s3\installer\latest" )){
+  New-Item -Force -ItemType directory -Path "$dpl_s3\installer\latest"
 }
 
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\$env:TAG_NAME\$zip_name"
