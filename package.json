@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -105,7 +105,7 @@
     "react-router-redux": "^4.0.0",
     "redux": "^3.3.1",
     "redux-thunk": "^2.0.1",
-    "request": "^2.65.0",
+    "request": "~2.65.0",
     "source-map-support": "^0.4.0"
   },
   "devEngines": {

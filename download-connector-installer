@@ -1,0 +1,121 @@
+#!/bin/bash
+
+print_usage(){
+  echo "Usage: build-connector-installer <connector-name> <platform> <arch> <download-dir>"
+}
+
+download_installer(){
+  local key="$1"
+  local platform="$2"
+  local arch="$3"
+  local output_dir="$4"
+  local ext="zip"
+  if [ "$platform" == "darwin" ]; then
+    ext="dmg"
+  fi
+  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.0.11/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
+  echo "* downloading... $download_url"
+  echo "* to $output_file"
+  curl -fsS "$download_url" -o "$output_file"
+}
+
+get_meshblu_config(){
+  meshblu-util register --type "device:${connector}"
+}
+
+generate_otp(){
+  local uuid="$1"
+  local token="$2"
+  local connector="$3"
+  local json="{\
+    \"legacy\":false, \
+    \"connector\": \"$connector\", \
+    \"dependency_manager\": \"v1.0.2\", \
+    \"connector_installer\": \"v5.1.0\", \
+    \"node\": \"v5.5.0\", \
+    \"npm\": \"v3.3.12\", \
+    \"nssm\": \"2.24\" \
+  }"
+
+  curl -XPOST \
+    --silent \
+    -H 'Content-Type: application/json' \
+    -d "$json" \
+    "https://${uuid}:${token}@meshblu-otp.octoblu.com/generate"
+}
+
+get_key(){
+  local uuid="$1"
+  local token="$2"
+  local connector="$3"
+  local generateResult="$(generate_otp "$uuid" "$token" "$connector")"
+  local key="$(get_value_from_json "$generateResult" "key")"
+  echo "$key"
+}
+
+get_value_from_json(){
+  local jsonStr="$1"
+  local key="$2"
+  local value="$(echo "$jsonStr" | jq --raw-output ".${key}")"
+  echo "$value"
+}
+
+rename_app_file(){
+  local appFile="$1"
+  local connector="$2"
+  local key="$3"
+  local appPath="$(dirname "$appFile")"
+  cp -r "$appFile" "${appPath}/${connector}-${key}.app"
+}
+
+main(){
+  if [ "$1" == "--help" -o "$1" == "-h" -o "$1" == "help" -o "$1" == "-?" ]; then
+    print_usage
+    exit 1
+  fi
+  local connector="$1"
+  local platform="$2"
+  local arch="$3"
+  local output_dir="$4"
+
+  if [ -z "$connector" ]; then
+    print_usage
+    echo "Missing connector"
+    exit 1
+  fi
+
+  if [ -z "$platform" ]; then
+    print_usage
+    echo "Missing platform"
+    exit 1
+  fi
+
+  if [ -z "$arch" ]; then
+    print_usage
+    echo "Missing arch"
+    exit 1
+  fi
+
+  if [ -z "$output_dir" -a -d "$output_dir" ]; then
+    print_usage
+    echo "Missing or invalid output_dir"
+    exit 1
+  fi
+
+  echo "* registering with meshblu"
+  local meshbluConfig="$(get_meshblu_config)"
+  local uuid="$(get_value_from_json "$meshbluConfig" "uuid")"
+  local token="$(get_value_from_json "$meshbluConfig" "token")"
+
+  echo "* generating key"
+  local key="$(get_key "$uuid" "$token" "$connector")"
+  echo "* generated key: $key"
+
+  echo "* download app"
+  download_installer "$key" "$platform" "$arch" "$output_dir"
+
+  echo "* done"
+}
+
+main "$@"
