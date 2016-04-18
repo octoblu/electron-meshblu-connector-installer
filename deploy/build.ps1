@@ -33,7 +33,7 @@ $build_dir="$project_dir\release\MeshbluConnectorInstaller-win32-$node_arch"
 echo "### zipping..."
 $zip_name="MeshbluConnectorInstaller-windows-$go_arch.zip"
 pushd "$build_dir"
-  7z "$zip_name" * -r
+  7z a "$zip_name" * -r
 popd
 
 echo "### packaging..."
