@@ -18,7 +18,7 @@ function Get-ScriptDirectory
 echo "### building..."
 $script_dir = Get-ScriptDirectory
 $project_dir = "$script_dir\.."
-
+$tag=$env:APPVEYOR_REPO_TAG_NAME
 $node_arch=$env:PLATFORM
 if ($node_arch -eq "x86") {
   $node_arch="ia32"
@@ -41,12 +41,12 @@ $dpl_s3="$project_dir\dpl_s3"
 
 if(!(test-path "$dpl_s3\installer\latest")) {
   echo "### creating $dpl_s3\installer\latest"
-  mkdir "$dpl_s3\installer\latest"
+  mkdir "$dpl_s3\installer\latest" | Out-Null
 }
 
-if(!(test-path "$dpl_s3\installer\$env:TAG_NAME")) {
-  echo "### creating $dpl_s3\installer\$env:TAG_NAME"
-  mkdir "$dpl_s3\installer\$env:TAG_NAME"
+if(!(test-path "$dpl_s3\installer\$tag")) {
+  echo "### creating $dpl_s3\installer\$tag"
+  mkdir "$dpl_s3\installer\$tag" | Out-Null
 }
 
 echo "### copying to tag"

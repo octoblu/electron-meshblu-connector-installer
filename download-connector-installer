@@ -13,7 +13,7 @@ download_installer(){
   if [ "$platform" == "darwin" ]; then
     ext="dmg"
   fi
-  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.0.12/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.0.18/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
   local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
   echo "* downloading... $download_url"
   echo "* to $output_file"
