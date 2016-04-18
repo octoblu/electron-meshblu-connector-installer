@@ -20,6 +20,9 @@ $script_dir = Get-ScriptDirectory
 $project_dir = "$script_dir\.."
 
 $node_arch=$env:PLATFORM
+if ($node_arch -eq "x86") {
+  $node_arch="ia32"
+}
 if ($node_arch -eq  "ia32") {
   $go_arch="386"
 } else {
@@ -30,7 +33,7 @@ $build_dir="$project_dir\release\MeshbluConnectorInstaller-win32-$node_arch"
 echo "### zipping..."
 $zip_name="MeshbluConnectorInstaller-windows-$go_arch.zip"
 pushd "$build_dir"
-  7z -tzip "$zip_name" *
+  7z "$zip_name" * -r
 popd
 
 echo "### packaging..."
