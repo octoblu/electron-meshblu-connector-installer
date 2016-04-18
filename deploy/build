@@ -11,7 +11,7 @@ identity_name="Developer ID Application: Octoblu Inc. (JLSZ8Q5945)"
 build_app(){
   echo "### building app"
   local platform="$1"
-  local arch=$(get_node_arch "$2")
+  local arch="$2"
   local skip="$3"
   local base_dir="$(get_base_dir "$platform" "$arch")"
   if [ "$skip" == "1" -a -d "${base_dir}" ]; then
@@ -24,7 +24,7 @@ build_app(){
 build_dmg(){
   echo "### building dmg"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   local app="$CACHE_DIR/MeshbluConnectorInstaller.app"
   local dmg="$CACHE_DIR/MeshbluConnectorInstaller.dmg"
   if [ ! -d "$app" ]; then
@@ -48,7 +48,7 @@ build_dmg(){
 bundle_app(){
   echo "### bundling"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   if [ "$platform" == "darwin" ]; then
     build_dmg "$platform" "$arch"
   else
@@ -59,7 +59,7 @@ bundle_app(){
 clean_up(){
   echo "### cleaning up"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   local base_dir="$(get_base_dir "$platform" "$arch")"
 
   if [ "$platform" == "darwin" ]; then
@@ -80,7 +80,7 @@ create_keychain(){
 
 get_base_dir(){
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   echo "$RELEASE_DIR/MeshbluConnectorInstaller-${platform}-${arch}"
 }
 
@@ -88,9 +88,11 @@ get_node_arch(){
   local arch="$1"
   if [ "$arch" == "386" ]; then
     echo "ia32"
+    return
   fi
   if [ "$arch" == "amd64" ]; then
     echo "x64"
+    return
   fi
   echo "$arch"
 }
@@ -98,7 +100,7 @@ get_node_arch(){
 move_app(){
   echo "### moving app"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   local base_dir="$(get_base_dir "$platform" "$arch")"
   if [ "$platform" == "darwin" ]; then
     mkdir -p "$CACHE_DIR"
@@ -109,7 +111,7 @@ move_app(){
 move_bundle(){
   echo "### moving app"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   local base_dir="$(get_base_dir "$platform" "$arch")"
   if [ "$platform" == "darwin" ]; then
     mv "${CACHE_DIR}/MeshbluConnectorInstaller.dmg" "$RELEASE_DIR/MeshbluConnectorInstaller-${platform}-${arch}.dmg"
@@ -121,7 +123,7 @@ move_bundle(){
 setup(){
   echo "### setting up"
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   rm -rf "$RELEASE_DIR/*${platform}-${arch}.*"
   rm -rf "$CACHE_DIR"
   mkdir -p "$CACHE_DIR"
@@ -167,7 +169,7 @@ zip_app() {
   echo "### zipping app"
 
   local platform="$1"
-  local arch="$(get_node_arch "$2")"
+  local arch="$2"
   local base_dir="$(get_base_dir "$platform" "$arch")"
   if [ ! -f "$base_dir/MeshbluConnectorInstaller" -a "$platform" == "linux" ]; then
     echo "ERROR: App didn't build properly"
@@ -195,7 +197,7 @@ main(){
   fi
 
   local platform="$PLATFORM"
-  local arch="$ARCH"
+  local arch="$(get_node_arch "$ARCH")"
 
   if [ -z "$platform" ]; then
     if [ "$TRAVIS_OS_NAME" == "osx" ]; then
