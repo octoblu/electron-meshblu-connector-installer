@@ -45,13 +45,13 @@ If (!(Test-Path $dpl_s3)){
   mkdir "$dpl_s3" | Out-Null
 }
 If (!(Test-Path "$dpl_s3\installer" )){
-  mkdir "$dpl_s3\installer"  | Out-Null
+  mkdir "$dpl_s3\installer"
 }
 If (!(Test-Path "$dpl_s3\installer\$env:TAG_NAME" )){
-  mkdir "$dpl_s3\installer\$env:TAG_NAME"  | Out-Null
+  mkdir "$dpl_s3\installer\$env:TAG_NAME"
 }
 If (!(Test-Path "$dpl_s3\installer\latest" )){
-  mkdir "$dpl_s3\installer\latest"  | Out-Null
+  mkdir "$dpl_s3\installer\latest"
 }
 
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\$env:TAG_NAME\$zip_name"
