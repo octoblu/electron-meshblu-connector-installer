@@ -33,12 +33,18 @@ $build_dir="$project_dir\release\MeshbluConnectorInstaller-win32-$node_arch"
 echo "### zipping..."
 $zip_name="MeshbluConnectorInstaller-windows-$go_arch.zip"
 pushd "$build_dir"
-  7z a "$zip_name" * -r
+  7z a "$zip_name" * -r | Out-Null
 popd
 
 echo "### packaging..."
-mkdir "$project_dir\dpl_s3\installer\$env:TAG_NAME" | Out-Null
-mkdir "$project_dir\dpl_s3\installer\latest" | Out-Null
+$dpl_s3="$project_dir\dpl_s3"
+If (Test-Path $dpl_s3){
+  Remove-Item $dpl_s3 -Recurse -Force -ErrorAction Stop
+}
+mkdir "$dpl_s3" | Out-Null
+mkdir "$dpl_s3\installer" | Out-Null
+mkdir "$dpl_s3\installer\$env:TAG_NAME" | Out-Null
+mkdir "$dpl_s3\installer\latest" | Out-Null
 
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\$env:TAG_NAME\$zip_name"
 Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\latest\$zip_name"
