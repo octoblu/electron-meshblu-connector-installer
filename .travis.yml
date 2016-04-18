@@ -1,24 +1,29 @@
-sudo: false
-language: node_js
+language: cpp
 os:
 - linux
 - osx
 env:
   matrix:
-  - ARCH="amd64" MAIN_BUILD=true
-  - ARCH="386"
+  - PACKAGER_NODE_VERSION="5.5" ARCH="amd64" MAIN_BUILD=true
+  - PACKAGER_NODE_VERSION="5.5" ARCH="386"
   global:
     secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
 matrix:
   exclude:
   - os: osx
-    env: ARCH="386"
+    env: PACKAGER_NODE_VERSION="5.5" ARCH="amd64" MAIN_BUILD=true
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
+before_install:
+- PACKAGER_URL="https://meshblu-connector.octoblu.com/tools/packager/v7.0.0"
+- export PACKAGER_ARCH="$ARCH"
+- curl -fsS "${PACKAGER_URL}/travis_install_node.sh" -o /tmp/travis_install_node.sh
+- chmod +x /tmp/travis_install_node.sh
+- . /tmp/travis_install_node.sh
 install:
 - export CXX="g++-4.8"
 - npm install
