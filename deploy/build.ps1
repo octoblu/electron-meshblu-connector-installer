@@ -23,12 +23,12 @@ if ($node_arch -eq  "ia32") {
 } else {
   $go_arch="x64"
 }
-$build_dir="$script_dir\release\MeshbluConnectorInstaller-win32-$arch"
+$build_dir="$script_dir\release\MeshbluConnectorInstaller-win32-$node_arch"
 
 echo "### zipping..."
 $zip_name="MeshbluConnectorInstaller-windows-$go_arch.zip"
 pushd "$build_dir"
-  7za -tzip "$zip_name" *
+  7z -tzip "$zip_name" *
 popd
 
 echo "### packaging..."
