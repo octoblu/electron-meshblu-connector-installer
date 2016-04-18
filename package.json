@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
