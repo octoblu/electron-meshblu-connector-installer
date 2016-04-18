@@ -38,23 +38,20 @@ popd
 
 echo "### packaging..."
 $dpl_s3="$project_dir\dpl_s3"
-If (Test-Path "$dpl_s3"){
-  Remove-Item "$dpl_s3" -Recurse -Force -ErrorAction Stop
+
+if(!(test-path "$project_dir\dpl_s3\installer\latest")) {
+  echo "### creating $dpl_s3\installer\latest"
+  mkdir -p "$project_dir\dpl_s3\installer\latest"
 }
-if(!(Test-Path -Path $dpl_s3 )){
-  New-Item -Force -ItemType directory -Path $dpl_s3
-}
-if(!(Test-Path -Path "$dpl_s3\installer" )){
-  New-Item -Force -ItemType directory -Path "$dpl_s3\installer"
-}
-if(!(Test-Path -Path "$dpl_s3\installer\$env:TAG_NAME" )){
-  New-Item -Force -ItemType directory -Path "$dpl_s3\installer\$env:TAG_NAME"
-}
-if(!(Test-Path -Path "$dpl_s3\installer\latest" )){
-  New-Item -Force -ItemType directory -Path "$dpl_s3\installer\latest"
+if(!(test-path "$project_dir\dpl_s3\installer\$env:TAG_NAME")) {
+  echo "### creating $dpl_s3\installer\$env:TAG_NAME"
+  mkdir -p "$project_dir\dpl_s3\installer\$env:TAG_NAME"
 }
 
-Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\$env:TAG_NAME\$zip_name"
-Copy-Item "$build_dir\$zip_name" "$project_dir\dpl_s3\latest\$zip_name"
+echo "### copying to tag"
+Copy-Item "$build_dir\$zip_name" "$dpl_s3\$env:TAG_NAME\$zip_name" -Force
+
+echo "### copying to latest"
+Copy-Item "$build_dir\$zip_name" "$dpl_s3\latest\$zip_name" -Force
 
 echo "### done"
