@@ -23,7 +23,7 @@ const config = {
       ...baseConfig.module.loaders,
 
       {
-        test: /\.global\.css$/,
+        test: /\.(style|global)\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
           'css-loader'
@@ -31,7 +31,7 @@ const config = {
       },
 
       {
-        test: /^((?!\.global).)*\.css$/,
+        test: /^((?!\.(style|global)).)*\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
           'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'

@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import styles from './index.css';
+import './index.css';
+
+import DebugConfig from '../debug-config'
+import DebugLines from '../debug-lines'
 import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
 import ExecuteThings from '../../services/execute-things';
+
+import {
+  Spinner,
+  ProgressBar,
+  ErrorState,
+  Button,
+  EmptyState
+} from 'zooid-ui'
 
 const MAX_STEPS = 5;
 
@@ -12,6 +23,8 @@ class Installer extends Component {
     config: null,
     configLoading: true,
     step: 1,
+    debugOn: true,
+    lines: [],
     message: 'Retrieving configuration...'
   }
 
@@ -48,49 +61,42 @@ class Installer extends Component {
     });
   }
 
+  toggleDebug = () => {
+    this.state.debugOn = !this.state.debugOn
+  }
+
   getDebug = () => {
-    // if (process.env.NODE_ENV === 'production') {
-    //   return <div></div>;
-    // }
-    let debugStr = JSON.stringify(this.state.config, null, 2);
+    const { config, lines, debugOn } = this.state;
+    if (!debugOn) return <div></div>
     return (
-      <div className={styles.debuginfo}>
-        <h5>Debug Info:</h5>
-        <pre>
-          {debugStr}
-        </pre>
+      <div className="Installer--split">
+        <div className="Installer--split-item">
+          <DebugConfig config={config} />
+        </div>
+        <div className="Installer--split-item">
+          <DebugLines lines={lines} />
+        </div>
       </div>
     );
   }
 
   render() {
     const { error, config, configLoading, message, step } = this.state;
-    if (error) {
-      return (
-        <div>
-          <div className={styles.container}>
-            <h2>Error {error.message}</h2>
-          </div>
-        </div>
-      );
-    }
-    if (configLoading) {
-      return (
-        <div>
-          <div className={styles.container}>
-            <h2>{message}</h2>
-          </div>
-        </div>
-      );
-    }
+
+    if (error) return <ErrorState title={error.message} />;
+    if (configLoading) return <Spinner size="large"/>;
+
     const { connector } = config;
-    const debug = this.getDebug();
+    const percentage = step / MAX_STEPS * 100
+
     return (
       <div>
-        <div className={styles.container}>
+        <div className="Installer">
           <h2>Installing: <small>{connector}</small></h2>
+          <ProgressBar completed={percentage}/>
           <h3>Step: {step} / {MAX_STEPS} {message}</h3>
-          {debug}
+          <Button kind="neutral" onClick={this.toggleDebug}><i class="fa fa-debug"></i></Button>
+          {this.getDebug()}
         </div>
       </div>
     );

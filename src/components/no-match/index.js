@@ -1,8 +1,8 @@
 import React from 'react';
-import styles from './index.css';
+import './index.css';
 
 const NoMatch = () => {
-  return <h1 className={styles.root}>No Match :(</h1>;
+  return <h1 className="NoMatch">No Match :(</h1>;
 }
 
 export default NoMatch;
