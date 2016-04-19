@@ -1,14 +1,14 @@
 /* eslint max-len: 0 */
 import webpack from 'webpack';
-import webpackTargetElectronRenderer from 'webpack-target-electron-renderer';
 import baseConfig from './webpack.config.base';
+import autoprefixer from 'autoprefixer'
 
 const config = {
   ...baseConfig,
 
   debug: true,
 
-  // devtool: 'cheap-module-eval-source-map',
+  devtool: 'cheap-module-eval-source-map',
 
   entry: [
     'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
@@ -24,20 +24,9 @@ const config = {
     ...baseConfig.module,
     loaders: [
       ...baseConfig.module.loaders,
-
       {
-        test: /\.(style|global)\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?sourceMap'
-        ]
-      },
-      {
-        test: /^((?!\.(style|global)).)*\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?sourceMap'
-        ]
+        test:   /\.css$/,
+        loader: "style-loader!css-loader!postcss-loader"
       }
     ]
   },
@@ -51,8 +40,12 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify('development')
     })
   ],
-};
 
-config.target = webpackTargetElectronRenderer(config);
+  postcss: () => {
+    return [autoprefixer];
+  },
+
+  target: 'electron-renderer'
+};
 
 export default config;

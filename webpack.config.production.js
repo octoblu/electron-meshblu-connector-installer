@@ -1,12 +1,12 @@
 import webpack from 'webpack';
-import webpackTargetElectronRenderer from 'webpack-target-electron-renderer';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import baseConfig from './webpack.config.base';
+import autoprefixer from 'autoprefixer';
 
 const config = {
   ...baseConfig,
 
-  devtool: 'source-map',
+  devtool: 'cheap-source-map',
 
   entry: './src/index',
 
@@ -21,21 +21,9 @@ const config = {
 
     loaders: [
       ...baseConfig.module.loaders,
-
       {
-        test: /\.(style|global)\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css-loader'
-        )
-      },
-
-      {
-        test: /^((?!\.(style|global)).)*\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
-        )
+        test:   /\.css$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'postcss-loader')
       }
     ]
   },
@@ -47,16 +35,13 @@ const config = {
       __DEV__: false,
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        screw_ie8: true,
-        warnings: false
-      }
-    }),
     new ExtractTextPlugin('style.css', { allChunks: true })
-  ]
-};
+  ],
+  postcss: () => {
+    return [autoprefixer];
+  },
 
-config.target = webpackTargetElectronRenderer(config);
+  target: 'electron-renderer'
+};
 
 export default config;

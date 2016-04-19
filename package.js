@@ -45,6 +45,8 @@ if (icon) {
 
 const version = argv.version || argv.v;
 
+console.log('initializing...')
+
 if (version) {
   DEFAULT_OPTS.version = version;
   startPack();
@@ -63,9 +65,14 @@ if (version) {
 
 
 function build(cfg) {
+  console.log('building...')
   return new Promise((resolve, reject) => {
     webpack(cfg, (err, stats) => {
-      if (err) return reject(err);
+      if (err) {
+        console.error('Building error', err);
+        return reject(err);
+      }
+      console.log('done building')
       resolve(stats);
     });
   });
@@ -100,6 +107,7 @@ function startPack() {
     })
     .catch(err => {
       console.error(err);
+      process.exit(1);
     });
 }
 
@@ -119,22 +127,24 @@ function pack(plat, arch, cb) {
     })()
   };
 
+  const appVersion = pkg.version || DEFAULT_OPTS.version;
+
   const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
     platform: plat,
     arch,
     prune: true,
     'app-bundle-id': pkg.appBundleId,
-    'app-version': pkg.version || DEFAULT_OPTS.version,
+    'app-version': appVersion,
     out: `release`
   });
-
+  console.log(`packaging v${appVersion} for ${plat}-${arch} to ./${opts.out}`);
   packager(opts, cb);
 }
-
 
 function log(plat, arch) {
   return (err, filepath) => {
     if (err) return console.error(err);
     console.log(`${plat}-${arch} finished!`);
+    process.exit(0);
   };
 }

@@ -18,6 +18,7 @@ install:
   - npm install
 test: off
 build_script:
+  - npm run build
   - npm run package
   - ps: . .\deploy\build.ps1
 after_build:

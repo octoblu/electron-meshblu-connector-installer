@@ -58,8 +58,7 @@ class Installer extends Component {
   getDebug = () => {
     const { config, lines, showDebug } = this.state;
     if (!showDebug) return (
-      <Button
-        kind="neutral"
+      <Button kind="neutral"
         onClick={this.toggleDebug}
         className="Installer--button">
         <Icon name="MdBugReport" /> Show Debug
