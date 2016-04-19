@@ -3,7 +3,8 @@ import async from 'async';
 import path from 'path'
 
 class ExecuteThings {
-  constructor(config) {
+  constructor({ emitDebug, config }) {
+    this.emitDebug = emitDebug;
     this.config = config;
   }
 
@@ -25,7 +26,11 @@ class ExecuteThings {
       '--tag',
       `${node}`
     ];
-    this.execute({ executable, args, cwd: binPath }, callback);
+    this.emitDebug(`Installing node ${node}`)
+    this.execute({ executable, args, cwd: binPath }, (error) => {
+      if(error) return callback(new Error("Node Install Failure"))
+      callback()
+    });
   }
 
   installNpm = (callback) => {
@@ -41,7 +46,11 @@ class ExecuteThings {
       '--tag',
       `${npm}`
     ];
-    this.execute({ executable, args, cwd: binPath }, callback);
+    this.emitDebug(`Installing npm ${npm}`)
+    this.execute({ executable, args, cwd: binPath }, (error) => {
+      if(error) return callback(new Error("NPM Install Failure"))
+      callback()
+    });
   }
 
   installNssm = (callback) => {
@@ -57,7 +66,11 @@ class ExecuteThings {
       '--tag',
       `${nssm}`
     ];
-    this.execute({ executable, args, cwd: binPath }, callback);
+    this.emitDebug(`Installing nssm ${nssm}`)
+    this.execute({ executable, args, cwd: binPath }, (error) => {
+      if(error) return callback(new Error("NSSM Install Failure"))
+      callback()
+    });
   }
 
   installConnector(callback) {
@@ -75,17 +88,22 @@ class ExecuteThings {
       `${tag}`,
       this.getLegacyArg()
     ];
-    this.execute({ executable, args, cwd: binPath }, callback);
+    this.emitDebug(`Installing connector ${connector} ${tag}`)
+    this.execute({ executable, args, cwd: binPath }, (error) => {
+      if(error) return callback(new Error("Connector Install Failure"))
+      callback()
+    });
   }
 
   execute({ executable, args, cwd }, callback) {
     const command = `.${path.sep}${executable} ${args.join(' ')}`;
     exec(command, { cwd }, (error, stdout, stderr) => {
       if (error) {
+        this.emitDebug(`Executable Error: ${error.message}`);
         return callback(error);
       }
-      console.log('stdout', stdout);
-      console.log('stderr', stderr);
+      this.emitDebug(`stdout ${stdout}`);
+      this.emitDebug(`stderr ${stderr}`);
       callback();
     });
   }

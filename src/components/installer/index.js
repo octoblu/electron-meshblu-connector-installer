@@ -3,74 +3,71 @@ import './index.css';
 
 import DebugConfig from '../debug-config'
 import DebugLines from '../debug-lines'
-import InstallerInfo from '../../services/installer-info';
-import DependencyDownloader from '../../services/dependency-downloader';
-import ExecuteThings from '../../services/execute-things';
+import InstallerMaster from './installer-master'
 
 import {
   Spinner,
   ProgressBar,
   ErrorState,
   Button,
-  EmptyState
+  EmptyState,
+  Icon
 } from 'zooid-ui'
 
-const MAX_STEPS = 5;
+const MAX_STEPS = 4;
 
 class Installer extends Component {
   state = {
     error: null,
     config: null,
     configLoading: true,
-    step: 1,
-    debugOn: true,
+    step: 0,
+    showDebug: false,
     lines: [],
-    message: 'Retrieving configuration...'
+    message: 'Loading...'
   }
 
   componentDidMount() {
-    new InstallerInfo().getInfo((error, config) => {
-      if (error) {
-        return this.setState({ error });
-      }
-      this.setState({
-        config,
-        step: 2,
-        message: 'Downloading dependencies...',
-        configLoading: false
-      });
-      new DependencyDownloader(config).downloadAll((error) => {
-        if (error) {
-          return this.setState({ error });
-        }
-        this.setState({ step: 3, message: 'Installing dependencies...' });
-        const executeThings = new ExecuteThings(config);
-        executeThings.installDeps((error) => {
-          if (error) {
-            return this.setState({ error });
-          }
-          this.setState({ step: 4, message: 'Installing connector...' });
-          executeThings.installConnector((error) => {
-            if (error) {
-              return this.setState({ error });
-            }
-            this.setState({ step: 5, message: 'Connector Installed!' });
-          });
-        });
-      });
+    this.installer = new InstallerMaster()
+    this.installer.on('debug', (line) => {
+      let { lines } = this.state;
+      lines.push(`-- ${line}`)
+      this.setState({ lines });
     });
+    this.installer.on('step', (message) => {
+      let { step, lines } = this.state;
+      const newStep = step + 1;
+      lines.push(`[Step ${newStep}]: ${message}`);
+      this.setState({ message, step: newStep });
+    });
+    this.installer.on('config', (config) => {
+      this.setState({ config, configLoading: false });
+    });
+    this.installer.on('error', (error) => {
+      this.setState({ error });
+    });
+    this.installer.start(() => {
+      this.setState({ done: true })
+    })
   }
 
   toggleDebug = () => {
-    this.state.debugOn = !this.state.debugOn
+    this.setState({ showDebug: !this.state.showDebug });
   }
 
   getDebug = () => {
-    const { config, lines, debugOn } = this.state;
-    if (!debugOn) return <div></div>
+    const { config, lines, showDebug } = this.state;
+    if (!showDebug) return (
+      <Button
+        kind="neutral"
+        onClick={this.toggleDebug}
+        className="Installer--button">
+        <Icon name="MdBugReport" /> Show Debug
+      </Button>
+    );
     return (
       <div className="Installer--split">
-        <div className="Installer--split-item">
+        <div className="Installer--split-item Installer-split-small">
           <DebugConfig config={config} />
         </div>
         <div className="Installer--split-item">
@@ -81,23 +78,30 @@ class Installer extends Component {
   }
 
   render() {
-    const { error, config, configLoading, message, step } = this.state;
+    const { error, config, configLoading, done, message, step } = this.state;
 
-    if (error) return <ErrorState title={error.message} />;
-    if (configLoading) return <Spinner size="large"/>;
+    if (error) return <div className="Installer"><ErrorState title={error.message} /></div>;
+    if (configLoading) return <div className="Installer"><Spinner size="large"/></div>;
 
     const { connector } = config;
-    const percentage = step / MAX_STEPS * 100
+    const percentage = step / MAX_STEPS * 100;
 
-    return (
+    let content = (
       <div>
-        <div className="Installer">
-          <h2>Installing: <small>{connector}</small></h2>
-          <ProgressBar completed={percentage}/>
-          <h3>Step: {step} / {MAX_STEPS} {message}</h3>
-          <Button kind="neutral" onClick={this.toggleDebug}><i class="fa fa-debug"></i></Button>
-          {this.getDebug()}
+        <h2>Installing: <strong>{connector}</strong></h2>
+        <ProgressBar completed={percentage}/>
+        <h3>Step: {step} / {MAX_STEPS} {message}</h3>
+      </div>
+    );
+    if(done) {
+      content = <div className="Action-Button Installer--done">Success! Exit app.</div>
+    }
+    return (
+      <div className="Installer">
+        <div className="Installer--content">
+          {content}
         </div>
+        {this.getDebug()}
       </div>
     );
   }

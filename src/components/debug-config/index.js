@@ -1,13 +1,20 @@
 import React, { PropTypes } from 'react';
+import _ from 'lodash';
 import './index.css';
 
 const DebugConfig = ({ config }) => {
-  const configString = JSON.stringify(config, null, 2);
+  function convertObject(obj, prefix) {
+    return _.map(obj, (value, key) => {
+      if(_.isPlainObject(value)) {
+        return convertObject(value, `${prefix}${key}.`);
+      }
+      const theKey = `${prefix}${key}`
+      return <li key={theKey}><span className="DebugConfig--key">{theKey}</span>: {value}</li>
+    });
+  }
+  const items = convertObject(config, '');
   return <div className="DebugConfig">
-    <h5>Info:</h5>
-    <pre>
-      {configString}
-    </pre>
+    {items}
   </div>
 };
 

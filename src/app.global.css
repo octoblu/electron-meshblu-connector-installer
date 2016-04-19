@@ -23,13 +23,13 @@ li {
   list-style: none;
 }
 
-a {
+.Action-Button, a {
   color: #28B78D;
   opacity: .75;
   text-decoration: none;
 }
 
-a:hover {
+.Action-Button, a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;

@@ -4,12 +4,14 @@ import async from 'async';
 import path from 'path';
 
 class DependencyDownloader {
-  constructor(config) {
+  constructor({ emitDebug, config }) {
+    this.emitDebug = emitDebug;
     this.config = config;
   }
 
   downloadAll(callback) {
     const { binPath } = this.config;
+    this.emitDebug(`Making the bin path: ${binPath}`)
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
       async.parallel([
@@ -23,6 +25,7 @@ class DependencyDownloader {
     const { connector_installer } = this.config.versions;
     const fileName = 'meshblu-connector-installer';
     const uri = this.getURL(fileName, connector_installer);
+    this.emitDebug(`Downloading ${uri}...`)
     request.get(uri)
       .on('error', callback)
       .on('end', () => {
@@ -35,6 +38,7 @@ class DependencyDownloader {
     const { dependency_manager } = this.config.versions;
     const fileName = 'meshblu-connector-dependency-manager';
     const uri = this.getURL(fileName, dependency_manager);
+    this.emitDebug(`Downloading ${uri}...`)
     request.get(uri)
       .on('error', callback)
       .on('end', () => {
@@ -46,6 +50,7 @@ class DependencyDownloader {
   getWriteStream(fileName) {
     const { binPath } = this.config;
     const ext = process.platform === 'win32' ? '.exe' : '';
+    this.emitDebug(`Downloading to ${fileName}${ext}`)
     return fs.createWriteStream(path.join(binPath, `${fileName}${ext}`));
   }
 

@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.Installer--content {
+  margin: 2rem;
+}
+
 .Installer h2 {
   font-size: 2.5rem;
 }
@@ -26,4 +30,34 @@
   background-color: #eee;
   padding: 20px;
   overflow: hidden;
+}
+
+.Installer-split-small {
+}
+
+.Installer--button {
+  font-size: 2em;
+}
+
+.Installer--button .Icon {
+  font-size: 1.3em;
+}
+
+.Installer--done {
+  font-size: 2rem;
+  border: 2px solid #28B78D;
+  padding: 0.5rem 1rem;
+  width: 35%;
+  margin: 0 auto;
+}
+
+.Installer--actions {
+  margin-top: 2rem;
+}
+
+.ProgressBar {
+  max-width: 50%;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

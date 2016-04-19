@@ -5,6 +5,10 @@ import { exchange, fakeExchange } from './otp-service';
 import path from 'path';
 
 class InstallerInfo {
+  constructor({ emitDebug }) {
+    this.emitDebug = emitDebug;
+  }
+
   getAppName(options, callback) {
     if (process.platform === 'darwin') {
       return darwinGetAppName(options, callback);
@@ -26,7 +30,7 @@ class InstallerInfo {
       }
       const key = this.getKey(appName);
       if (!key) return callback(new Error('Invalid Key for Installation'));
-      fakeExchange({ key }, (error, response) => {
+      exchange({ key }, (error, response) => {
         if (error) return callback(error);
 
         callback(null, this.getConfig({ key }, response));
