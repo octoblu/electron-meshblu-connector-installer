@@ -10,11 +10,9 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
 }
 
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
-
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
@@ -23,7 +21,7 @@ app.on('ready', () => {
     height: 728
   });
 
-  mainWindow.loadURL(`file://${__dirname}/app/app.html`);
+  mainWindow.loadURL(`file://${__dirname}/src/app.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();

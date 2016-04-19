@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import styles from './Installer.css';
-import InstallerInfo from '../services/installer-info';
-import DependencyDownloader from '../services/dependency-downloader';
-import ExecuteThings from '../services/execute-things';
+import styles from './index.css';
+import InstallerInfo from '../../services/installer-info';
+import DependencyDownloader from '../../services/dependency-downloader';
+import ExecuteThings from '../../services/execute-things';
 
 const MAX_STEPS = 5;
 

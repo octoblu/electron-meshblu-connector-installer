@@ -36,7 +36,6 @@ $ npm run dev
 
 *Note: requires a node version >= 4 and an npm version >= 2.*
 
-
 ## DevTools
 
 #### Toggle Chrome DevTools
@@ -46,16 +45,6 @@ $ npm run dev
 - Windows: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>I</kbd> or <kbd>F12</kbd>
 
 *See [electron-debug](https://github.com/sindresorhus/electron-debug) for more information.*
-
-#### Toggle Redux DevTools
-
-- All platforms: <kbd>Ctrl+H</kbd>
-
-*See [redux-devtools-dock-monitor](https://github.com/gaearon/redux-devtools-dock-monitor) for more information.*
-
-#### Redux Devtools Window
-
-Now you can implement it using [remote-redux-devtools](https://github.com/zalmoxisus/remote-redux-devtools) with a [remote monitor](https://github.com/zalmoxisus/remote-redux-devtools#remote-monitoring) by yourself.
 
 ## Package
 
@@ -75,6 +64,8 @@ $ npm run package-all
 - --version, -v: Electron version (default: latest version)
 - --asar, -a: [asar](https://github.com/atom/asar) support (default: false)
 - --icon, -i: Application icon
+- --platform: pack for platform
+- --arch: pack for arch
 - --all: pack for all platforms
 
 Use `electron-packager` to pack your app with `--all` options for darwin (osx), linux and win32 (windows) platform. After build, you will find them in `release` folder. Otherwise, you will only find one for your os.
