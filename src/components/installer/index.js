@@ -76,31 +76,33 @@ class Installer extends Component {
     );
   }
 
-  render() {
-    const { error, config, configLoading, done, message, step } = this.state;
-
-    if (error) return <div className="Installer"><ErrorState title={error.message} /></div>;
-    if (configLoading) return <div className="Installer"><Spinner size="large"/></div>;
-
-    const { connector } = config;
-    const percentage = step / MAX_STEPS * 100;
-
-    let content = (
-      <div>
-        <h2>Installing: <strong>{connector}</strong></h2>
-        <ProgressBar completed={percentage}/>
-        <h3>Step: {step} / {MAX_STEPS} {message}</h3>
-      </div>
-    );
-    if(done) {
-      content = <div className="Action-Button Installer--done">Success! Exit app.</div>
-    }
+  renderContent = (content) => {
     return (
       <div className="Installer">
         <div className="Installer--content">
           {content}
         </div>
         {this.getDebug()}
+      </div>
+    );
+  }
+
+  render() {
+    const { error, configLoading, done } = this.state;
+
+    if (error) return this.renderContent(<ErrorState title={error.message} />);
+    if (configLoading) return this.renderContent(<Spinner size="large"/>);
+    if (done) return this.renderContent(<div className="Action-Button Installer--done">Success! Exit app.</div>);
+
+    const { config, message, step } = this.state
+    const { connector } = config;
+    const percentage = step / MAX_STEPS * 100;
+
+    return this.renderContent(
+      <div>
+        <h2>Installing: <strong>{connector}</strong></h2>
+        <ProgressBar completed={percentage}/>
+        <h3>Step: {step} / {MAX_STEPS} {message}</h3>
       </div>
     );
   }

@@ -1,11 +1,12 @@
-import { exec } from 'child_process';
 import async from 'async';
-import path from 'path'
+import path from 'path';
+import Execute from './execute';
 
 class ExecuteThings {
   constructor({ emitDebug, config }) {
     this.emitDebug = emitDebug;
     this.config = config;
+    this.execute = new Execute({ emitDebug })
   }
 
   installDeps(callback) {
@@ -19,15 +20,15 @@ class ExecuteThings {
   installNode = (callback) => {
     const { binPath, versions } = this.config;
     const { node } = versions;
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
       '--type',
       'node',
       '--tag',
-      `${node}`
+      node
     ];
     this.emitDebug(`Installing node ${node}`)
-    this.execute({ executable, args, cwd: binPath }, (error) => {
+    this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("Node Install Failure"))
       callback()
     });
@@ -39,15 +40,15 @@ class ExecuteThings {
     }
     const { binPath, versions } = this.config;
     const { npm } = versions;
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
       '--type',
       'npm',
       '--tag',
-      `${npm}`
+      npm
     ];
     this.emitDebug(`Installing npm ${npm}`)
-    this.execute({ executable, args, cwd: binPath }, (error) => {
+    this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("NPM Install Failure"))
       callback()
     });
@@ -59,15 +60,15 @@ class ExecuteThings {
     }
     const { binPath, versions } = this.config;
     const { nssm } = versions;
-    const executable = `meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
     const args = [
       '--type',
       'nssm',
       '--tag',
-      `${nssm}`
+      nssm
     ];
     this.emitDebug(`Installing nssm ${nssm}`)
-    this.execute({ executable, args, cwd: binPath }, (error) => {
+    this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("NSSM Install Failure"))
       callback()
     });
@@ -76,35 +77,22 @@ class ExecuteThings {
   installConnector(callback) {
     const { binPath, uuid, token, connector, versions } = this.config;
     const { tag } = versions
-    const executable = `meshblu-connector-installer${this.getExt()}`;
+    const executable = `./meshblu-connector-installer${this.getExt()}`;
     const args = [
       '--connector',
-      `${connector}`,
+      connector,
       '--uuid',
-      `${uuid}`,
+      uuid,
       '--token',
-      `${token}`,
+      token,
       '--tag',
-      `${tag}`,
+      tag,
       this.getLegacyArg()
     ];
     this.emitDebug(`Installing connector ${connector} ${tag}`)
-    this.execute({ executable, args, cwd: binPath }, (error) => {
+    this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("Connector Install Failure"))
       callback()
-    });
-  }
-
-  execute({ executable, args, cwd }, callback) {
-    const command = `.${path.sep}${executable} ${args.join(' ')}`;
-    exec(command, { cwd }, (error, stdout, stderr) => {
-      if (error) {
-        this.emitDebug(`Executable Error: ${error.message}`);
-        return callback(error);
-      }
-      this.emitDebug(`stdout ${stdout}`);
-      this.emitDebug(`stderr ${stderr}`);
-      callback();
     });
   }
 

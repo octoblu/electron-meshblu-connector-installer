@@ -19,6 +19,15 @@ class InstallerInfo {
     return callback(new Error(`Invalid platform ${process.platform}`));
   }
 
+  exchangeToken = (options, callback) => {
+    if (process.env.NODE_ENV === 'production') {
+      exchange(options, callback);
+      return;
+    }
+    this.emitDebug('Using fake key!');
+    fakeExchange(options, callback);
+  }
+
   getInfo(callback) {
     const launchPath = _.first(process.argv);
     this.getAppName({ launchPath }, (error, appName) => {
@@ -29,9 +38,10 @@ class InstallerInfo {
         return callback(new Error(`Invalid FileName ${launchPath}`))
       }
       const key = this.getKey(appName);
+      this.emitDebug(`Found key ${key}`)
       if (!key) return callback(new Error('Invalid Key for Installation'));
-      exchange({ key }, (error, response) => {
-        if (error) return callback(error);
+      this.exchangeToken({ key }, (error, response) => {
+        if (error) return callback(new Error('Installer already used. Download a new one.'));
 
         callback(null, this.getConfig({ key }, response));
       });
@@ -77,11 +87,13 @@ class InstallerInfo {
       connector_installer,
       node,
       npm,
-      nssm,
-      tag
+      nssm
     } = metadata;
+
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
+
+    const tag = metadata.tag || 'latest';
 
     return {
       key,

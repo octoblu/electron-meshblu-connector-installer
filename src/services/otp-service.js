@@ -21,12 +21,12 @@ export function fakeExchange({ key }, callback) {
     metadata: {
       legacy: false,
       connector: 'say-hello',
-      dependency_manager: 'v1.0.2',
-      connector_installer: 'v5.1.0',
+      dependency_manager: 'v1.0.3',
+      connector_installer: 'v5.1.1',
       node: 'v5.5.0',
       npm: 'v3.3.12',
       nssm: '2.24',
-      tag: 'v2.0.19'
+      tag: 'v2.0.22'
     }
   });
 }

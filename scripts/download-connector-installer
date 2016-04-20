@@ -13,11 +13,15 @@ download_installer(){
   if [ "$platform" == "darwin" ]; then
     ext="dmg"
   fi
-  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.0.18/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.1.1/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
   local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
   echo "* downloading... $download_url"
   echo "* to $output_file"
-  curl -fsS "$download_url" -o "$output_file"
+  curl "$download_url" -o "$output_file"
+  if [ ! -f "$output_file" ]; then
+    echo "Invalid downloaded file"
+    exit 1
+  fi
 }
 
 get_meshblu_config(){
@@ -110,7 +114,7 @@ main(){
 
   echo "* generating key"
   local key="$(get_key "$uuid" "$token" "$connector")"
-  echo "* generated key: $key"
+  echo "* key: $key"
 
   echo "* download app"
   download_installer "$key" "$platform" "$arch" "$output_dir"

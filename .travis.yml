@@ -12,6 +12,9 @@ matrix:
   exclude:
   - os: osx
     env: PACKAGER_NODE_VERSION="5.5" ARCH="386"
+branches:
+  only:
+  - /^v[0-9]/
 addons:
   apt:
     sources:
