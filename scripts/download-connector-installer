@@ -13,7 +13,7 @@ download_installer(){
   if [ "$platform" == "darwin" ]; then
     ext="dmg"
   fi
-  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.1.4/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.1.5/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
   local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
   echo "* downloading... $download_url"
   echo "* to $output_file"
@@ -35,11 +35,12 @@ generate_otp(){
   local json="{\
     \"legacy\":false, \
     \"connector\": \"$connector\", \
-    \"dependency_manager\": \"v1.0.2\", \
-    \"connector_installer\": \"v5.1.0\", \
+    \"dependency_manager\": \"v1.0.3\", \
+    \"connector_installer\": \"v5.1.1\", \
     \"node\": \"v5.5.0\", \
     \"npm\": \"v3.3.12\", \
-    \"nssm\": \"2.24\" \
+    \"nssm\": \"2.24\", \
+    \"tag\": \"2.0.22\" \
   }"
 
   curl -XPOST \

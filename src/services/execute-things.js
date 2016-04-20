@@ -20,7 +20,7 @@ class ExecuteThings {
   installNode = (callback) => {
     const { binPath, versions } = this.config;
     const { node } = versions;
-    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = this.getExecutable('meshblu-connector-dependency-manager');
     const args = [
       '--type',
       'node',
@@ -40,7 +40,7 @@ class ExecuteThings {
     }
     const { binPath, versions } = this.config;
     const { npm } = versions;
-    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = this.getExecutable('meshblu-connector-dependency-manager');
     const args = [
       '--type',
       'npm',
@@ -60,7 +60,7 @@ class ExecuteThings {
     }
     const { binPath, versions } = this.config;
     const { nssm } = versions;
-    const executable = `./meshblu-connector-dependency-manager${this.getExt()}`;
+    const executable = this.getExecutable('meshblu-connector-dependency-manager');
     const args = [
       '--type',
       'nssm',
@@ -77,7 +77,7 @@ class ExecuteThings {
   installConnector(callback) {
     const { binPath, uuid, token, connector, versions } = this.config;
     const { tag } = versions
-    const executable = `./meshblu-connector-installer${this.getExt()}`;
+    const executable = this.getExecutable('meshblu-connector-installer');
     const args = [
       '--connector',
       connector,
@@ -96,11 +96,12 @@ class ExecuteThings {
     });
   }
 
-  getExt() {
+  getExecutable(filename) {
+    let ext = '';
     if (process.platform === 'win32') {
-      return '.exe';
+      ext = '.exe';
     }
-    return '';
+    return `.${path.sep}${filename}${ext}`;
   }
 
   getLegacyArg() {

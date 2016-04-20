@@ -3,10 +3,10 @@
   border: 1px solid gray;
   color: #243743;
   padding: 0.5rem 1rem;
-  height: 300px;
+  height: 350px;
 }
 
 .DebugLines--console {
   overflow-y: scroll;
-  height: 250px;
+  height: 300px;
 }
