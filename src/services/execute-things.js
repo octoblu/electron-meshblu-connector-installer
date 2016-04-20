@@ -10,66 +10,25 @@ class ExecuteThings {
   }
 
   installDeps(callback) {
-    async.parallel([
-      this.installNode,
-      this.installNpm,
-      this.installNssm
-    ], callback);
-  }
-
-  installNode = (callback) => {
-    const { binPath, versions } = this.config;
-    const { node } = versions;
-    const executable = this.getExecutable('meshblu-connector-dependency-manager');
-    const args = [
-      '--type',
-      'node',
-      '--tag',
-      node
-    ];
-    this.emitDebug(`Installing node ${node}`)
-    this.execute.do({ executable, args, cwd: binPath }, (error) => {
-      if(error) return callback(new Error("Node Install Failure"))
-      callback()
+    const { deps } = this.config;
+    const tasks = _.map(deps, (tag, type) => {
+      return async.apply(this.installDep, {type, tag});
     });
+    async.series(tasks, callback);
   }
 
-  installNpm = (callback) => {
-    if (process.os !== 'win32') {
-      return callback();
-    }
-    const { binPath, versions } = this.config;
-    const { npm } = versions;
+  installDep = ({type, tag}, callback) => {
+    const { binPath, } = this.config;
     const executable = this.getExecutable('meshblu-connector-dependency-manager');
     const args = [
       '--type',
-      'npm',
+      type,
       '--tag',
-      npm
+      tag
     ];
-    this.emitDebug(`Installing npm ${npm}`)
+    this.emitDebug(`Installing ${type} ${tag}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {
-      if(error) return callback(new Error("NPM Install Failure"))
-      callback()
-    });
-  }
-
-  installNssm = (callback) => {
-    if (process.os !== 'win32') {
-      return callback();
-    }
-    const { binPath, versions } = this.config;
-    const { nssm } = versions;
-    const executable = this.getExecutable('meshblu-connector-dependency-manager');
-    const args = [
-      '--type',
-      'nssm',
-      '--tag',
-      nssm
-    ];
-    this.emitDebug(`Installing nssm ${nssm}`)
-    this.execute.do({ executable, args, cwd: binPath }, (error) => {
-      if(error) return callback(new Error("NSSM Install Failure"))
+      if(error) return callback(new Error(`${type} ${tag} install failure`))
       callback()
     });
   }

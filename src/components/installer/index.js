@@ -14,7 +14,7 @@ import {
   Icon
 } from 'zooid-ui'
 
-const MAX_STEPS = 4;
+const MAX_STEPS = 5;
 
 class Installer extends Component {
   state = {
@@ -47,7 +47,7 @@ class Installer extends Component {
       this.setState({ error });
     });
     this.installer.start(() => {
-      this.setState({ done: true })
+      this.setState({ done: true, step: 5, message: "done" })
     })
   }
 

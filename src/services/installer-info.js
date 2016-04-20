@@ -83,30 +83,28 @@ class InstallerInfo {
     const {
       legacy,
       connector,
+      tag,
       dependency_manager,
-      connector_installer,
-      node,
-      npm,
-      nssm,
-      tag
+      connector_installer
     } = metadata;
 
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
-    const versions = _.extend({}, {
-      dependency_manager: 'latest',
-      connector_installer: 'latest',
+
+    const deps = _.extend({
       node: 'v5.5.0',
       npm: 'v3.3.12',
       nssm: '2.24',
+    }, metadata.deps);
+
+    const versions = _.extend({
+      dependency_manager: 'latest',
+      connector_installer: 'latest',
       tag: 'latest'
     }, {
+      tag,
       dependency_manager,
       connector_installer,
-      node,
-      npm,
-      nssm,
-      tag
     });
 
     return {
@@ -117,7 +115,8 @@ class InstallerInfo {
       legacy,
       platform,
       binPath,
-      versions
+      versions,
+      deps
     };
   }
 }
