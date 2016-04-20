@@ -50,7 +50,7 @@ if(!(test-path "$dpl_s3\installer\$tag")) {
 }
 
 echo "### copying to tag"
-Copy-Item "$build_dir\$zip_name" "$dpl_s3\installer\$env:TAG_NAME\$zip_name" -Force
+Copy-Item "$build_dir\$zip_name" "$dpl_s3\installer\$tag\$zip_name" -Force
 
 echo "### copying to latest"
 Copy-Item "$build_dir\$zip_name" "$dpl_s3\installer\latest\$zip_name" -Force

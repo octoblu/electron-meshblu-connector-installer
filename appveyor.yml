@@ -23,7 +23,7 @@ build_script:
   - npm run package
   - ps: . .\deploy\build.ps1
 after_build:
-  - ps: $root = Resolve-Path dpl_s3; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName S3.Connector }
+  - ps: $root = Resolve-Path dpl_s3; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName S3.ConnectorInstaller }
 deploy:
   - provider: S3
     access_key_id: AKIAJH2D5IPIRHYJT5IA
@@ -31,7 +31,7 @@ deploy:
       secure: cFwATEkycF0yVPBsMBevUntX0ylOMsjvSbnaePjbONDOpxV/7QvU7aOt/zoPwHmI
     bucket: meshblu-connector
     folder: apps
-    artifact: S3.Connector
+    artifact: S3.ConnectorInstaller
     set_public: true
     on:
       branch: master
