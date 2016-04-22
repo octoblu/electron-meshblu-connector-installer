@@ -33,11 +33,8 @@ class DependencyDownloader {
           this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
           return callback(new Error('Invalid Dependency Download'))
         }
-        stream.pipe(this.getWriteStream(fileName))
-      })
-      .on('end', () => {
-        callback();
-      })
+        stream.on('end', callback).pipe(this.getWriteStream(fileName))
+      });
   }
 
   getWriteStream(fileName) {
