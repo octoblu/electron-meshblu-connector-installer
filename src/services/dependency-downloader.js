@@ -14,37 +14,30 @@ class DependencyDownloader {
     this.emitDebug(`Making the bin path: ${binPath}`)
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
-      async.parallel([
-        this.downloadCI,
-        this.downloadDepMan
+      this.emitDebug(`Downloading dependencies`)
+      const { connectorInstallerVersion, dependencyManagerVersion } = this.config.versions;
+      async.series([
+        async.apply(this.download, 'meshblu-connector-installer', connectorInstallerVersion),
+        async.apply(this.download, 'meshblu-connector-dependency-manager', dependencyManagerVersion),
       ], callback);
     });
   }
 
-  downloadCI = (callback) => {
-    const { connector_installer } = this.config.versions;
-    const fileName = 'meshblu-connector-installer';
-    const uri = this.getURL(fileName, connector_installer);
+  download = (fileName, tag, callback) => {
+    const uri = this.getURL(fileName, tag);
     this.emitDebug(`Downloading ${uri}...`)
-    request.get(uri)
+    const stream = request.get(uri)
       .on('error', callback)
+      .on('response', (response) => {
+        if(response.statusCode >= 400){
+          this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
+          return callback(new Error('Invalid Dependency Download'))
+        }
+        stream.pipe(this.getWriteStream(fileName))
+      })
       .on('end', () => {
         callback();
       })
-      .pipe(this.getWriteStream(fileName));
-  }
-
-  downloadDepMan = (callback) => {
-    const { dependency_manager } = this.config.versions;
-    const fileName = 'meshblu-connector-dependency-manager';
-    const uri = this.getURL(fileName, dependency_manager);
-    this.emitDebug(`Downloading ${uri}...`)
-    request.get(uri)
-      .on('error', callback)
-      .on('end', () => {
-        callback();
-      })
-      .pipe(this.getWriteStream(fileName));
   }
 
   getWriteStream(fileName) {
@@ -56,7 +49,7 @@ class DependencyDownloader {
 
   getURL(fileName, tag) {
     const { platform } = this.config;
-    return `https://meshblu-connector.octoblu.com/tools/go-${fileName}/${tag}/${fileName}-${platform}`;
+    return `https://github.com/octoblu/go-${fileName}/releases/download/${tag}/${fileName}-${platform}`
   }
 }
 

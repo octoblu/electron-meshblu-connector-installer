@@ -12,12 +12,15 @@ class ExecuteThings {
   installDeps(callback) {
     const { deps } = this.config;
     const tasks = _.map(deps, (tag, type) => {
-      return async.apply(this.installDep, {type, tag});
+      return async.apply(this.installSingleDep, {type, tag});
     });
     async.series(tasks, callback);
   }
 
-  installDep = ({type, tag}, callback) => {
+  installSingleDep = ({type, tag}, callback) => {
+    if(!this.shouldInstallDep(type)) {
+      return callback();
+    }
     const { binPath, } = this.config;
     const executable = this.getExecutable('meshblu-connector-dependency-manager');
     const args = [
@@ -34,8 +37,7 @@ class ExecuteThings {
   }
 
   installConnector(callback) {
-    const { binPath, uuid, token, connector, versions } = this.config;
-    const { tag } = versions
+    const { binPath, uuid, token, connector, downloadURI } = this.config;
     const executable = this.getExecutable('meshblu-connector-installer');
     const args = [
       '--connector',
@@ -44,15 +46,26 @@ class ExecuteThings {
       uuid,
       '--token',
       token,
-      '--tag',
-      tag,
+      '--download-uri',
+      downloadURI,
       this.getLegacyArg()
     ];
-    this.emitDebug(`Installing connector ${connector} ${tag}`)
+    this.emitDebug(`Installing connector ${connector}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("Connector Install Failure"))
       callback()
     });
+  }
+
+  shouldInstallDep(type) {
+    const { platform } = process;
+    if(type === "nssm" && platform === "win32") {
+      return true
+    }
+    if(type === "npm" && platform === "win32") {
+      return true
+    }
+    return false
   }
 
   getExecutable(filename) {

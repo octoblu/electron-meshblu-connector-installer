@@ -36,11 +36,13 @@
 }
 
 .Installer--button {
-  font-size: 2em;
+  font-size: 1.3em !important;
+  width: 200px;
+  margin: 0 auto;
 }
 
-.Installer--button .Icon {
-  font-size: 1.3em;
+.Installer--button i {
+  font-size: 1em;
 }
 
 .Installer--done {
@@ -60,4 +62,8 @@
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.ProgressBar-completed {
+  background: #28B78D !important;
 }

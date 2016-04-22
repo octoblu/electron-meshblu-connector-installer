@@ -78,14 +78,19 @@ class InstallerInfo {
     return path.join(process.env.HOME, '.octoblu', 'bin');
   }
 
+  generateDownloadURI({ githubSlug, tag, connector, platform }) {
+    return `https://github.com/${githubSlug}/releases/download/${tag}/${connector}-${platform}.tar.gz`
+  }
+
   getConfig({ key }, response) {
     const { uuid, token, metadata } = response;
     const {
       legacy,
       connector,
+      githubSlug,
       tag,
-      dependency_manager,
-      connector_installer
+      dependencyManagerVersion,
+      connectorInstallerVersion
     } = metadata;
 
     const platform = this.getPlatform();
@@ -98,14 +103,14 @@ class InstallerInfo {
     }, metadata.deps);
 
     const versions = _.extend({
-      dependency_manager: 'latest',
-      connector_installer: 'latest',
-      tag: 'latest'
+      dependencyManagerVersion: 'latest',
+      connectorInstallerVersion: 'latest'
     }, {
-      tag,
-      dependency_manager,
-      connector_installer,
+      dependencyManagerVersion,
+      connectorInstallerVersion,
     });
+
+    const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform })
 
     return {
       key,
@@ -113,6 +118,7 @@ class InstallerInfo {
       token,
       connector,
       legacy,
+      downloadURI,
       platform,
       binPath,
       versions,

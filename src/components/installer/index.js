@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import './index.css';
 
-import DebugConfig from '../debug-config'
-import DebugLines from '../debug-lines'
-import InstallerMaster from './installer-master'
+import DebugConfig from '../debug-config';
+import DebugLines from '../debug-lines';
+import ErrorState from '../error-state';
+import InstallerMaster from './installer-master';
 
 import {
   Spinner,
   ProgressBar,
-  ErrorState,
   Button,
   EmptyState,
   Icon
-} from 'zooid-ui'
+} from 'zooid-ui';
 
 const MAX_STEPS = 5;
 
@@ -58,11 +58,10 @@ class Installer extends Component {
   getDebug = () => {
     const { config, lines, showDebug } = this.state;
     if (!showDebug) return (
-      <Button kind="neutral"
-        onClick={this.toggleDebug}
-        className="Installer--button">
-        <Icon name="MdBugReport" /> Show Debug
-      </Button>
+      <div onClick={this.toggleDebug}
+        className="Action-Button Installer--button">
+        <i className="fa fa-bug"></i> Show Debug
+      </div>
     );
     return (
       <div className="Installer--split">
@@ -90,7 +89,7 @@ class Installer extends Component {
   render() {
     const { error, configLoading, done } = this.state;
 
-    if (error) return this.renderContent(<ErrorState title={error.message} />);
+    if (error) return this.renderContent(<ErrorState message={error.message} />);
     if (configLoading) return this.renderContent(<Spinner size="large"/>);
     if (done) return this.renderContent(<div className="Action-Button Installer--done">Success! Exit app.</div>);
 

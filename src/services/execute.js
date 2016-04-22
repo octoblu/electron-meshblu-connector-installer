@@ -18,6 +18,9 @@ export default class Execute {
 
     child.on('close', (code) => {
       this.emitDebug(`${executable} exited ${code}`);
+      if(code > 0){
+        return callback(new Error('Error during installation'))
+      }
       callback();
     });
 

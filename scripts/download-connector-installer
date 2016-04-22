@@ -35,9 +35,10 @@ generate_otp(){
   local json="{\
     \"legacy\":false, \
     \"connector\": \"$connector\", \
-    \"tag\": \"2.0.22\", \
-    \"dependency_manager\": \"v1.0.3\", \
-    \"connector_installer\": \"v5.1.1\", \
+    \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
+    \"tag\": \"v3.0.8\", \
+    \"dependencyManagerVersion\": \"v1.0.6\", \
+    \"connectorInstallerVersion\": \"v6.0.0\", \
     \"deps\": { \
       \"node\": \"v5.5.0\", \
       \"npm\": \"v3.3.12\", \
