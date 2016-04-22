@@ -1,4 +1,4 @@
-import {spawn} from 'child_process';
+import spawn from 'cross-spawn-async';
 
 export default class Execute {
   constructor({ emitDebug }) {
@@ -9,11 +9,11 @@ export default class Execute {
     const child = spawn(executable, args, {cwd});
 
     child.stdout.on('data', (data) => {
-      this.emitDebug(`stdout: ${data}`);
+      this.emitDebug(`stdout: ${data.toString()}`);
     });
 
     child.stderr.on('data', (data) => {
-      this.emitDebug(`stderr: ${data}`);
+      this.emitDebug(`stderr: ${data.toString()}`);
     });
 
     child.on('close', (code) => {

@@ -1,0 +1,72 @@
+#!/bin/bash
+
+print_usage(){
+  echo "Usage: create-key <connector-name>"
+}
+
+get_meshblu_config(){
+  meshblu-util register --type "device:${connector}"
+}
+
+generate_otp(){
+  local uuid="$1"
+  local token="$2"
+  local connector="$3"
+  local json="{ \
+    \"legacy\": false, \
+    \"connector\": \"$connector\", \
+    \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
+    \"tag\": \"v3.0.8\", \
+    \"dependencyManagerVersion\": \"v1.0.6\", \
+    \"connectorInstallerVersion\": \"v6.0.1\", \
+    \"deps\": { \
+      \"node\": \"v5.5.0\", \
+      \"npm\": \"v3.3.12\", \
+      \"nssm\": \"2.24\" \
+    } \
+  }"
+
+  curl -XPOST \
+    --silent \
+    -H 'Content-Type: application/json' \
+    -d "$json" \
+    "https://${uuid}:${token}@meshblu-otp.octoblu.com/generate"
+}
+
+get_key(){
+  local uuid="$1"
+  local token="$2"
+  local connector="$3"
+  local generateResult="$(generate_otp "$uuid" "$token" "$connector")"
+  local key="$(get_value_from_json "$generateResult" "key")"
+  echo "$key"
+}
+
+get_value_from_json(){
+  local jsonStr="$1"
+  local key="$2"
+  local value="$(echo "$jsonStr" | jq --raw-output ".${key}")"
+  echo "$value"
+}
+
+main(){
+  if [ "$1" == "--help" -o "$1" == "-h" -o "$1" == "help" -o "$1" == "-?" ]; then
+    print_usage
+    exit 1
+  fi
+  local connector="$1"
+
+  if [ -z "$connector" ]; then
+    print_usage
+    echo "Missing connector"
+    exit 1
+  fi
+
+  local meshbluConfig="$(get_meshblu_config)"
+  local uuid="$(get_value_from_json "$meshbluConfig" "uuid")"
+  local token="$(get_value_from_json "$meshbluConfig" "token")"
+
+  get_key "$uuid" "$token" "$connector"
+}
+
+main "$@"

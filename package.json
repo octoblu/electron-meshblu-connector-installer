@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -89,6 +89,7 @@
   },
   "dependencies": {
     "async": "^1.5.2",
+    "cross-spawn-async": "^2.2.2",
     "css-modules-require-hook": "^4.0.0",
     "electron-debug": "^0.6.0",
     "font-awesome": "^4.6.1",
