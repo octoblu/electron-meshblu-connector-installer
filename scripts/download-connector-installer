@@ -13,7 +13,8 @@ download_installer(){
   if [ "$platform" == "darwin" ]; then
     ext="dmg"
   fi
-  local download_url="https://meshblu-connector.octoblu.com/apps/installer/v1.1.5/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local base_url="https://github.com/octoblu/electron-meshblu-connector-installer"
+  local download_url="${base_url}/releases/download/v3.0.1/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
   local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
   echo "* downloading... $download_url"
   echo "* to $output_file"
@@ -38,7 +39,7 @@ generate_otp(){
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
     \"tag\": \"v3.0.8\", \
     \"dependencyManagerVersion\": \"v1.0.6\", \
-    \"connectorInstallerVersion\": \"v6.0.0\", \
+    \"connectorInstallerVersion\": \"v6.0.1\", \
     \"deps\": { \
       \"node\": \"v5.5.0\", \
       \"npm\": \"v3.3.12\", \

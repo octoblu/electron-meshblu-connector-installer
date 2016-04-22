@@ -24,7 +24,7 @@ export function fakeExchange({ key }, callback) {
       githubSlug: 'octoblu/meshblu-connector-say-hello',
       tag: 'v3.0.8',
       dependencyManagerVersion: 'v1.0.6',
-      connectorInstallerVersion: 'v6.0.0'
+      connectorInstallerVersion: 'v6.0.1'
     }
   });
 }
