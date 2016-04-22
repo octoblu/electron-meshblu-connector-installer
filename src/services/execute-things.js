@@ -38,7 +38,7 @@ class ExecuteThings {
 
   installConnector(callback) {
     const { binPath, uuid, token, connector, downloadURI } = this.config;
-    const executable = this.getExecutable('meshblu-connector-installer');
+    const executable = this.getExecutable('meshblu-connector-assembler');
     const args = [
       '--connector',
       connector,

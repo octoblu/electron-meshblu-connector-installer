@@ -22,9 +22,9 @@ export function fakeExchange({ key }, callback) {
       legacy: false,
       connector: 'say-hello',
       githubSlug: 'octoblu/meshblu-connector-say-hello',
-      tag: 'v3.0.8',
-      dependencyManagerVersion: 'v1.0.6',
-      connectorInstallerVersion: 'v6.0.1'
+      tag: 'v3.0.9',
+      dependencyManagerVersion: 'v1.0.7',
+      connectorAssemblerVersion: 'v7.0.0'
     }
   });
 }

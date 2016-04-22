@@ -79,7 +79,11 @@ class InstallerInfo {
   }
 
   generateDownloadURI({ githubSlug, tag, connector, platform }) {
-    return `https://github.com/${githubSlug}/releases/download/${tag}/${connector}-${platform}.tar.gz`
+    let ext = "tar.gz";
+    if(process.platform === "win32") {
+      ext = "zip";
+    }
+    return `https://github.com/${githubSlug}/releases/download/${tag}/${connector}-${platform}.${ext}`
   }
 
   getConfig({ key }, response) {
@@ -90,7 +94,7 @@ class InstallerInfo {
       githubSlug,
       tag,
       dependencyManagerVersion,
-      connectorInstallerVersion
+      connectorAssemblerVersion
     } = metadata;
 
     const platform = this.getPlatform();
@@ -103,11 +107,11 @@ class InstallerInfo {
     }, metadata.deps);
 
     const versions = _.extend({
-      dependencyManagerVersion: 'latest',
-      connectorInstallerVersion: 'latest'
+      dependencyManagerVersion: 'v1.0.7',
+      connectorAssemblerVersion: 'v7.0.0'
     }, {
       dependencyManagerVersion,
-      connectorInstallerVersion,
+      connectorAssemblerVersion,
     });
 
     const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform })

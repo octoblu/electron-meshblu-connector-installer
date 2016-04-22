@@ -16,9 +16,9 @@ generate_otp(){
     \"legacy\": false, \
     \"connector\": \"$connector\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
-    \"tag\": \"v3.0.8\", \
-    \"dependencyManagerVersion\": \"v1.0.6\", \
-    \"connectorInstallerVersion\": \"v6.0.1\", \
+    \"tag\": \"v3.0.9\", \
+    \"dependencyManagerVersion\": \"v1.0.7\", \
+    \"connectorAssemblerVersion\": \"v7.0.0\", \
     \"deps\": { \
       \"node\": \"v5.5.0\", \
       \"npm\": \"v3.3.12\", \

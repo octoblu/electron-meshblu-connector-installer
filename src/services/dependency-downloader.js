@@ -15,10 +15,12 @@ class DependencyDownloader {
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
       this.emitDebug(`Downloading dependencies`)
-      const { connectorInstallerVersion, dependencyManagerVersion } = this.config.versions;
+      const { connectorAssemblerVersion, dependencyManagerVersion } = this.config.versions;
       async.series([
-        async.apply(this.download, 'meshblu-connector-installer', connectorInstallerVersion),
+        async.apply(this.download, 'meshblu-connector-assembler', connectorAssemblerVersion),
+        async.apply(this.makeExecutable, 'meshblu-connector-assembler'),
         async.apply(this.download, 'meshblu-connector-dependency-manager', dependencyManagerVersion),
+        async.apply(this.makeExecutable, 'meshblu-connector-assembler'),
       ], callback);
     });
   }
@@ -37,11 +39,23 @@ class DependencyDownloader {
       });
   }
 
+  makeExecutable = (fileName, callback) => {
+    const { platform } = process;
+    if (platform === "win32") return callback();
+    const filePath = this.getFullFilePath(fileName);
+    fs.chmod(filePath, '755', callback);
+  }
+
   getWriteStream(fileName) {
+    const filePath = this.getFullFilePath(fileName);
+    this.emitDebug(`Downloading to ${filePath}`);
+    return fs.createWriteStream(filePath);
+  }
+
+  getFullFilePath(fileName) {
     const { binPath } = this.config;
     const ext = process.platform === 'win32' ? '.exe' : '';
-    this.emitDebug(`Downloading to ${fileName}${ext}`)
-    return fs.createWriteStream(path.join(binPath, `${fileName}${ext}`));
+    return path.join(binPath, `${fileName}${ext}`);
   }
 
   getURL(fileName, tag) {
