@@ -37,22 +37,13 @@ pushd "$build_dir"
 popd
 
 echo "### packaging..."
-$dpl_s3="$project_dir\dpl_s3"
+$dpl_github="$project_dir\dpl_github"
 
-if(!(test-path "$dpl_s3\installer\latest")) {
-  echo "### creating $dpl_s3\installer\latest"
-  mkdir "$dpl_s3\installer\latest" | Out-Null
+if(!(test-path "$dpl_github")) {
+  mkdir "$dpl_github" | Out-Null
 }
 
-if(!(test-path "$dpl_s3\installer\$tag")) {
-  echo "### creating $dpl_s3\installer\$tag"
-  mkdir "$dpl_s3\installer\$tag" | Out-Null
-}
-
-echo "### copying to tag"
-Copy-Item "$build_dir\$zip_name" "$dpl_s3\installer\$tag\$zip_name" -Force
-
-echo "### copying to latest"
-Copy-Item "$build_dir\$zip_name" "$dpl_s3\installer\latest\$zip_name" -Force
+echo "### copying to dpl_github"
+Copy-Item "$build_dir\$zip_name" "$dpl_github\$zip_name" -Force
 
 echo "### done"

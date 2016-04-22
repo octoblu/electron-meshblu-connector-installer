@@ -41,18 +41,15 @@ script:
 - npm run build
 before_deploy:
 - "./deploy/build"
-- "./deploy/package"
 - if [ "$TRAVIS_OS_NAME" == "linux" -a "$MAIN_BUILD" == "true" ]; then export NPM_PUBLISH=true; fi
 deploy:
-- provider: s3
-  access_key_id: AKIAJH2D5IPIRHYJT5IA
-  secret_access_key:
-    secure: ZMKMxvhA8x3WFSabPSNVy9FwTeBrM9Zgu+qpw4iJIjlPhzBThEc+0eZ8UPvaGegHAYd9oMeMwchMA0XfjKBAtgrhz9r+qEirFVBCK33jToGDKAo+OC7I+k2hnfiqVFPZUIGBqbPKHT9YLiI+RwmX0tO8J5VBv68ywcIUiG/5mjV+DL4oieWewWI/8iCrUTvhxWItnFdmClrFYm7KWXRnsjZCZCKB+gOWi0Kc/oTkkqMVuyWYlEV4t8hBdJv1mSyLP43ciXu6/fWMxk/shDNKU+Dcch2KCu6CziNwPTphsbH0VuZyFE5s0gSjRVnMYXPMYztNLXepInG270R6ZyZWtgM9Du0zAqyMJzpNw6XSJzE0TYTwLibcPZeKKFHl5kzwcZYXBe3LLkN7KAQIlpvBZ8Rd0f5rUXMiKedDj8pQhS++SPphC63jV+V+DAnpG0juTdVC1gwrNOimScCY2nKVHQQyeOlFIS1s3ARH7BCQ9MZWR7y1S9qt09M6Dx8o6ROmQRPVx2RZmOhR2KQWo9pV5Duh+/lxfYJYtaAm7sR3lOQL12t6T7bqZT610W0UBnkD7pvkxYCjN7QVtncd39ZK7AslXrmW2ml/VZV8T6s2rJdhzaHoqpeBKrubqBFU7mfZ7NKB7mXUYucRet8+PGYEtsBarzWMb7X6RfAdlGiVhFw=
-  bucket: meshblu-connector
-  upload-dir: apps
-  region: us-west-2
+- provider: releases
+  api_key:
+    secure: "nVIKNoMTbyHktn7wzEcjBm0GHtutZjZm7CbXNqJxNgYD+URdr0GX6j92nGtpOXhp1AN09iTNhrkRvpjFYLMy+B8zGFzmhQj1gIfN2g8U4H+tUxiKWON3B7VEh20s9iAPxWw5UD7PNhzBqoI8MjnDSzzdSzNPE9bGCnys0pl+wUvG+mKoOfM0hyUHmpyWEFVQJEmSIh8FC6EV+fyG2YR/TRdsTIrQDa87/0oEh0XZQJz8YZK2MZo5rBXL7Yse2GefYEnK0jE1Xu7xIi9dTnCcxD1SqjSjJ1xuZ7S5HytWqociAPzDQ1/85eo+F7PS3Wxvl8ac7I58UVoNcca671qRJ4vYOvPZyx9OgSvNTHmvkQds0l/MZY3TAyerDFp87a9PhLXk/O4/rtP/5dFxIhznOidCyxOjb85Ytms3Ns2BG7/S5vUkE9CRWqbL3WkLEmzYryo8uMyuUqxyFGC4BiOUHNKy4NJZBwBti1iey+JHkWwplchGIKB6x6/pBwvVEzyI3AvpA2cmQq44SXE1zjJeU3oI7QxAmRcykBlxzBHwBQO244kTHfKgVkuhKZ5FaDN6kkOkT2X/SOU5ZLFG0iqPZW6o+Jq4yIKWwbynIImPZ87NzaSxh9Agqg5s3qvoMFsX1qNFWFI54QbK2bhLY+lTTnmRwvrrW6UMXvfzcPuxawg="
+  file_glob: true
+  file:
+  - "release/MeshbluConnectorInstaller*"
   skip_cleanup: true
-  local-dir: dpl_s3
   on:
     tags: true
 - provider: npm
