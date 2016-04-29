@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -102,7 +102,7 @@
     "react-router": "^2.0.1",
     "request": "~2.65.0",
     "source-map-support": "^0.4.0",
-    "zooid-ui": "^4.0.3"
+    "zooid-ui": "^5.0.1"
   },
   "devEngines": {
     "node": "4.x || 5.x",

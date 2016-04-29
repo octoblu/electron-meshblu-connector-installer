@@ -9,7 +9,7 @@ export default class Home extends Component {
         <div className="Home">
           <h2>Meshblu Connector Installer</h2>
           <div className="Home--actions">
-            <Link to="/install" className="Action-Button">Begin Install</Link>
+            <Link to="/install" className="Button Button--hollow-approve">Begin Install</Link>
           </div>
         </div>
       </div>

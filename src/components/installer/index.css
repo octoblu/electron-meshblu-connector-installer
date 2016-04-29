@@ -46,7 +46,7 @@
 }
 
 .Installer--done {
-  font-size: 2rem;
+  font-size: 2rem !important;
   border: 2px solid #28B78D;
   padding: 0.5rem 1rem;
   width: 35%;
@@ -65,5 +65,5 @@
 }
 
 .ProgressBar-completed {
-  background: #28B78D !important;
+  /*background: #28B78D !important;*/
 }

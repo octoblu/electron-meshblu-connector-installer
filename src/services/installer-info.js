@@ -2,6 +2,15 @@ import _ from 'lodash';
 import { darwinGetAppName } from './installer-info-darwin';
 import { windowsGetAppName } from './installer-info-windows';
 import { exchange, fakeExchange } from './otp-service';
+import {
+  RUN_LEGACY_VERSION,
+  NODE_VERSION,
+  NPM_VERSION,
+  NSSM_VERSION,
+  DEPENDENCY_MANAGER_VERSION,
+  CONNECTOR_ASSEMBER_VERSION,
+} from '../config/default-versions'
+
 import path from 'path';
 
 class InstallerInfo {
@@ -78,10 +87,13 @@ class InstallerInfo {
     return path.join(process.env.HOME, '.octoblu', 'bin');
   }
 
-  generateDownloadURI({ githubSlug, tag, connector, platform }) {
+  generateDownloadURI({ githubSlug, tag, connector, platform, legacy }) {
     let ext = "tar.gz";
     if(process.platform === "win32") {
       ext = "zip";
+    }
+    if(legacy) {
+      return `https://github.com/octoblu/meshblu-connector-run-legacy/releases/download/${RUN_LEGACY_VERSION}/run-legacy-${platform}.${ext}`
     }
     return `https://github.com/${githubSlug}/releases/download/${tag}/${connector}-${platform}.${ext}`
   }
@@ -100,21 +112,21 @@ class InstallerInfo {
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
 
-    const deps = _.extend({
-      node: 'v5.5.0',
-      npm: 'v3.3.12',
-      nssm: '2.24',
+    const deps = _.defaults({
+      node: NODE_VERSION,
+      npm: NPM_VERSION,
+      nssm: NSSM_VERSION,
     }, metadata.deps);
 
-    const versions = _.extend({
-      dependencyManagerVersion: 'v1.0.7',
-      connectorAssemblerVersion: 'v7.0.0'
+    const versions = _.defaults({
+      dependencyManagerVersion: DEPENDENCY_MANAGER_VERSION,
+      connectorAssemblerVersion: CONNECTOR_ASSEMBER_VERSION,
     }, {
       dependencyManagerVersion,
       connectorAssemblerVersion,
     });
 
-    const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform })
+    const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform, legacy })
 
     return {
       key,
@@ -126,7 +138,7 @@ class InstallerInfo {
       platform,
       binPath,
       versions,
-      deps
+      deps,
     };
   }
 }

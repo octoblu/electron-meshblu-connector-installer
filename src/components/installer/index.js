@@ -10,8 +10,7 @@ import {
   Spinner,
   ProgressBar,
   Button,
-  EmptyState,
-  Icon
+  EmptyState
 } from 'zooid-ui';
 
 const MAX_STEPS = 5;
@@ -55,11 +54,15 @@ class Installer extends Component {
     this.setState({ showDebug: !this.state.showDebug });
   }
 
+  exitApp = () => {
+    console.log('exitApp');
+  }
+
   getDebug = () => {
     const { config, lines, showDebug } = this.state;
     if (!showDebug) return (
       <div onClick={this.toggleDebug}
-        className="Action-Button Installer--button">
+        className="Button Button--hollow-neutral Installer--button">
         <i className="fa fa-bug"></i> Show Debug
       </div>
     );
@@ -91,7 +94,7 @@ class Installer extends Component {
 
     if (error) return this.renderContent(<ErrorState message={error.message} />);
     if (configLoading) return this.renderContent(<Spinner size="large"/>);
-    if (done) return this.renderContent(<div className="Action-Button Installer--done">Success! Exit app.</div>);
+    if (done) return this.renderContent(<Button className="Installer--done" kind="hollow-approve" onClick={this.exitApp}>Success! Please Close.</Button>);
 
     const { config, message, step } = this.state
     const { connector } = config;
