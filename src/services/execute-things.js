@@ -77,8 +77,8 @@ class ExecuteThings {
   }
 
   getLegacyArg() {
-    const legacy = this.config;
-    if (legacy === true) {
+    const { legacy } = this.config;
+    if (legacy) {
       return '--legacy';
     }
     return '';

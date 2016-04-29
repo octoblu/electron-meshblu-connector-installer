@@ -1,18 +1,27 @@
 import { exec } from 'child_process';
+import fs from 'fs';
 import _ from 'lodash';
 
 export function darwinGetAppName({ launchPath }, callback) {
   const volumePath = getVolumePath({ launchPath });
-  exec('hdiutil info', { cwd: volumePath }, (error, stdout) => {
-    if (error) {
-      return callback(error);
+  fs.exists(volumePath, (exists) => {
+    if(!exists){
+      if(process.env.NODE_ENV === 'development'){
+        return callback(null, 'something')
+      }
+      return callback(new Error('Volume Doesn\'t Exist'));
     }
-    const imagePath = getImagePath(stdout, launchPath);
-    if(!imagePath) return callback(new Error('Unable to get imagePath'))
-    const appName = getAppNameFromImagePath(imagePath);
-    if(!appName) return callback(new Error('Unable to get appName'))
-    callback(null, appName);
-  });
+    exec('hdiutil info', { cwd: volumePath }, (error, stdout) => {
+      if (error) {
+        return callback(error);
+      }
+      const imagePath = getImagePath(stdout, launchPath);
+      if(!imagePath) return callback(new Error('Unable to get imagePath'))
+      const appName = getAppNameFromImagePath(imagePath);
+      if(!appName) return callback(new Error('Unable to get appName'))
+      callback(null, appName);
+    });
+  })
 }
 
 function getVolumePath({ launchPath }) {

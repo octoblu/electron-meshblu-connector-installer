@@ -16,12 +16,11 @@ export function exchange({ key }, callback) {
 
 export function fakeExchange({ key }, callback) {
   callback(null, {
-    uuid: 'c044b376-4bfe-4d7b-8221-69f89e3ccfc1',
-    token: '63cce0015a8308cf74e9eab02aeb275918adbd90',
+    uuid: 'c7097087-bed4-4272-8692-3b07277ec281',
+    token: 'a7702204e157e51fd63c924a7b77db00121a0d5d',
     metadata: {
-      legacy: false,
-      connector: 'say-hello',
-      githubSlug: 'octoblu/meshblu-connector-say-hello',
+      legacy: true,
+      connector: 'shell',
       tag: 'v3.0.10',
     }
   });
