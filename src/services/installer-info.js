@@ -115,7 +115,6 @@ class InstallerInfo {
     const deps = _.defaults({
       node: NODE_VERSION,
       npm: NPM_VERSION,
-      nssm: NSSM_VERSION,
     }, metadata.deps);
 
     const versions = _.defaults({

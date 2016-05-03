@@ -1,7 +1,8 @@
 #!/bin/bash
 
 print_usage(){
-  echo "Usage: create-key <connector-name>"
+  echo "Usage: create-test-key"
+  echo "** This will create a say-hello test OTP **"
 }
 
 get_meshblu_config(){
@@ -11,19 +12,11 @@ get_meshblu_config(){
 generate_otp(){
   local uuid="$1"
   local token="$2"
-  local connector="$3"
   local json="{ \
     \"legacy\": false, \
-    \"connector\": \"$connector\", \
+    \"connector\": \"say-hello\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
-    \"tag\": \"v3.0.10\", \
-    \"dependencyManagerVersion\": \"v1.0.7\", \
-    \"connectorAssemblerVersion\": \"v7.0.0\", \
-    \"deps\": { \
-      \"node\": \"v5.5.0\", \
-      \"npm\": \"v3.3.12\", \
-      \"nssm\": \"2.24\" \
-    } \
+    \"tag\": \"v3.0.13\"
   }"
 
   curl -XPOST \
@@ -36,8 +29,7 @@ generate_otp(){
 get_key(){
   local uuid="$1"
   local token="$2"
-  local connector="$3"
-  local generateResult="$(generate_otp "$uuid" "$token" "$connector")"
+  local generateResult="$(generate_otp "$uuid" "$token")"
   local key="$(get_value_from_json "$generateResult" "key")"
   echo "$key"
 }
@@ -54,19 +46,12 @@ main(){
     print_usage
     exit 1
   fi
-  local connector="$1"
-
-  if [ -z "$connector" ]; then
-    print_usage
-    echo "Missing connector"
-    exit 1
-  fi
 
   local meshbluConfig="$(get_meshblu_config)"
   local uuid="$(get_value_from_json "$meshbluConfig" "uuid")"
   local token="$(get_value_from_json "$meshbluConfig" "token")"
 
-  get_key "$uuid" "$token" "$connector"
+  get_key "$uuid" "$token"
 }
 
 main "$@"

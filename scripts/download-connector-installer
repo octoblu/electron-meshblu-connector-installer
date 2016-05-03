@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print_usage(){
-  echo "Usage: build-connector-installer <connector-name> <platform> <arch> <download-dir>"
+  echo "Usage: build-connector-installer <platform> <arch> <download-dir>"
 }
 
 download_installer(){
@@ -25,29 +25,14 @@ download_installer(){
   fi
 }
 
-rename_app_file(){
-  local appFile="$1"
-  local connector="$2"
-  local key="$3"
-  local appPath="$(dirname "$appFile")"
-  cp -r "$appFile" "${appPath}/${connector}-${key}.app"
-}
-
 main(){
   if [ "$1" == "--help" -o "$1" == "-h" -o "$1" == "help" -o "$1" == "-?" ]; then
     print_usage
     exit 1
   fi
-  local connector="$1"
   local platform="$2"
   local arch="$3"
   local output_dir="$4"
-
-  if [ -z "$connector" ]; then
-    print_usage
-    echo "Missing connector"
-    exit 1
-  fi
 
   if [ -z "$platform" ]; then
     print_usage
@@ -68,7 +53,7 @@ main(){
   fi
 
   echo "* generating key"
-  local key="$(./scripts/create-key "$connector")"
+  local key="$(./scripts/create-test-key)"
   echo "* key: $key"
 
   echo "* download app"

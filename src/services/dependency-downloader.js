@@ -2,6 +2,9 @@ import request from 'request';
 import fs from 'fs-extra';
 import async from 'async';
 import path from 'path';
+import {
+  DOWNLOAD_MAP
+} from '../config/download-map'
 
 class DependencyDownloader {
   constructor({ emitDebug, config }) {
@@ -17,16 +20,16 @@ class DependencyDownloader {
       this.emitDebug(`Downloading dependencies`)
       const { connectorAssemblerVersion, dependencyManagerVersion } = this.config.versions;
       async.series([
-        async.apply(this.download, 'meshblu-connector-assembler', connectorAssemblerVersion),
-        async.apply(this.makeExecutable, 'meshblu-connector-assembler'),
-        async.apply(this.download, 'meshblu-connector-dependency-manager', dependencyManagerVersion),
-        async.apply(this.makeExecutable, 'meshblu-connector-assembler'),
+        async.apply(this.download, DOWNLOAD_MAP.assembler, connectorAssemblerVersion),
+        async.apply(this.makeExecutable, DOWNLOAD_MAP.assembler),
+        async.apply(this.download, DOWNLOAD_MAP.dependencyManager, dependencyManagerVersion),
+        async.apply(this.makeExecutable, DOWNLOAD_MAP.dependencyManager),
       ], callback);
     });
   }
 
-  download = (fileName, tag, callback) => {
-    const uri = this.getURL(fileName, tag);
+  download = ({ projectName, fileName }, tag, callback) => {
+    const uri = this.getURL({ projectName }, tag);
     this.emitDebug(`Downloading ${uri}...`)
     const stream = request.get(uri)
       .on('error', callback)
@@ -35,32 +38,32 @@ class DependencyDownloader {
           this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
           return callback(new Error('Invalid Dependency Download'))
         }
-        stream.on('end', callback).pipe(this.getWriteStream(fileName))
+        stream.on('end', callback).pipe(this.getWriteStream({ fileName }))
       });
   }
 
-  makeExecutable = (fileName, callback) => {
+  makeExecutable = ({ fileName }, callback) => {
     const { platform } = process;
     if (platform === "win32") return callback();
-    const filePath = this.getFullFilePath(fileName);
+    const filePath = this.getFullFilePath({ fileName });
     fs.chmod(filePath, '755', callback);
   }
 
-  getWriteStream(fileName) {
-    const filePath = this.getFullFilePath(fileName);
+  getWriteStream({ fileName }) {
+    const filePath = this.getFullFilePath({ fileName });
     this.emitDebug(`Downloading to ${filePath}`);
     return fs.createWriteStream(filePath);
   }
 
-  getFullFilePath(fileName) {
+  getFullFilePath({ fileName }) {
     const { binPath } = this.config;
     const ext = process.platform === 'win32' ? '.exe' : '';
     return path.join(binPath, `${fileName}${ext}`);
   }
 
-  getURL(fileName, tag) {
+  getURL({ projectName }, tag) {
     const { platform } = this.config;
-    return `https://github.com/octoblu/go-${fileName}/releases/download/${tag}/${fileName}-${platform}`
+    return `https://github.com/octoblu/go-${projectName}/releases/download/${tag}/${projectName}-${platform}`
   }
 }
 

@@ -2,6 +2,10 @@ import async from 'async';
 import path from 'path';
 import Execute from './execute';
 
+import {
+  DOWNLOAD_MAP
+} from '../config/download-map'
+
 class ExecuteThings {
   constructor({ emitDebug, config }) {
     this.emitDebug = emitDebug;
@@ -22,7 +26,7 @@ class ExecuteThings {
       return callback();
     }
     const { binPath, } = this.config;
-    const executable = this.getExecutable('meshblu-connector-dependency-manager');
+    const executable = this.getExecutable(DOWNLOAD_MAP.dependencyManager.fileName);
     const args = [
       '--type',
       type,
@@ -38,7 +42,7 @@ class ExecuteThings {
 
   installConnector(callback) {
     const { binPath, uuid, token, connector, downloadURI } = this.config;
-    const executable = this.getExecutable('meshblu-connector-assembler');
+    const executable = this.getExecutable(DOWNLOAD_MAP.assembler.fileName);
     const args = [
       '--connector',
       connector,
@@ -59,13 +63,13 @@ class ExecuteThings {
 
   shouldInstallDep(type) {
     const { platform } = process;
-    if(type === "nssm" && platform === "win32") {
-      return true
+    if(type === "nssm") {
+      return false;
     }
-    if(type === "npm" && platform === "win32") {
-      return true
+    if(type === "npm" && platform !== "win32") {
+      return false;
     }
-    return false
+    return true;
   }
 
   getExecutable(filename) {
