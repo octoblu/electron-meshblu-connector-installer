@@ -41,9 +41,18 @@ class ExecuteThings {
   }
 
   installConnector(callback) {
-    const { binPath, uuid, token, connector, downloadURI } = this.config;
+    const {
+      binPath,
+      uuid,
+      token,
+      connector,
+      downloadURI,
+      versions,
+    } = this.config;
+    const { ignitionVersion } = versions;
+
     const executable = this.getExecutable(DOWNLOAD_MAP.assembler.fileName);
-    const args = [
+    let args = [
       '--connector',
       connector,
       '--uuid',
@@ -51,9 +60,15 @@ class ExecuteThings {
       '--token',
       token,
       '--download-uri',
-      downloadURI,
-      this.getLegacyArg()
+      downloadURI
     ];
+    if (ignitionVersion != null) {
+      args.push('--ignition')
+      args.push(ignitionVersion)
+    }
+    if (legacy) {
+      args.push('--legacy')
+    }
     this.emitDebug(`Installing connector ${connector}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("Connector Install Failure"))
@@ -78,14 +93,6 @@ class ExecuteThings {
       ext = '.exe';
     }
     return `.${path.sep}${filename}${ext}`;
-  }
-
-  getLegacyArg() {
-    const { legacy } = this.config;
-    if (legacy) {
-      return '--legacy';
-    }
-    return '';
   }
 }
 

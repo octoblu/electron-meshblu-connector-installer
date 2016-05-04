@@ -22,10 +22,7 @@ class InstallerInfo {
     if (process.platform === 'darwin') {
       return darwinGetAppName(options, callback);
     }
-    if (process.platform === 'win32') {
-      return windowsGetAppName(options, callback);
-    }
-    return callback(new Error(`Invalid platform ${process.platform}`));
+    return windowsGetAppName(options, callback);
   }
 
   exchangeToken = (options, callback) => {
@@ -106,6 +103,7 @@ class InstallerInfo {
       githubSlug,
       tag,
       dependencyManagerVersion,
+      ignitionVersion,
       connectorAssemblerVersion
     } = metadata;
 
@@ -123,6 +121,7 @@ class InstallerInfo {
     }, {
       dependencyManagerVersion,
       connectorAssemblerVersion,
+      ignitionVersion,
     });
 
     const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform, legacy })

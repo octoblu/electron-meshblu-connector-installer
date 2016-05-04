@@ -16,7 +16,7 @@ generate_otp(){
     \"legacy\": false, \
     \"connector\": \"say-hello\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
-    \"tag\": \"v3.0.13\"
+    \"tag\": \"v4.0.0\"
   }"
 
   curl -XPOST \
