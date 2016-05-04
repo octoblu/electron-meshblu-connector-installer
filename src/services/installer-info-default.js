@@ -1,6 +1,6 @@
 import path from 'path'
 
-export function windowsGetAppName({ launchPath }, callback) {
+export function defaultGetAppName({ launchPath }, callback) {
   callback(null, getAppNameFromLaunchPath(launchPath));
 }
 

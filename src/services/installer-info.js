@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { darwinGetAppName } from './installer-info-darwin';
-import { windowsGetAppName } from './installer-info-windows';
+import { windowsGetAppName } from './installer-info-default';
 import { exchange, fakeExchange } from './otp-service';
 import {
   RUN_LEGACY_VERSION,
@@ -22,7 +22,7 @@ class InstallerInfo {
     if (process.platform === 'darwin') {
       return darwinGetAppName(options, callback);
     }
-    return windowsGetAppName(options, callback);
+    return defaultGetAppName(options, callback);
   }
 
   exchangeToken = (options, callback) => {
