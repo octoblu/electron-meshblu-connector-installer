@@ -48,6 +48,7 @@ class ExecuteThings {
       connector,
       downloadURI,
       versions,
+      legacy,
     } = this.config;
     const { ignitionVersion } = versions;
 

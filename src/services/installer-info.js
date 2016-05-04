@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { darwinGetAppName } from './installer-info-darwin';
-import { windowsGetAppName } from './installer-info-default';
+import { defaultGetAppName } from './installer-info-default';
 import { exchange, fakeExchange } from './otp-service';
 import {
   RUN_LEGACY_VERSION,
