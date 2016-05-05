@@ -5,6 +5,7 @@ import './index.css';
 const DebugConfig = ({ config }) => {
   function convertObject(obj, prefix) {
     return _.map(obj, (value, key) => {
+      if(key === 'coreDependencies') return null
       if(_.isPlainObject(value)) {
         return convertObject(value, `${prefix}${key}.`);
       }

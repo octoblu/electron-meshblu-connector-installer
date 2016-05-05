@@ -1,7 +1,8 @@
 import {EventEmitter} from 'events'
 import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
-import ExecuteThings from '../../services/execute-things';
+import InstallDependencies from '../../services/install-dependencies';
+import InstallConnector from '../../services/install-connector';
 import async from 'async'
 
 class InstallerMaster extends EventEmitter {
@@ -36,8 +37,8 @@ class InstallerMaster extends EventEmitter {
 
   installDeps = (done) => {
     this.emit('step', 'Installing dependencies');
-    new ExecuteThings({emitDebug: this.emitDebug, config: this.config})
-      .installDeps((error) => {
+    new InstallDependencies({emitDebug: this.emitDebug, config: this.config})
+      .install((error) => {
         if(error) return this.emit('error', error);
         done()
       });
@@ -45,8 +46,8 @@ class InstallerMaster extends EventEmitter {
 
   installConnector = (done) => {
     this.emit('step', 'Installing Connector')
-    new ExecuteThings({emitDebug: this.emitDebug, config: this.config})
-      .installConnector((error) => {
+    new InstallConnector({emitDebug: this.emitDebug, config: this.config})
+      .install((error) => {
         if(error) return this.emit('error', error);
         done()
       });

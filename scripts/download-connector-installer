@@ -14,7 +14,7 @@ download_installer(){
     ext="dmg"
   fi
   local base_url="https://github.com/octoblu/electron-meshblu-connector-installer"
-  local download_url="${base_url}/releases/download/v4.0.0/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
+  local download_url="${base_url}/releases/download/v5.0.0/MeshbluConnectorInstaller-${platform}-${arch}.${ext}"
   local output_file="$output_dir/MeshbluConnectorInstaller-${key}.${ext}"
   echo "* downloading... $download_url"
   echo "* to $output_file"

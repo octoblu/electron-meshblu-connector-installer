@@ -9,7 +9,11 @@ import {
   NSSM_VERSION,
   DEPENDENCY_MANAGER_VERSION,
   CONNECTOR_ASSEMBER_VERSION,
-} from '../config/default-versions'
+} from '../config/default-versions';
+
+import {
+  DOWNLOAD_MAP
+} from '../config/download-map';
 
 import path from 'path';
 
@@ -124,6 +128,12 @@ class InstallerInfo {
       ignitionVersion,
     });
 
+    let coreDependencies = _.clone(DOWNLOAD_MAP)
+    coreDependencies.assembler.tag = versions.connectorAssemblerVersion
+    coreDependencies.assembler.fileName += `-${versions.connectorAssemblerVersion}`
+    coreDependencies.dependencyManager.tag = versions.dependencyManagerVersion
+    coreDependencies.dependencyManager.fileName += `-${versions.dependencyManagerVersion}`
+
     const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform, legacy })
 
     return {
@@ -137,6 +147,7 @@ class InstallerInfo {
       binPath,
       versions,
       deps,
+      coreDependencies
     };
   }
 }

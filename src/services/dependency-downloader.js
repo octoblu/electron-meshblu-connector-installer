@@ -2,9 +2,6 @@ import request from 'request';
 import fs from 'fs-extra';
 import async from 'async';
 import path from 'path';
-import {
-  DOWNLOAD_MAP
-} from '../config/download-map'
 
 class DependencyDownloader {
   constructor({ emitDebug, config }) {
@@ -18,50 +15,54 @@ class DependencyDownloader {
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
       this.emitDebug(`Downloading dependencies`)
-      const { connectorAssemblerVersion, dependencyManagerVersion } = this.config.versions;
+      const { assembler, dependencyManager } = this.config.coreDependencies;
       async.series([
-        async.apply(this.download, DOWNLOAD_MAP.assembler, connectorAssemblerVersion),
-        async.apply(this.makeExecutable, DOWNLOAD_MAP.assembler),
-        async.apply(this.download, DOWNLOAD_MAP.dependencyManager, dependencyManagerVersion),
-        async.apply(this.makeExecutable, DOWNLOAD_MAP.dependencyManager),
+        async.apply(this.download, assembler),
+        async.apply(this.makeExecutable, assembler),
+        async.apply(this.download, dependencyManager),
+        async.apply(this.makeExecutable, dependencyManager),
       ], callback);
     });
   }
 
-  download = ({ projectName, fileName }, tag, callback) => {
-    const uri = this.getURL({ projectName }, tag);
-    this.emitDebug(`Downloading ${uri}...`)
-    const stream = request.get(uri)
-      .on('error', callback)
-      .on('response', (response) => {
-        if(response.statusCode >= 400){
-          this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
-          return callback(new Error('Invalid Dependency Download'))
-        }
-        stream.on('end', callback).pipe(this.getWriteStream({ fileName }))
-      });
+  download = ({ projectName, fileName, tag }, callback) => {
+    const filePath = this.getFullFilePath({ fileName, tag });
+    fs.exists(filePath, (exists) => {
+      if (exists) return callback();
+      const uri = this.getURL({ projectName, tag });
+      this.emitDebug(`Downloading ${uri}...`)
+      const stream = request.get(uri)
+        .on('error', callback)
+        .on('response', (response) => {
+          if(response.statusCode >= 400){
+            this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
+            return callback(new Error('Invalid Dependency Download'))
+          }
+          stream.on('end', callback).pipe(this.getWriteStream({ fileName, tag }))
+        });
+    });
   }
 
-  makeExecutable = ({ fileName }, callback) => {
+  makeExecutable = ({ fileName, tag }, callback) => {
     const { platform } = process;
     if (platform === "win32") return callback();
-    const filePath = this.getFullFilePath({ fileName });
+    const filePath = this.getFullFilePath({ fileName, tag });
     fs.chmod(filePath, '755', callback);
   }
 
-  getWriteStream({ fileName }) {
-    const filePath = this.getFullFilePath({ fileName });
+  getWriteStream({ fileName, tag }) {
+    const filePath = this.getFullFilePath({ fileName, tag });
     this.emitDebug(`Downloading to ${filePath}`);
     return fs.createWriteStream(filePath);
   }
 
-  getFullFilePath({ fileName }) {
+  getFullFilePath({ fileName, tag }) {
     const { binPath } = this.config;
     const ext = process.platform === 'win32' ? '.exe' : '';
     return path.join(binPath, `${fileName}${ext}`);
   }
 
-  getURL({ projectName }, tag) {
+  getURL({ projectName, tag }) {
     const { platform } = this.config;
     return `https://github.com/octoblu/go-${projectName}/releases/download/${tag}/${projectName}-${platform}`
   }
