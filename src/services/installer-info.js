@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { darwinGetAppName } from './installer-info-darwin';
 import { defaultGetAppName } from './installer-info-default';
-import { exchange, fakeExchange } from './otp-service';
+import { retrieveOTP } from './otp-service';
 import {
   RUN_LEGACY_VERSION,
   NODE_VERSION,
@@ -29,15 +29,6 @@ class InstallerInfo {
     return defaultGetAppName(options, callback);
   }
 
-  exchangeToken = (options, callback) => {
-    if (process.env.NODE_ENV === 'production') {
-      exchange(options, callback);
-      return;
-    }
-    this.emitDebug('Using fake key!');
-    fakeExchange(options, callback);
-  }
-
   getInfo(callback) {
     const launchPath = _.first(process.argv);
     this.getAppName({ launchPath }, (error, appName) => {
@@ -50,7 +41,7 @@ class InstallerInfo {
       const key = this.getKey(appName);
       this.emitDebug(`Found key ${key}`)
       if (!key) return callback(new Error('Invalid Key for Installation'));
-      this.exchangeToken({ key }, (error, response) => {
+      retrieveOTP({ key }, (error, response) => {
         if (error) return callback(new Error('Installer already used. Download a new one.'));
 
         callback(null, this.getConfig({ key }, response));
@@ -74,18 +65,10 @@ class InstallerInfo {
   }
 
   getBinPath() {
-    if (process.platform === 'darwin') {
-      return path.join(
-        process.env.HOME,
-        'Library',
-        'Application Support',
-        'MeshbluConnectors',
-        'bin'
-      );
-    } else if (process.platform === 'win32') {
+    if (process.platform === 'win32') {
       return path.join(process.env.LOCALAPPDATA, 'MeshbluConnectors', 'bin');
     }
-    return path.join(process.env.HOME, '.octoblu', 'bin');
+    return path.join(process.env.HOME, '.octoblu', 'MeshbluConnectors', 'bin');
   }
 
   generateDownloadURI({ githubSlug, tag, connector, platform, legacy }) {

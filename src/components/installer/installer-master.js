@@ -3,6 +3,8 @@ import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
 import InstallDependencies from '../../services/install-dependencies';
 import InstallConnector from '../../services/install-connector';
+import { expireOTP } from '../../services/otp-service';
+
 import async from 'async'
 
 class InstallerMaster extends EventEmitter {
@@ -53,12 +55,18 @@ class InstallerMaster extends EventEmitter {
       });
   }
 
+  expireOTP = (done) => {
+    const { key } = this.config;
+    expireOTP({ key }, done);
+  }
+
   start(done) {
     async.series([
       this.getInfo,
       this.downloadDeps,
       this.installDeps,
-      this.installConnector
+      this.installConnector,
+      this.expireOTP,
     ], (error) => {
       if(error) return this.emit('error', error)
       done()
