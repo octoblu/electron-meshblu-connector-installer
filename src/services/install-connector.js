@@ -40,7 +40,7 @@ class InstallConnector {
     }
     this.emitDebug(`Installing connector ${connector}`)
     let method = 'do'
-    if (process.platform === "linux") {
+    if (process.platform !== "darwin") {
       method = 'doSudo'
     }
     this.execute[method]({ executable, args, cwd: binPath }, (error) => {
