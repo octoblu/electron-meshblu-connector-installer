@@ -14,9 +14,11 @@ class InstallConnector {
       uuid,
       token,
       connector,
-      downloadURI,
       versions,
       legacy,
+      legacyTag,
+      githubSlug,
+      tag,
     } = this.config;
     const { ignitionVersion } = versions;
     const { assembler } = this.config.coreDependencies;
@@ -28,8 +30,10 @@ class InstallConnector {
       uuid,
       '--token',
       token,
-      '--download-uri',
-      downloadURI
+      '--github-slug',
+      githubSlug,
+      '--tag',
+      tag,
     ];
     if (ignitionVersion != null) {
       args.push('--ignition')
@@ -37,6 +41,7 @@ class InstallConnector {
     }
     if (legacy) {
       args.push('--legacy')
+      args.push(legacyTag)
     }
     this.emitDebug(`Installing connector ${connector}`)
     let method = 'do'

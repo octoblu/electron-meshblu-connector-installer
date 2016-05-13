@@ -71,28 +71,22 @@ class InstallerInfo {
     return path.join(process.env.HOME, '.octoblu', 'MeshbluConnectors', 'bin');
   }
 
-  generateDownloadURI({ githubSlug, tag, connector, platform, legacy }) {
-    let ext = "tar.gz";
-    if(process.platform === "win32") {
-      ext = "zip";
-    }
-    if(legacy) {
-      return `https://github.com/octoblu/meshblu-connector-run-legacy/releases/download/${RUN_LEGACY_VERSION}/run-legacy-${platform}.${ext}`
-    }
-    return `https://github.com/${githubSlug}/releases/download/${tag}/${connector}-${platform}.${ext}`
-  }
-
   getConfig({ key }, response) {
     const { uuid, token, metadata } = response;
     const {
       legacy,
       connector,
-      githubSlug,
       tag,
       dependencyManagerVersion,
       ignitionVersion,
       connectorAssemblerVersion
     } = metadata;
+
+    let githubSlug = metadata.githubSlug;
+    let legacyTag = RUN_LEGACY_VERSION
+    if(legacy){
+      githubSlug = 'octoblu/meshblu-connector-run-legacy'
+    }
 
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
@@ -117,15 +111,15 @@ class InstallerInfo {
     coreDependencies.dependencyManager.tag = versions.dependencyManagerVersion
     coreDependencies.dependencyManager.fileName += `-${versions.dependencyManagerVersion}`
 
-    const downloadURI = this.generateDownloadURI({ githubSlug, tag, connector, platform, legacy })
-
     return {
       key,
       uuid,
       token,
       connector,
+      githubSlug,
+      tag,
       legacy,
-      downloadURI,
+      legacyTag,
       platform,
       binPath,
       versions,
