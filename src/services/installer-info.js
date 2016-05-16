@@ -8,7 +8,7 @@ import {
   NPM_VERSION,
   NSSM_VERSION,
   DEPENDENCY_MANAGER_VERSION,
-  CONNECTOR_ASSEMBER_VERSION,
+  CONNECTOR_ASSEMBLER_VERSION,
 } from '../config/default-versions';
 
 import {
@@ -98,7 +98,7 @@ class InstallerInfo {
 
     const versions = _.defaults({
       dependencyManagerVersion: DEPENDENCY_MANAGER_VERSION,
-      connectorAssemblerVersion: CONNECTOR_ASSEMBER_VERSION,
+      connectorAssemblerVersion: CONNECTOR_ASSEMBLER_VERSION,
     }, {
       dependencyManagerVersion,
       connectorAssemblerVersion,
