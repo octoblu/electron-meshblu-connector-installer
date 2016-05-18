@@ -1,6 +1,5 @@
 import spawn from 'cross-spawn-async';
 import path from 'path';
-import sudo from 'electron-sudo';
 
 export default class Execute {
   constructor({ emitDebug }) {
@@ -30,34 +29,6 @@ export default class Execute {
       this.emitDebug(`${executable} exited with error ${error.message}`);
       callback(error);
     });
-  }
-
-  doSudo({ executable, args, cwd }, callback) {
-    const options = {
-      name: 'Meshblu Connector Installer',
-      process: {
-        options: {
-          cwd,
-        },
-        on: (child) => {
-          child.stdout.on('data', (data) => {
-            this.emitDebug(`stdout: ${data.toString()}`);
-          });
-
-          child.stderr.on('data', (data) => {
-            this.emitDebug(`stderr: ${data.toString()}`);
-          });
-        }
-      }
-    }
-    const command = `${executable} ${args.join(' ')}`
-    sudo.exec(command, options, (error, stdout, stderr) => {
-      if (error) {
-        this.emitDebug(`${executable} exit with error ${error}`);
-        return callback(new Error('Error during installation'))
-      }
-      return callback()
-    })
   }
 
   getFile(filename) {

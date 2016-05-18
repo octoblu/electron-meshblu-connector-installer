@@ -47,7 +47,7 @@ const config = {
     return [autoprefixer];
   },
 
-  target: 'electron-renderer'
+  target: 'electron-renderer',
 };
 
 export default config;

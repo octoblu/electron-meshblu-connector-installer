@@ -44,11 +44,7 @@ class InstallConnector {
       args.push(legacyTag)
     }
     this.emitDebug(`Installing connector ${connector}`)
-    let method = 'do'
-    if (process.platform !== "darwin") {
-      method = 'doSudo'
-    }
-    this.execute[method]({ executable, args, cwd: binPath }, (error) => {
+    this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if(error) return callback(new Error("Connector Install Failure"))
       callback()
     });
