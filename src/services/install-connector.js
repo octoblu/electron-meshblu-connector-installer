@@ -34,11 +34,9 @@ class InstallConnector {
       githubSlug,
       '--tag',
       tag,
+      '--ignition',
+      ignitionVersion,
     ];
-    if (ignitionVersion != null) {
-      args.push('--ignition')
-      args.push(ignitionVersion)
-    }
     if (legacy) {
       args.push('--legacy')
       args.push(legacyTag)

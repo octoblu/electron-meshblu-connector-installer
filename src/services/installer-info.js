@@ -6,9 +6,6 @@ import {
   RUN_LEGACY_VERSION,
   NODE_VERSION,
   NPM_VERSION,
-  NSSM_VERSION,
-  DEPENDENCY_MANAGER_VERSION,
-  CONNECTOR_ASSEMBLER_VERSION,
 } from '../config/default-versions';
 
 import {
@@ -83,7 +80,7 @@ class InstallerInfo {
     } = metadata;
 
     let githubSlug = metadata.githubSlug;
-    let legacyTag = RUN_LEGACY_VERSION
+    let legacyTag = RUN_LEGACY_VERSION;
     if(legacy){
       githubSlug = 'octoblu/meshblu-connector-run-legacy'
     }
@@ -96,14 +93,11 @@ class InstallerInfo {
       npm: NPM_VERSION,
     }, metadata.deps);
 
-    const versions = _.defaults({
-      dependencyManagerVersion: DEPENDENCY_MANAGER_VERSION,
-      connectorAssemblerVersion: CONNECTOR_ASSEMBLER_VERSION,
-    }, {
+    const versions = {
       dependencyManagerVersion,
       connectorAssemblerVersion,
       ignitionVersion,
-    });
+    };
 
     let coreDependencies = _.clone(DOWNLOAD_MAP)
     coreDependencies.assembler.tag = versions.connectorAssemblerVersion

@@ -1,5 +1,6 @@
 import spawn from 'cross-spawn-async';
 import path from 'path';
+import _ from 'lodash';
 
 export default class Execute {
   constructor({ emitDebug }) {
@@ -7,14 +8,17 @@ export default class Execute {
   }
 
   do({ executable, args, cwd }, callback) {
-    const child = spawn(executable, args, {cwd});
+    const env = _.assign(process.env, {
+      DEBUG: 'meshblu-connector-*'
+    })
+    const child = spawn(executable, args, { cwd, env });
 
     child.stdout.on('data', (data) => {
-      this.emitDebug(`stdout: ${data.toString()}`);
+      this.logOutput('stdout', data)
     });
 
     child.stderr.on('data', (data) => {
-      this.emitDebug(`stderr: ${data.toString()}`);
+      this.logOutput('stderr', data)
     });
 
     child.on('close', (code) => {
@@ -29,6 +33,23 @@ export default class Execute {
       this.emitDebug(`${executable} exited with error ${error.message}`);
       callback(error);
     });
+  }
+
+  logOutput(key, ouput) {
+    const str = ouput.toString()
+    const lines = str.split("\n")
+    _.each(lines, (line) => {
+      if(line.indexOf(' - ') > -1) {
+        const debugLine = _.last(line.split(' - '))
+        if(!_.isEmpty(line)) {
+          this.emitDebug(`debug: ${debugLine}`);
+        }
+        return
+      }
+      if(!_.isEmpty(line)) {
+        this.emitDebug(`${key}: ${line}`);
+      }
+    })
   }
 
   getFile(filename) {
