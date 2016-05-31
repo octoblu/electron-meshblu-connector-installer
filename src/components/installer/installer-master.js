@@ -8,8 +8,9 @@ import { expireOTP } from '../../services/otp-service';
 import async from 'async'
 
 class InstallerMaster extends EventEmitter {
-  constructor() {
+  constructor({ key }) {
     super()
+    this.key = key
   }
 
   emitDebug = (debug) => {
@@ -18,8 +19,9 @@ class InstallerMaster extends EventEmitter {
 
   getInfo = (done) => {
     this.emit('step', 'Getting installer information');
+    const key = this.key;
     new InstallerInfo({emitDebug: this.emitDebug})
-      .getInfo((error, config) => {
+      .getInfo({ key }, (error, config) => {
         if(error) return this.emit('error', error);
         this.config = config;
         this.emit('config', config);

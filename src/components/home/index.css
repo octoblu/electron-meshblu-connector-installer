@@ -16,3 +16,20 @@
 .Home--actions {
   margin-top: 2rem;
 }
+
+.Home--change-key {
+  margin-top: 3rem;
+}
+
+.Home--warning-message {
+  color: #CA2329;
+}
+
+.Home--form-field {
+  width: 50%;
+  margin: auto;
+}
+
+.Home--info-action {
+  padding: 1rem;
+}

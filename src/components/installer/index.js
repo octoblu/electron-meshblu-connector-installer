@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import './index.css';
 
 import DebugConfig from '../debug-config';
@@ -10,7 +11,7 @@ import {
   Spinner,
   ProgressBar,
   Button,
-  EmptyState
+  EmptyState,
 } from 'zooid-ui';
 
 const MAX_STEPS = 5;
@@ -27,7 +28,8 @@ class Installer extends Component {
   }
 
   componentDidMount() {
-    this.installer = new InstallerMaster()
+    const key = this.props.otpKey
+    this.installer = new InstallerMaster({ key })
     this.installer.on('debug', (line) => {
       let { lines } = this.state;
       lines.push(`-- ${line}`)
@@ -81,6 +83,9 @@ class Installer extends Component {
   renderContent = (content) => {
     return (
       <div className="Installer">
+        <div className="Installer--top-actions">
+          <Link to="/"><i className="fa fa-chevron-left"></i> Start Over</Link>
+        </div>
         <div className="Installer--content">
           {content}
         </div>
@@ -108,6 +113,10 @@ class Installer extends Component {
       </div>
     );
   }
+}
+
+Installer.propTypes = {
+  otpKey: PropTypes.string.isRequired
 }
 
 export default Installer;

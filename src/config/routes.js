@@ -9,7 +9,7 @@ export default (
   <Route>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
-      <Route path="install" component={Installer} />
+      <Route path="install/:key" component={Installer} />
     </Route>
     <Route path="*" status={404} component={NoMatch} />
   </Route>

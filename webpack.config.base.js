@@ -26,5 +26,6 @@ export default {
 
   ],
   externals: [
+    'is-admin'
   ]
 };

@@ -67,3 +67,15 @@
 .ProgressBar-completed {
   /*background: #28B78D !important;*/
 }
+
+.Installer--top-actions {
+  width: 75%;
+  margin: auto;
+}
+
+.Installer--top-actions a {
+  font-size: 1rem;
+  text-align: left;
+  float: left;
+  text-decoration: none;
+}

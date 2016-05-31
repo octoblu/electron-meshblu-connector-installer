@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import { darwinGetAppName } from './installer-info-darwin';
-import { defaultGetAppName } from './installer-info-default';
 import { retrieveOTP } from './otp-service';
 import {
   RUN_LEGACY_VERSION,
@@ -19,38 +17,12 @@ class InstallerInfo {
     this.emitDebug = emitDebug;
   }
 
-  getAppName(options, callback) {
-    if (process.platform === 'darwin') {
-      return darwinGetAppName(options, callback);
-    }
-    return defaultGetAppName(options, callback);
-  }
+  getInfo({ key }, callback) {
+    retrieveOTP({ key }, (error, response) => {
+      if (error) return callback(new Error('Installer already used. Download a new one.'));
 
-  getInfo(callback) {
-    const launchPath = _.first(process.argv);
-    this.getAppName({ launchPath }, (error, appName) => {
-      if (error) {
-        return callback(error);
-      }
-      if (!appName) {
-        return callback(new Error(`Invalid FileName ${launchPath}`))
-      }
-      const key = this.getKey(appName);
-      this.emitDebug(`Found key ${key}`)
-      if (!key) return callback(new Error('Invalid Key for Installation'));
-      retrieveOTP({ key }, (error, response) => {
-        if (error) return callback(new Error('Installer already used. Download a new one.'));
-
-        callback(null, this.getConfig({ key }, response));
-      });
+      callback(null, this.getConfig({ key }, response));
     });
-  }
-
-  getKey(appName) {
-    const part = appName.replace('MeshbluConnectorInstaller-', '');
-    const smallerPart = part.replace(/\.\w+$/, '');
-    const lastParts = smallerPart.split(/[^\w]+/);
-    return _.first(lastParts);
   }
 
   getPlatform() {
