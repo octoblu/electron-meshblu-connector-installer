@@ -1,11 +1,8 @@
 #!/bin/bash
 
 main() {
-  local arch="x64"
-  local platform="darwin"
-
   echo "* cleaning up"
-  rm -rf "./release/${platform}-${arch}"
+  rm -rf ./release/*-darwin-amd64
 
   echo "* packaging..."
   env PLATFORM="darwin" ARCH="x64" ./deploy/build
@@ -14,7 +11,7 @@ main() {
   local key="$(./scripts/create-test-key)"
   echo "* key: $key"
 
-  mv "./release/MeshbluConnectorInstaller-$platform-$arch.dmg" "./release/MeshbluConnectorInstaller-$key.dmg"
+  mv "./release/MeshbluConnectorInstaller-darwin-amd64.dmg" "./release/MeshbluConnectorInstaller-$key.dmg"
   open "./release/MeshbluConnectorInstaller-$key.dmg"
   echo "* done"
 }

@@ -16,7 +16,10 @@ generate_otp(){
     \"legacy\": false, \
     \"connector\": \"say-hello\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
-    \"tag\": \"v4.1.0\"
+    \"dependencyManagerVersion\": \"v3.0.6\", \
+    \"ignitionVersion\": \"v4.1.10\", \
+    \"connectorAssemblerVersion\": \"v13.0.2\", \
+    \"tag\": \"v5.0.1\"
   }"
 
   curl -XPOST \

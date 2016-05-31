@@ -1,4 +1,4 @@
-import spawn from 'cross-spawn-async';
+import spawn from 'cross-spawn';
 import path from 'path';
 import _ from 'lodash';
 

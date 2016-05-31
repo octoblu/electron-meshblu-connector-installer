@@ -27,5 +27,6 @@ export default {
   ],
   externals: [
     'is-admin',
+    'cross-spawn'
   ],
 };
