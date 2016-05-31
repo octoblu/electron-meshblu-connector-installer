@@ -10,7 +10,7 @@ export function retrieveOTP({ key }, callback) {
   request({
     baseUrl: OTP_SERVICE_URL,
     uri: `/retrieve/${key}`,
-    json: true
+    json: true,
   }, (error, response, body) => {
     if (error) return callback(error);
     if (response.statusCode !== 200) return callback(new Error(body.error));
@@ -26,7 +26,7 @@ export function expireOTP({ key }, callback) {
   request({
     baseUrl: OTP_SERVICE_URL,
     uri: `/expire/${key}`,
-    json: true
+    json: true,
   }, (error, response, body) => {
     if (error) return callback(error);
     if (response.statusCode !== 200) return callback(new Error(body.error));
@@ -50,6 +50,6 @@ function fakeRetrieveOTP({ key }, callback) {
       ignitionVersion: 'v4.1.8',
       connector: 'bean',
       tag: 'v4.0.0',
-    }
+    },
   });
 }

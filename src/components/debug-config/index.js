@@ -5,26 +5,27 @@ import './index.css';
 const DebugConfig = ({ config }) => {
   function convertObject(obj, prefix) {
     return _.map(obj, (value, key) => {
-      if(key === 'coreDependencies') return null
-      if(_.isPlainObject(value)) {
+      if (key === 'coreDependencies') return null
+      if (_.isPlainObject(value)) {
         return convertObject(value, `${prefix}${key}.`);
       }
-      if(_.isBoolean(value)){
-        value = value ? 'true' : 'false';
+      let valueStr = value
+      if (_.isBoolean(valueStr)) {
+        valueStr = valueStr ? 'true' : 'false';
       }
       const theKey = `${prefix}${key}`
-      return <li key={theKey}><span className="DebugConfig--key">{theKey}</span>: {value}</li>
+      return <li key={theKey}><span className="DebugConfig--key">{theKey}</span>: {valueStr}</li>
     });
   }
   const items = convertObject(config, '');
-  return <div className="DebugConfig">
+  return (<div className="DebugConfig">
     <h3>Installer Information:</h3>
     {items}
-  </div>
+  </div>)
 };
 
 DebugConfig.propTypes = {
-  config: PropTypes.object.isRequired
+  config: PropTypes.object.isRequired,
 }
 
 export default DebugConfig

@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 import Installer from '../components/installer'
 
 export default class InstallerPage extends Component {

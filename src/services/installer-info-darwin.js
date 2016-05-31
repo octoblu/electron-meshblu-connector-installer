@@ -5,8 +5,8 @@ import _ from 'lodash';
 export function darwinGetAppName({ launchPath }, callback) {
   const volumePath = getVolumePath({ launchPath });
   fs.exists(volumePath, (exists) => {
-    if(!exists){
-      if(process.env.NODE_ENV === 'development'){
+    if (!exists) {
+      if (process.env.NODE_ENV === 'development') {
         return callback(null, 'something')
       }
       return callback(new Error('Volume Doesn\'t Exist'));
@@ -16,9 +16,9 @@ export function darwinGetAppName({ launchPath }, callback) {
         return callback(error);
       }
       const imagePath = getImagePath(stdout, launchPath);
-      if(!imagePath) return callback(new Error('Unable to get imagePath'))
+      if (!imagePath) return callback(new Error('Unable to get imagePath'))
       const appName = getAppNameFromImagePath(imagePath);
-      if(!appName) return callback(new Error('Unable to get appName'))
+      if (!appName) return callback(new Error('Unable to get appName'))
       callback(null, appName);
     });
   })
@@ -42,11 +42,11 @@ function getEscapedVolumePath({ launchPath }) {
 
 
 function getImagePath(stdout, launchPath) {
-  const sections = stdout.split(/\={10,}/);
+  const sections = stdout.split(/={10,}/);
   let imagePath;
   _.some(sections, (section) => {
-    const escapedVolumePath = getEscapedVolumePath({launchPath});
-    if(new RegExp(`\\s+${escapedVolumePath}\\s*$`).test(section)){
+    const escapedVolumePath = getEscapedVolumePath({ launchPath });
+    if (new RegExp(`\\s+${escapedVolumePath}\\s*$`).test(section)) {
       imagePath = parseLines(section);
     }
   });
@@ -55,7 +55,7 @@ function getImagePath(stdout, launchPath) {
 
 function parseLines(section) {
   const lines = section.split(/\r?\n/);
-  var imagePath;
+  let imagePath;
   _.some(lines, (line) => {
     const parts = line.split(':');
     const key = _.trim(parts[0]);

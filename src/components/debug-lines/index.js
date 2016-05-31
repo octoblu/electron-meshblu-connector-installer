@@ -5,12 +5,11 @@ import './index.css';
 
 class DebugLines extends Component {
   static propTypes = {
-    lines: PropTypes.array.isRequired
+    lines: PropTypes.array.isRequired,
   }
 
   updateScroll = () => {
     const { thing } = this.refs;
-    console.log(`Updating ${thing.scrollHeight}`)
     ReactDOM.findDOMNode(thing).scrollTop = thing.scrollHeight;
   }
 

@@ -1,4 +1,3 @@
-import path from 'path';
 import Execute from './execute';
 
 class InstallConnector {
@@ -23,7 +22,7 @@ class InstallConnector {
     const { ignitionVersion } = versions;
     const { assembler } = this.config.coreDependencies;
     const executable = this.execute.getFile(assembler.fileName);
-    let args = [
+    const args = [
       '--connector',
       connector,
       '--uuid',
@@ -43,7 +42,7 @@ class InstallConnector {
     }
     this.emitDebug(`Installing connector ${connector}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {
-      if(error) return callback(new Error("Connector Install Failure"))
+      if (error) return callback(new Error('Connector Install Failure'))
       callback()
     });
   }

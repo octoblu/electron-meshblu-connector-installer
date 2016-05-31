@@ -9,7 +9,7 @@ export default class Execute {
 
   do({ executable, args, cwd }, callback) {
     const env = _.assign(process.env, {
-      DEBUG: 'meshblu-connector-*'
+      DEBUG: 'meshblu-connector-*',
     })
     const child = spawn(executable, args, { cwd, env });
 
@@ -23,7 +23,7 @@ export default class Execute {
 
     child.on('close', (code) => {
       this.emitDebug(`${executable} exited ${code}`);
-      if(code > 0){
+      if (code > 0) {
         return callback(new Error('Error during installation'))
       }
       callback();
@@ -37,16 +37,16 @@ export default class Execute {
 
   logOutput(key, ouput) {
     const str = ouput.toString()
-    const lines = str.split("\n")
+    const lines = str.split('\n')
     _.each(lines, (line) => {
-      if(line.indexOf(' - ') > -1) {
+      if (line.indexOf(' - ') > -1) {
         const debugLine = _.last(line.split(' - '))
-        if(!_.isEmpty(line)) {
+        if (!_.isEmpty(line)) {
           this.emitDebug(`debug: ${debugLine}`);
         }
         return
       }
-      if(!_.isEmpty(line)) {
+      if (!_.isEmpty(line)) {
         this.emitDebug(`${key}: ${line}`);
       }
     })

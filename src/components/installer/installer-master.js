@@ -1,4 +1,4 @@
-import {EventEmitter} from 'events'
+import { EventEmitter } from 'events'
 import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
 import InstallDependencies from '../../services/install-dependencies';
@@ -20,9 +20,9 @@ class InstallerMaster extends EventEmitter {
   getInfo = (done) => {
     this.emit('step', 'Getting installer information');
     const key = this.key;
-    new InstallerInfo({emitDebug: this.emitDebug})
+    new InstallerInfo({ emitDebug: this.emitDebug })
       .getInfo({ key }, (error, config) => {
-        if(error) return this.emit('error', error);
+        if (error) return this.emit('error', error);
         this.config = config;
         this.emit('config', config);
         this.emitDebug(`Got key ${config.key}`)
@@ -32,27 +32,27 @@ class InstallerMaster extends EventEmitter {
 
   downloadDeps = (done) => {
     this.emit('step', 'Downloading dependencies');
-    new DependencyDownloader({emitDebug: this.emitDebug, config: this.config})
+    new DependencyDownloader({ emitDebug: this.emitDebug, config: this.config })
       .downloadAll((error) => {
-        if(error) return this.emit('error', error);
+        if (error) return this.emit('error', error);
         done()
       });
   }
 
   installDeps = (done) => {
     this.emit('step', 'Installing dependencies');
-    new InstallDependencies({emitDebug: this.emitDebug, config: this.config})
+    new InstallDependencies({ emitDebug: this.emitDebug, config: this.config })
       .install((error) => {
-        if(error) return this.emit('error', error);
+        if (error) return this.emit('error', error);
         done()
       });
   }
 
   installConnector = (done) => {
     this.emit('step', 'Installing Connector')
-    new InstallConnector({emitDebug: this.emitDebug, config: this.config})
+    new InstallConnector({ emitDebug: this.emitDebug, config: this.config })
       .install((error) => {
-        if(error) return this.emit('error', error);
+        if (error) return this.emit('error', error);
         done()
       });
   }
@@ -70,7 +70,7 @@ class InstallerMaster extends EventEmitter {
       this.installConnector,
       this.expireOTP,
     ], (error) => {
-      if(error) return this.emit('error', error)
+      if (error) return this.emit('error', error)
       done()
     })
   }

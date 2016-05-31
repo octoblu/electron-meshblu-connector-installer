@@ -3,7 +3,7 @@ import './index.css';
 
 class ErrorState extends Component {
   static propTypes = {
-    message: PropTypes.string.isRequired
+    message: PropTypes.string.isRequired,
   }
 
   render() {

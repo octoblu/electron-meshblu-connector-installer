@@ -14,7 +14,7 @@ class DependencyDownloader {
     this.emitDebug(`Making the bin path: ${binPath}`)
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
-      this.emitDebug(`Downloading dependencies`)
+      this.emitDebug('Downloading dependencies')
       const { assembler, dependencyManager } = this.config.coreDependencies;
       async.series([
         async.apply(this.download, assembler),
@@ -34,7 +34,7 @@ class DependencyDownloader {
       const stream = request.get(uri)
         .on('error', callback)
         .on('response', (response) => {
-          if(response.statusCode >= 400){
+          if (response.statusCode >= 400) {
             this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
             return callback(new Error('Invalid Dependency Download'))
           }
@@ -45,7 +45,7 @@ class DependencyDownloader {
 
   makeExecutable = ({ fileName, tag }, callback) => {
     const { platform } = process;
-    if (platform === "win32") return callback();
+    if (platform === 'win32') return callback();
     const filePath = this.getFullFilePath({ fileName, tag });
     fs.chmod(filePath, '755', callback);
   }
@@ -56,7 +56,7 @@ class DependencyDownloader {
     return fs.createWriteStream(filePath);
   }
 
-  getFullFilePath({ fileName, tag }) {
+  getFullFilePath({ fileName }) {
     const { binPath } = this.config;
     const ext = process.platform === 'win32' ? '.exe' : '';
     return path.join(binPath, `${fileName}${ext}`);

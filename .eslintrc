@@ -9,9 +9,12 @@
   "rules": {
     "react/jsx-no-bind": 0,
     "react/prefer-stateless-function": 0,
-    "comma-dangle": 0,
+    "comma-dangle": 1,
     "no-use-before-define": 0,
-    "consistent-return": 0
+    "consistent-return": 0,
+    "semi": 0,
+    "arrow-body-style": 0,
+    "max-len": 0,
   },
   "plugins": [
     "react"

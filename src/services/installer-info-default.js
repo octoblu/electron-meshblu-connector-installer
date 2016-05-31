@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import path from 'path'
 
 export function defaultGetAppName({ launchPath }, callback) {

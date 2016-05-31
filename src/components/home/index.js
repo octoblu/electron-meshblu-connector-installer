@@ -22,34 +22,36 @@ export default class Home extends Component {
     this.state = {
       key: null,
       loading: true,
-      editKey: false
+      editKey: false,
     }
     this.handleKeyChange = this.handleKeyChange.bind(this);
     this.editKey = this.editKey.bind(this);
   }
 
+  componentDidMount() {
+    this.checkIfPrivileged((error, privileged) => {
+      if (error) return this.setState({ error })
+      if (!privileged) {
+        return this.setState({ error: new Error('Installer must be run as administrator') })
+      }
+      new GetOTPKey().getKey((error, response) => {
+        if (error) {
+          return this.setState({ error })
+        }
+        const { key } = response;
+        this.setState({ key, editKey: !key, loading: false })
+      })
+    })
+  }
+
   checkIfPrivileged(callback) {
-    if(process.platform !== 'win32') {
+    if (process.platform !== 'win32') {
       return callback(null, true)
     }
     isAdmin().then((admin) => {
       callback(null, admin)
     }, (error) => {
       callback(error)
-    })
-  }
-
-  componentDidMount() {
-    this.checkIfPrivileged((error, privileged) => {
-      if(error) return this.setState({ error })
-      if(!privileged) {
-        return this.setState({ error: new Error('Installer must be run as administrator')})
-      }
-      new GetOTPKey().getKey((error, response) => {
-        if (error) return this.setState({ error })
-        const { key } = response;
-        this.setState({ key, editKey: !key, loading: false })
-      })
     })
   }
 
@@ -62,15 +64,15 @@ export default class Home extends Component {
     const key = ReactDOM.findDOMNode(ref).value;
     let message = null
     let editKey = true
-    if(!key) {
-      message = "Missing One Time Password"
+    if (!key) {
+      message = 'Missing One Time Password'
     } else {
       editKey = false
     }
     this.setState({ key, message, editKey })
   }
 
-  renderContent(content){
+  renderContent(content) {
     return (
       <div>
         <div className="Home">

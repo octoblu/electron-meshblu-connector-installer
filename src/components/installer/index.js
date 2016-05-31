@@ -11,7 +11,6 @@ import {
   Spinner,
   ProgressBar,
   Button,
-  EmptyState,
 } from 'zooid-ui';
 
 const MAX_STEPS = 5;
@@ -24,19 +23,19 @@ class Installer extends Component {
     step: 0,
     showDebug: false,
     lines: [],
-    message: 'Loading...'
+    message: 'Loading...',
   }
 
   componentDidMount() {
     const key = this.props.otpKey
     this.installer = new InstallerMaster({ key })
     this.installer.on('debug', (line) => {
-      let { lines } = this.state;
+      const { lines } = this.state;
       lines.push(`-- ${line}`)
       this.setState({ lines });
     });
     this.installer.on('step', (message) => {
-      let { step, lines } = this.state;
+      const { step, lines } = this.state;
       const newStep = step + 1;
       lines.push(`[Step ${newStep}]: ${message}`);
       this.setState({ message, step: newStep });
@@ -48,26 +47,22 @@ class Installer extends Component {
       this.setState({ error });
     });
     this.installer.start(() => {
-      this.setState({ done: true, step: 5, message: "done" })
+      this.setState({ done: true, step: 5, message: 'done' })
     })
-  }
-
-  toggleDebug = () => {
-    this.setState({ showDebug: !this.state.showDebug });
-  }
-
-  exitApp = () => {
-    console.log('exitApp');
   }
 
   getDebug = () => {
     const { config, lines, showDebug } = this.state;
-    if (!showDebug) return (
-      <div onClick={this.toggleDebug}
-        className="Button Button--hollow-neutral Installer--button">
-        <i className="fa fa-bug"></i> Show Debug
-      </div>
-    );
+    if (!showDebug) {
+      return (
+        <div
+          onClick={this.toggleDebug}
+          className="Button Button--hollow-neutral Installer--button"
+        >
+          <i className="fa fa-bug"></i> Show Debug
+        </div>
+      );
+    }
     return (
       <div className="Installer--split">
         <div className="Installer--split-item Installer-split-small">
@@ -78,6 +73,13 @@ class Installer extends Component {
         </div>
       </div>
     );
+  }
+
+  exitApp = () => {
+  }
+
+  toggleDebug = () => {
+    this.setState({ showDebug: !this.state.showDebug });
   }
 
   renderContent = (content) => {
@@ -98,7 +100,7 @@ class Installer extends Component {
     const { error, configLoading, done } = this.state;
 
     if (error) return this.renderContent(<ErrorState message={error.message} />);
-    if (configLoading) return this.renderContent(<Spinner size="large"/>);
+    if (configLoading) return this.renderContent(<Spinner size="large" />);
     if (done) return this.renderContent(<Button className="Installer--done" kind="hollow-approve" onClick={this.exitApp}>Success! Please Close.</Button>);
 
     const { config, message, step } = this.state
@@ -108,7 +110,7 @@ class Installer extends Component {
     return this.renderContent(
       <div>
         <h2>Installing: <strong>{connector}</strong></h2>
-        <ProgressBar completed={percentage}/>
+        <ProgressBar completed={percentage} />
         <h3>Step: {step} / {MAX_STEPS} {message}</h3>
       </div>
     );
@@ -116,7 +118,7 @@ class Installer extends Component {
 }
 
 Installer.propTypes = {
-  otpKey: PropTypes.string.isRequired
+  otpKey: PropTypes.string.isRequired,
 }
 
 export default Installer;

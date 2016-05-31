@@ -28,12 +28,12 @@ const DEFAULT_OPTS = {
     '/test($|/)',
     '/release($|/)',
     '/deploy($|/)',
-    '/main.development.js'
+    '/main.development.js',
   ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
     .concat(
       deps.filter(name => !electronCfg.externals.includes(name))
         .map(name => `/node_modules/${name}($|/)`)
-    )
+    ),
 };
 
 const icon = argv.icon || argv.i || 'src/app';
@@ -93,9 +93,9 @@ function startPack() {
             pack(plat, arch, log(plat, arch));
           });
         });
-      } else if(buildArch && buildPlatform) {
+      } else if (buildArch && buildPlatform) {
         pack(buildPlatform, buildArch, log(buildPlatform, buildArch));
-      } else if(buildPlatform) {
+      } else if (buildPlatform) {
         archs.forEach(arch => {
           pack(buildPlatform, arch, log(buildPlatform, arch));
         });
@@ -123,7 +123,7 @@ function pack(plat, arch, cb) {
         extension = '.ico';
       }
       return extension;
-    })()
+    })(),
   };
 
   const appVersion = pkg.version || DEFAULT_OPTS.version;
@@ -134,7 +134,7 @@ function pack(plat, arch, cb) {
     prune: true,
     'app-bundle-id': pkg.appBundleId,
     'app-version': appVersion,
-    out: `release`
+    out: 'release',
   });
   console.log(`packaging v${appVersion} for ${plat}-${arch} to ./${opts.out}`);
   packager(opts, cb);

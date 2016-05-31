@@ -14,8 +14,8 @@ const PORT = 3000;
 app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath,
   stats: {
-    colors: true
-  }
+    colors: true,
+  },
 }));
 
 app.use(webpackHotMiddleware(compiler));

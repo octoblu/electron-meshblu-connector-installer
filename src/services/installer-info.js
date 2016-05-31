@@ -7,7 +7,7 @@ import {
 } from '../config/default-versions';
 
 import {
-  DOWNLOAD_MAP
+  DOWNLOAD_MAP,
 } from '../config/download-map';
 
 import path from 'path';
@@ -48,12 +48,12 @@ class InstallerInfo {
       tag,
       dependencyManagerVersion,
       ignitionVersion,
-      connectorAssemblerVersion
+      connectorAssemblerVersion,
     } = metadata;
 
     let githubSlug = metadata.githubSlug;
-    let legacyTag = RUN_LEGACY_VERSION;
-    if(legacy){
+    const legacyTag = RUN_LEGACY_VERSION;
+    if (legacy) {
       githubSlug = 'octoblu/meshblu-connector-run-legacy'
     }
 
@@ -71,7 +71,7 @@ class InstallerInfo {
       ignitionVersion,
     };
 
-    let coreDependencies = _.clone(DOWNLOAD_MAP)
+    const coreDependencies = _.clone(DOWNLOAD_MAP)
     coreDependencies.assembler.tag = versions.connectorAssemblerVersion
     coreDependencies.assembler.fileName += `-${versions.connectorAssemblerVersion}`
     coreDependencies.dependencyManager.tag = versions.dependencyManagerVersion
@@ -90,7 +90,7 @@ class InstallerInfo {
       binPath,
       versions,
       deps,
-      coreDependencies
+      coreDependencies,
     };
   }
 }
