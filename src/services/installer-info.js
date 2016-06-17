@@ -49,6 +49,7 @@ class InstallerInfo {
       dependencyManagerVersion,
       ignitionVersion,
       connectorAssemblerVersion,
+      octoblu,
     } = metadata;
 
     let githubSlug = metadata.githubSlug;
@@ -81,6 +82,7 @@ class InstallerInfo {
       key,
       uuid,
       token,
+      octoblu,
       connector,
       githubSlug,
       tag,

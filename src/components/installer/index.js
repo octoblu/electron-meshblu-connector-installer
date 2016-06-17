@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import './index.css';
 
+import ZooidOctobluIntercom from 'zooid-octoblu-intercom'
 import DebugConfig from '../debug-config';
 import DebugLines from '../debug-lines';
 import ErrorState from '../error-state';
@@ -49,6 +50,16 @@ class Installer extends Component {
     this.installer.start(() => {
       this.setState({ done: true, step: 5, message: 'done' })
     })
+  }
+
+  getIntercom({ uuid, token } = {}) {
+    if (true) {
+      return <ZooidOctobluIntercom appId="ux5bbkjz" uuid="0759a161-f8db-4393-a4e0-03b566591fd2" token="43f280b54849f77eb94114f4682bc447204d1841" />
+    }
+    if (!uuid || !token) {
+      return null
+    }
+    return <ZooidOctobluIntercom appId="ux5bbkjz" uuid={uuid} token={token} />
   }
 
   getDebug = () => {
@@ -104,7 +115,7 @@ class Installer extends Component {
     if (done) return this.renderContent(<Button className="Installer--done" kind="hollow-approve" onClick={this.exitApp}>Success! Please Close.</Button>);
 
     const { config, message, step } = this.state
-    const { connector } = config;
+    const { connector, octoblu } = config;
     const percentage = step / MAX_STEPS * 100;
 
     return this.renderContent(
@@ -112,6 +123,7 @@ class Installer extends Component {
         <h2>Installing: <strong>{connector}</strong></h2>
         <ProgressBar completed={percentage} />
         <h3>Step: {step} / {MAX_STEPS} {message}</h3>
+        {this.getIntercom(octoblu)}
       </div>
     );
   }
