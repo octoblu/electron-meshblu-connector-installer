@@ -76,7 +76,7 @@ export default class Home extends Component {
     return (
       <div>
         <div className="Home">
-          <h2>Meshblu Connector Installer</h2>
+          <h2>Connector Installer</h2>
           {content}
         </div>
       </div>
