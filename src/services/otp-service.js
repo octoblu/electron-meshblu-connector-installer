@@ -43,13 +43,12 @@ function fakeRetrieveOTP({ key }, callback) {
     uuid: 'c7097087-bed4-4272-8692-3b07277ec281',
     token: 'a7702204e157e51fd63c924a7b77db00121a0d5d',
     metadata: {
-      legacy: false,
-      githubSlug: 'octoblu/meshblu-connector-bean',
+      githubSlug: 'octoblu/meshblu-connector-say-hello',
       connectorAssemblerVersion: 'v13.0.0',
       dependencyManagerVersion: 'v3.0.2',
-      ignitionVersion: 'v4.1.8',
-      connector: 'bean',
-      tag: 'v4.0.0',
+      ignitionVersion: 'v6.0.0',
+      connector: 'say-hello',
+      tag: 'v6.0.0',
     },
   });
 }

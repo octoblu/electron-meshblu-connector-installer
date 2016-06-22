@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { retrieveOTP } from './otp-service';
 import {
-  RUN_LEGACY_VERSION,
   NODE_VERSION,
   NPM_VERSION,
 } from '../config/default-versions';
@@ -41,9 +40,8 @@ class InstallerInfo {
   }
 
   getConfig({ key }, response) {
-    const { uuid, token, metadata } = response;
+    const { uuid, token, metadata } = _.cloneDeep(response);
     const {
-      legacy,
       connector,
       tag,
       dependencyManagerVersion,
@@ -52,11 +50,7 @@ class InstallerInfo {
       octoblu,
     } = metadata;
 
-    let githubSlug = metadata.githubSlug;
-    const legacyTag = RUN_LEGACY_VERSION;
-    if (legacy) {
-      githubSlug = 'octoblu/meshblu-connector-run-legacy'
-    }
+    const githubSlug = metadata.githubSlug;
 
     const platform = this.getPlatform();
     const binPath = this.getBinPath();
@@ -72,7 +66,7 @@ class InstallerInfo {
       ignitionVersion,
     };
 
-    const coreDependencies = _.clone(DOWNLOAD_MAP)
+    const coreDependencies = _.cloneDeep(DOWNLOAD_MAP)
     coreDependencies.assembler.tag = versions.connectorAssemblerVersion
     coreDependencies.assembler.fileName += `-${versions.connectorAssemblerVersion}`
     coreDependencies.dependencyManager.tag = versions.dependencyManagerVersion
@@ -86,8 +80,6 @@ class InstallerInfo {
       connector,
       githubSlug,
       tag,
-      legacy,
-      legacyTag,
       platform,
       binPath,
       versions,

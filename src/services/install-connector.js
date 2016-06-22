@@ -14,8 +14,6 @@ class InstallConnector {
       token,
       connector,
       versions,
-      legacy,
-      legacyTag,
       githubSlug,
       tag,
     } = this.config;
@@ -36,10 +34,6 @@ class InstallConnector {
       '--ignition',
       ignitionVersion,
     ];
-    if (legacy) {
-      args.push('--legacy')
-      args.push(legacyTag)
-    }
     this.emitDebug(`Installing connector ${connector}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {
       if (error) return callback(new Error('Connector Install Failure'))

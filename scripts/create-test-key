@@ -13,13 +13,12 @@ generate_otp(){
   local uuid="$1"
   local token="$2"
   local json="{ \
-    \"legacy\": false, \
     \"connector\": \"say-hello\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
     \"dependencyManagerVersion\": \"v3.0.6\", \
-    \"ignitionVersion\": \"v4.1.10\", \
-    \"connectorAssemblerVersion\": \"v13.0.2\", \
-    \"tag\": \"v5.0.1\"
+    \"ignitionVersion\": \"v6.0.0\", \
+    \"connectorAssemblerVersion\": \"v14.0.0\", \
+    \"tag\": \"v6.0.0\"
   }"
 
   curl -XPOST \
