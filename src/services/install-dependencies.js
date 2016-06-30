@@ -31,7 +31,7 @@ class InstallDepedencies {
       tag,
     ];
     this.emitDebug(`Installing ${type} ${tag}`)
-    this.execute.do({ executable, args, cwd: binPath }, (error) => {
+    this.execute.doAndRetry({ executable, args, cwd: binPath }, (error) => {
       if (error) return callback(new Error(`${type} ${tag} install failure`))
       callback()
     });

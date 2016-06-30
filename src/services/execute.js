@@ -1,10 +1,13 @@
 import spawn from 'cross-spawn';
+import async from 'async';
 import path from 'path';
 import _ from 'lodash';
 
 export default class Execute {
   constructor({ emitDebug }) {
     this.emitDebug = emitDebug;
+    this.do = this.do.bind(this);
+    this.doAndRetry = this.doAndRetry.bind(this);
   }
 
   do({ executable, args, cwd }, callback) {
@@ -33,6 +36,11 @@ export default class Execute {
       this.emitDebug(`${executable} exited with error ${error.message}`);
       callback(error);
     });
+  }
+
+  doAndRetry({ executable, args, cwd }, callback) {
+    const options = { times: 3, interval: 100 }
+    async.retry(options, async.apply(this.do, { executable, args, cwd }), callback)
   }
 
   logOutput(key, ouput) {
