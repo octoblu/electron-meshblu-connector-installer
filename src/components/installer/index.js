@@ -11,7 +11,6 @@ import InstallerMaster from './installer-master';
 import {
   Spinner,
   ProgressBar,
-  Button,
 } from 'zooid-ui';
 
 const MAX_STEPS = 5;
@@ -112,7 +111,14 @@ class Installer extends Component {
 
     if (error) return this.renderContent(<ErrorState message={error.message} />);
     if (configLoading) return this.renderContent(<Spinner size="large" />);
-    if (done) return this.renderContent(<Button className="Installer--done" kind="hollow-approve" onClick={this.exitApp}>Success! Please Close.</Button>);
+    if (done) {
+      return this.renderContent(
+        <div className="Installer--done">
+          Success! Please Close. <br />
+          <small>* Sorry I currently can't do it for you *</small>
+        </div>
+      );
+    }
 
     const { config, message, step } = this.state
     const { connector, octoblu } = config;

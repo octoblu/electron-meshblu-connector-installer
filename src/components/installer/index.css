@@ -47,10 +47,14 @@
 
 .Installer--done {
   font-size: 2rem !important;
-  border: 2px solid #28B78D;
   padding: 0.5rem 1rem;
-  width: 35%;
+  width: 50%;
   margin: 0 auto;
+}
+
+.Installer--done small {
+  font-size: 0.8rem !important;
+  color: light-gray;
 }
 
 .Installer--actions {
