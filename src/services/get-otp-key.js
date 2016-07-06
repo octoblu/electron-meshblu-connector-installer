@@ -16,9 +16,6 @@ export default class GetOTPKey {
       if (error) {
         return callback(error);
       }
-      if (!appName) {
-        return callback(new Error(`Invalid FileName ${launchPath}`))
-      }
       const key = this.getKeyFromAppName(appName);
       callback(null, { key })
     });
