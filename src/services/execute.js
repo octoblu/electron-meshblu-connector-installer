@@ -16,6 +16,11 @@ export default class Execute {
     })
     const child = spawn(executable, args, { cwd, env });
 
+    child.on('error', (error) => {
+      this.emitDebug(`${executable} exited with error ${error.message}`);
+      callback(error);
+    });
+
     child.stdout.on('data', (data) => {
       this.logOutput('stdout', data)
     });
@@ -32,10 +37,6 @@ export default class Execute {
       callback();
     });
 
-    child.on('error', (error) => {
-      this.emitDebug(`${executable} exited with error ${error.message}`);
-      callback(error);
-    });
   }
 
   doAndRetry({ executable, args, cwd }, callback) {

@@ -18,6 +18,7 @@ generate_otp(){
     \"dependencyManagerVersion\": \"v3.0.6\", \
     \"ignitionVersion\": \"v6.0.0\", \
     \"connectorAssemblerVersion\": \"v14.0.0\", \
+    \"installerVersion\": \"v2.0.1\", \
     \"tag\": \"v6.0.0\"
   }"
 

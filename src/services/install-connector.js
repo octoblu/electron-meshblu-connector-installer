@@ -9,30 +9,21 @@ class InstallConnector {
 
   install(callback) {
     const {
+      key,
       binPath,
-      uuid,
-      token,
       connector,
-      versions,
-      githubSlug,
-      tag,
     } = this.config;
-    const { ignitionVersion } = versions;
-    const { assembler } = this.config.coreDependencies;
-    const executable = this.execute.getFile(assembler.fileName);
+    const { installer } = this.config.coreDependencies;
+    const executable = this.execute.getFile(installer.fileName);
+    let serviceType = 'Service'
+    if (process.platform == 'darwin') {
+      serviceType = 'UserService'
+    }
     const args = [
-      '--connector',
-      connector,
-      '--uuid',
-      uuid,
-      '--token',
-      token,
-      '--github-slug',
-      githubSlug,
-      '--tag',
-      tag,
-      '--ignition',
-      ignitionVersion,
+      '--one-time-password',
+      key,
+      '--service-type',
+      serviceType,
     ];
     this.emitDebug(`Installing connector ${connector}`)
     this.execute.do({ executable, args, cwd: binPath }, (error) => {

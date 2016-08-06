@@ -44,9 +44,7 @@ class InstallerInfo {
     const {
       connector,
       tag,
-      dependencyManagerVersion,
-      ignitionVersion,
-      connectorAssemblerVersion,
+      installerVersion,
       octoblu,
     } = metadata;
 
@@ -61,16 +59,12 @@ class InstallerInfo {
     }, metadata.deps);
 
     const versions = {
-      dependencyManagerVersion,
-      connectorAssemblerVersion,
-      ignitionVersion,
+      installerVersion,
     };
 
     const coreDependencies = _.cloneDeep(DOWNLOAD_MAP)
-    coreDependencies.assembler.tag = versions.connectorAssemblerVersion
-    coreDependencies.assembler.fileName += `-${versions.connectorAssemblerVersion}`
-    coreDependencies.dependencyManager.tag = versions.dependencyManagerVersion
-    coreDependencies.dependencyManager.fileName += `-${versions.dependencyManagerVersion}`
+    coreDependencies.installer.tag = versions.installerVersion
+    coreDependencies.installer.fileName += `-${versions.installerVersion}`
 
     return {
       key,

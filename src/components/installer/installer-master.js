@@ -39,15 +39,6 @@ class InstallerMaster extends EventEmitter {
       });
   }
 
-  installDeps = (done) => {
-    this.emit('step', 'Installing dependencies');
-    new InstallDependencies({ emitDebug: this.emitDebug, config: this.config })
-      .install((error) => {
-        if (error) return this.emit('error', error);
-        done()
-      });
-  }
-
   installConnector = (done) => {
     this.emit('step', 'Installing Connector')
     new InstallConnector({ emitDebug: this.emitDebug, config: this.config })
@@ -66,9 +57,7 @@ class InstallerMaster extends EventEmitter {
     async.series([
       this.getInfo,
       this.downloadDeps,
-      this.installDeps,
       this.installConnector,
-      this.expireOTP,
     ], (error) => {
       if (error) return this.emit('error', error)
       done()

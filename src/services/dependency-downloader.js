@@ -15,12 +15,10 @@ class DependencyDownloader {
     fs.mkdirs(binPath, (error) => {
       if (error) return callback(error);
       this.emitDebug('Downloading dependencies')
-      const { assembler, dependencyManager } = this.config.coreDependencies;
+      const { installer } = this.config.coreDependencies;
       async.series([
-        async.apply(this.download, assembler),
-        async.apply(this.makeExecutable, assembler),
-        async.apply(this.download, dependencyManager),
-        async.apply(this.makeExecutable, dependencyManager),
+        async.apply(this.download, installer),
+        async.apply(this.makeExecutable, installer),
       ], callback);
     });
   }
