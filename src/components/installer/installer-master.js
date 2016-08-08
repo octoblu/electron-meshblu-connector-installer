@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events'
 import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
-import InstallDependencies from '../../services/install-dependencies';
 import InstallConnector from '../../services/install-connector';
 import { expireOTP } from '../../services/otp-service';
 
