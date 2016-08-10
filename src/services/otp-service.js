@@ -3,10 +3,10 @@ import request from 'request';
 const OTP_SERVICE_URL = 'https://meshblu-otp.octoblu.com';
 
 export function retrieveOTP({ otpKey }, callback) {
-  // if (process.env.NODE_ENV === 'development') {
-  //   fakeRetrieveOTP({ otpKey }, callback);
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    fakeRetrieveOTP({ otpKey }, callback);
+    return;
+  }
   request({
     baseUrl: OTP_SERVICE_URL,
     uri: `/retrieve/${otpKey}`,

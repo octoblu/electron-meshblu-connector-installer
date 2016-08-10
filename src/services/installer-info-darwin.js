@@ -7,7 +7,7 @@ export function darwinGetAppName({ launchPath }, callback) {
   fs.exists(volumePath, (exists) => {
     if (!exists) {
       if (process.env.NODE_ENV === 'development') {
-        return callback(null, '57abaaf38379b50001cb6941') // sample-otp
+        return callback(null, 'thisissampleotp') // sample-otp
       }
       return callback(new Error('Volume Doesn\'t Exist'));
     }
