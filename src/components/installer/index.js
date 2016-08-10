@@ -16,6 +16,12 @@ import {
 const MAX_STEPS = 5;
 
 class Installer extends Component {
+  static propTypes = {
+    otpKey: PropTypes.string.isRequired,
+    serviceType: PropTypes.string.isRequired,
+    platform: PropTypes.string.isRequired,
+  }
+
   state = {
     error: null,
     config: null,
@@ -27,8 +33,8 @@ class Installer extends Component {
   }
 
   componentDidMount() {
-    const key = this.props.otpKey
-    this.installer = new InstallerMaster({ key })
+    const { otpKey, serviceType, platform } = this.props
+    this.installer = new InstallerMaster({ otpKey, serviceType })
     this.installer.on('debug', (line) => {
       const { lines } = this.state;
       lines.push(`-- ${line}`)
@@ -133,10 +139,6 @@ class Installer extends Component {
       </div>
     );
   }
-}
-
-Installer.propTypes = {
-  otpKey: PropTypes.string.isRequired,
 }
 
 export default Installer;

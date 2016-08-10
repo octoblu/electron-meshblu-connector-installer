@@ -1,35 +1,35 @@
-.Home {
+.InputKey {
   position: absolute;
   top: 35%;
   text-align: center;
   width: 100%;
 }
 
-.Home h2 {
+.InputKey h2 {
   font-size: 2.5rem;
 }
 
-.Home a {
+.InputKey a {
   font-size: 1.5rem;
 }
 
-.Home--actions {
+.InputKey--actions {
   margin-top: 2rem;
 }
 
-.Home--change-key {
+.InputKey--change-key {
   margin-top: 3rem;
 }
 
-.Home--warning-message {
+.InputKey--warning-message {
   color: #CA2329;
 }
 
-.Home--form-field {
+.InputKey--form-field {
   width: 50%;
   margin: auto;
 }
 
-.Home--info-action {
+.InputKey--info-action {
   padding: 1rem;
 }

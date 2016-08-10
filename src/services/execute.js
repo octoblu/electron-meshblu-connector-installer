@@ -60,12 +60,4 @@ export default class Execute {
       }
     })
   }
-
-  getFile(filename) {
-    let ext = '';
-    if (process.platform === 'win32') {
-      ext = '.exe';
-    }
-    return `.${path.sep}${filename}${ext}`;
-  }
 }

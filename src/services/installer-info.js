@@ -16,11 +16,11 @@ class InstallerInfo {
     this.emitDebug = emitDebug;
   }
 
-  getInfo({ key }, callback) {
-    retrieveOTP({ key }, (error, response) => {
+  getInfo({ otpKey, serviceType }, callback) {
+    retrieveOTP({ otpKey }, (error, response) => {
       if (error) return callback(new Error('Installer already used. Download a new one.'));
 
-      callback(null, this.getConfig({ key }, response));
+      callback(null, this.getConfig({ otpKey, serviceType }, response));
     });
   }
 
@@ -32,14 +32,7 @@ class InstallerInfo {
     return `${goOS}-${goArch}`;
   }
 
-  getBinPath() {
-    if (process.platform === 'win32') {
-      return path.join(process.env.LOCALAPPDATA, 'MeshbluConnectors', 'bin');
-    }
-    return path.join(process.env.HOME, '.octoblu', 'MeshbluConnectors', 'bin');
-  }
-
-  getConfig({ key }, response) {
+  getConfig({ otpKey, serviceType }, response) {
     const { uuid, token, metadata } = _.cloneDeep(response);
     const {
       connector,
@@ -51,7 +44,6 @@ class InstallerInfo {
     const githubSlug = metadata.githubSlug;
 
     const platform = this.getPlatform();
-    const binPath = this.getBinPath();
 
     const deps = _.defaults({
       node: NODE_VERSION,
@@ -67,7 +59,8 @@ class InstallerInfo {
     coreDependencies.installer.fileName += `-${versions.installerVersion}`
 
     return {
-      key,
+      otpKey,
+      serviceType,
       uuid,
       token,
       octoblu,
@@ -75,7 +68,6 @@ class InstallerInfo {
       githubSlug,
       tag,
       platform,
-      binPath,
       versions,
       deps,
       coreDependencies,

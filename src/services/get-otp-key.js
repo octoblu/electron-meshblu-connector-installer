@@ -16,15 +16,16 @@ export default class GetOTPKey {
       if (error) {
         return callback(error);
       }
-      const key = this.getKeyFromAppName(appName);
-      callback(null, { key })
+      const otpKey = this.getKeyFromAppName(appName);
+      callback(null, { otpKey })
     });
   }
 
   getKeyFromAppName(appName) {
-    const part = appName.replace('MeshbluConnectorInstaller-', '');
-    const smallerPart = part.replace(/\.\w+$/, '');
-    const lastParts = smallerPart.split(/[^\w]+/);
-    return _.first(lastParts);
+    let part = appName.replace('MeshbluConnectorInstaller-', '')
+    part = part || ''
+    const smallerPart = part.replace(/\.\w+$/, '')
+    const lastParts = smallerPart.split(/[^\w]+/)
+    return _.first(lastParts)
   }
 }

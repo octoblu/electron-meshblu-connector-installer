@@ -7,21 +7,25 @@ class InstallConnector {
     this.execute = new Execute({ emitDebug })
   }
 
+  getServiceType(serviceType) {
+    if (serviceType == 'service') return 'Service'
+    if (serviceType == 'user-service') return 'UserService'
+    if (serviceType == 'user-login') return 'UserLogin'
+  }
+
   install(callback) {
     const {
-      key,
+      otpKey,
       binPath,
       connector,
     } = this.config;
     const { installer } = this.config.coreDependencies;
-    const executable = this.execute.getFile(installer.fileName);
-    let serviceType = 'Service'
-    if (process.platform == 'darwin') {
-      serviceType = 'UserService'
-    }
+    const executable = installer.filePath
+    const serviceType = this.getServiceType(this.config.serviceType)
+
     const args = [
       '--one-time-password',
-      key,
+      otpKey,
       '--service-type',
       serviceType,
     ];

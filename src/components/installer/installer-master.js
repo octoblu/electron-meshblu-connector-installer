@@ -2,14 +2,14 @@ import { EventEmitter } from 'events'
 import InstallerInfo from '../../services/installer-info';
 import DependencyDownloader from '../../services/dependency-downloader';
 import InstallConnector from '../../services/install-connector';
-import { expireOTP } from '../../services/otp-service';
 
 import async from 'async'
 
 class InstallerMaster extends EventEmitter {
-  constructor({ key }) {
+  constructor({ otpKey, serviceType }) {
     super()
-    this.key = key
+    this.otpKey = otpKey
+    this.serviceType = serviceType
   }
 
   emitDebug = (debug) => {
@@ -17,14 +17,15 @@ class InstallerMaster extends EventEmitter {
   }
 
   getInfo = (done) => {
-    this.emit('step', 'Getting installer information');
-    const key = this.key;
+    this.emit('step', 'Getting installer information')
+    const { otpKey, serviceType } = this
+
     new InstallerInfo({ emitDebug: this.emitDebug })
-      .getInfo({ key }, (error, config) => {
-        if (error) return this.emit('error', error);
-        this.config = config;
-        this.emit('config', config);
-        this.emitDebug(`Got key ${config.key}`)
+      .getInfo({ otpKey, serviceType }, (error, config) => {
+        if (error) return this.emit('error', error)
+        this.config = config
+        this.emit('config', config)
+        this.emitDebug(`Got otpKey: ${config.otpKey}, serviceType: ${config.serviceType}`)
         done()
       });
   }
@@ -45,11 +46,6 @@ class InstallerMaster extends EventEmitter {
         if (error) return this.emit('error', error);
         done()
       });
-  }
-
-  expireOTP = (done) => {
-    const { key } = this.config;
-    expireOTP({ key }, done);
   }
 
   start(done) {
