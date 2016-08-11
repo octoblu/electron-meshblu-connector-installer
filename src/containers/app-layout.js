@@ -22,12 +22,12 @@ class AppLayout extends Component {
         <AppBar>
           <AppBarPrimary>
             <nav className="OctobluAppBar-nav OctobluAppBar-nav--primary" role="navigation">
-              <a className="OctobluAppBar-link" href="/">Connector Installer</a>
+              <Link className="OctobluAppBar-link" to="/">Connector Installer</Link>
             </nav>
           </AppBarPrimary>
           <AppBarSecondary>
             <nav role="navigation">
-              <a className="OctobluAppBar-link" href="/">{otpKey}</a>
+              <Link className="OctobluAppBar-link" to={{pathname: '#/input-key', query: {otpKey: otpKey}}}>{otpKey} <i className="fa fa-pencil"></i></Link>
             </nav>
           </AppBarSecondary>
         </AppBar>

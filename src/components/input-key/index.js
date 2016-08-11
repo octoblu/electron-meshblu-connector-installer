@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import { hashHistory } from 'react-router';
 import isAdmin from 'is-admin';
@@ -16,12 +16,25 @@ import {
 import ErrorState from '../error-state'
 
 export default class InputKey extends Component {
+  static propTypes = {
+    otpKey: PropTypes.string.isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       otpKey: null,
     }
     this.handleKeyChange = this.handleKeyChange.bind(this);
+  }
+
+  componentDidMount() {
+    let otpKey
+    if (this.props) {
+      otpKey = this.props.otpKey
+    }
+
+    this.setState({otpKey})
   }
 
   handleKeyChange() {
@@ -42,7 +55,6 @@ export default class InputKey extends Component {
     return (
       <div>
         <div className="InputKey">
-          <h2>Connector Installer</h2>
           {content}
         </div>
       </div>

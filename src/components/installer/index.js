@@ -101,9 +101,6 @@ class Installer extends Component {
   renderContent = (content) => {
     return (
       <div className="Installer">
-        <div className="Installer--top-actions">
-          <Link to="/"><i className="fa fa-chevron-left"></i> Start Over</Link>
-        </div>
         <div className="Installer--content">
           {content}
         </div>
