@@ -9,7 +9,10 @@ export default class Execute {
     this.serviceType = serviceType
     this.do = this.do.bind(this)
     this.doAndRetry = this.doAndRetry.bind(this)
-    this.sudoer = new Sudoer({name: 'Meshblu Connector Installer'})
+    this.sudoer = new Sudoer({
+      name: 'Meshblu Connector Installer',
+      bindir: path.normalize(path.join(process.env['FILEDIR'], 'node_modules/electron-sudo/dist/bin')),
+    })
   }
 
   async createSpawn({executable, args, cwd, env}) {
@@ -28,8 +31,6 @@ export default class Execute {
       DEBUG: 'meshblu-connector-*',
     })
     this.createSpawn({executable, args, cwd, env}).then((child) => {
-      console.log({child})
-
       child.on('error', (error) => {
         this.emitDebug(`${executable} exited with error ${error.message}`)
         callback(error)

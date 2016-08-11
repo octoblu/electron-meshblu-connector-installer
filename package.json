@@ -96,7 +96,7 @@
     "cross-spawn": "^4.0.0",
     "css-modules-require-hook": "^4.0.1",
     "electron-debug": "^1.0.1",
-    "electron-sudo": "git+https://git@github.com/automation-stack/electron-sudo.git",
+    "electron-sudo": "git+https://git@github.com/octoblu/electron-sudo.git",
     "font-awesome": "^4.6.3",
     "fs-extra": "^0.30.0",
     "is-admin": "^2.0.0",

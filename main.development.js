@@ -3,11 +3,17 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
-const alwaysDev = true;
+const alwaysDev = false;
+let filedir = app.getAppPath()
+
+require('electron-debug')();
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
   require('electron-debug')();
+  filedir = __dirname
 }
+
+process.env['FILEDIR'] = filedir
 
 app.on('window-all-closed', () => {
   app.quit();
@@ -20,7 +26,7 @@ app.on('ready', () => {
     height: 728,
   });
 
-  mainWindow.loadURL(`file://${__dirname}/src/app.html`);
+  mainWindow.loadURL(`file://${filedir}/src/app.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
@@ -34,6 +40,7 @@ app.on('ready', () => {
   if (alwaysDev || process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
   }
+  mainWindow.openDevTools();
 
   if (process.platform === 'darwin') {
     template = [{
