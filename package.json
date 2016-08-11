@@ -109,8 +109,11 @@
     "request": "^2.74.0",
     "source-map-support": "^0.4.0",
     "temp": "^0.8.3",
+    "zooid-device-icon": "^1.0.6",
+    "zooid-error-state": "^1.2.1",
     "zooid-octoblu-intercom": "^1.0.1",
-    "zooid-ui": "^8.0.0"
+    "zooid-ui": "^8.0.0",
+    "zooid-ui-toast": "^1.1.1"
   },
   "devEngines": {
     "node": "4.x || 5.x",

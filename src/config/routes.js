@@ -1,6 +1,6 @@
 import React from 'react';
 import { browserHistory, Route, Router, IndexRoute } from 'react-router';
-import App from '../containers/app';
+import AppLayout from '../containers/app-layout';
 import InputKey from '../containers/input-key';
 import ServiceContainer from '../containers/service-container';
 import Installer from '../containers/installer';
@@ -57,7 +57,7 @@ const needOTP = (nextState, replace, callback) => {
 }
 
 export default (
-  <Route path="/" component={App} >
+  <Route path="/" component={AppLayout} >
     <IndexRoute onEnter={needOTP} />
     <Route path="input-key" component={InputKey} />
     <Route path="install" component={Installer} />

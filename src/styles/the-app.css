@@ -1,0 +1,47 @@
+.TopBar--link {
+  padding: 0 1rem;
+}
+
+.ConnectorIcon {
+  max-width: 100px;
+}
+
+.Form {
+  background: none;
+}
+
+.Page {
+  max-width: none;
+}
+
+.CenterIt {
+  margin: auto;
+  width: 350px;
+  text-align: center;
+}
+
+.ActionFooter {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 2rem;
+
+  font-size: 15px;
+}
+
+.ActionButton {
+  margin-left: auto;
+  min-height: 42px;
+}
+
+.Pretty--EmptyState {
+  width: 800px;
+  background: #fff;
+  margin: 50px auto;
+  padding: 50px;
+}
+
+.Button {
+  padding: 1rem 1.5rem;
+  border-width: 0.2rem;
+}
