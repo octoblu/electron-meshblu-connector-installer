@@ -1,42 +1,56 @@
-import spawn from 'cross-spawn';
 import async from 'async';
 import path from 'path';
 import _ from 'lodash';
+import Sudoer from 'electron-sudo';
 
 export default class Execute {
-  constructor({ emitDebug }) {
-    this.emitDebug = emitDebug;
-    this.do = this.do.bind(this);
-    this.doAndRetry = this.doAndRetry.bind(this);
+  constructor({ emitDebug, serviceType }) {
+    this.emitDebug = emitDebug
+    this.serviceType = serviceType
+    this.do = this.do.bind(this)
+    this.doAndRetry = this.doAndRetry.bind(this)
+    this.sudoer = new Sudoer({name: 'Meshblu Connector Installer'})
   }
+
+  async createSpawn({executable, args, cwd, env}) {
+    let child;
+    if (this.serviceType == 'service') {
+      child = await this.sudoer.spawn(executable, args, { cwd, env })
+    } else {
+      child = spawn(executable, args, { cwd, env })
+    }
+    return child
+  }
+
 
   do({ executable, args, cwd }, callback) {
     const env = _.assign(process.env, {
       DEBUG: 'meshblu-connector-*',
     })
-    const child = spawn(executable, args, { cwd, env });
+    this.createSpawn({executable, args, cwd, env}).then((child) => {
+      console.log({child})
 
-    child.on('error', (error) => {
-      this.emitDebug(`${executable} exited with error ${error.message}`);
-      callback(error);
-    });
+      child.on('error', (error) => {
+        this.emitDebug(`${executable} exited with error ${error.message}`)
+        callback(error)
+      });
 
-    child.stdout.on('data', (data) => {
-      this.logOutput('stdout', data)
-    });
+      child.stdout.on('data', (data) => {
+        this.logOutput('stdout', data)
+      });
 
-    child.stderr.on('data', (data) => {
-      this.logOutput('stderr', data)
-    });
+      child.stderr.on('data', (data) => {
+        this.logOutput('stderr', data)
+      });
 
-    child.on('close', (code) => {
-      this.emitDebug(`${executable} exited ${code}`);
-      if (code > 0) {
-        return callback(new Error('Error during installation'))
-      }
-      callback();
-    });
-
+      child.on('close', (code) => {
+        this.emitDebug(`${executable} exited ${code}`)
+        if (code > 0) {
+          return callback(new Error('Error during installation'))
+        }
+        callback();
+      });
+    })
   }
 
   doAndRetry({ executable, args, cwd }, callback) {

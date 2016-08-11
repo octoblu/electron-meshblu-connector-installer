@@ -27,6 +27,7 @@ function fakeRetrieveOTP({ otpKey }, callback) {
       connectorAssemblerVersion: 'v13.0.0',
       dependencyManagerVersion: 'v3.0.2',
       ignitionVersion: 'v6.2.0',
+      installerVersion: 'v2.0.2',
       connector: 'say-hello',
       tag: 'v6.0.0',
     },

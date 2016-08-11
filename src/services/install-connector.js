@@ -4,7 +4,7 @@ class InstallConnector {
   constructor({ emitDebug, config }) {
     this.emitDebug = emitDebug;
     this.config = config;
-    this.execute = new Execute({ emitDebug })
+    this.execute = new Execute({ emitDebug, serviceType: config.serviceType })
   }
 
   getServiceType(serviceType) {

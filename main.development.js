@@ -3,7 +3,7 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
-const alwaysDev = false;
+const alwaysDev = true;
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
   require('electron-debug')();

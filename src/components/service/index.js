@@ -38,10 +38,20 @@ class Service extends Component {
     const { error, message } = this.state || {}
 
     if (error) return this.renderContent(<ErrorState message={error.message} />)
+    if (serviceType == 'service') {
+      return this.renderContent(
+        <div className="Service--actions">
+          <h2>Warning: This will install as a system-level service</h2>
+          <div className="Service--info-action"><strong>Using One Time Password:</strong> {otpKey}</div>
+          <Link to={{pathname: '/install', query: {otpKey, serviceType, platform}}} className="Button Button--hollow-approve">Begin Install</Link>
+        </div>
+      );
+    }
     return this.renderContent(
       <div className="Service--actions">
         <div className="Service--info-action"><strong>Using One Time Password:</strong> {otpKey}</div>
         <Link to={{pathname: '/install', query: {otpKey, serviceType, platform}}} className="Button Button--hollow-approve">Begin Install</Link>
+        <Link to={{pathname: `/service/${platform}/service`, query: {otpKey}}} className="Button Button--hollow-approve">Switch to Admin</Link>
       </div>
     );
   }
