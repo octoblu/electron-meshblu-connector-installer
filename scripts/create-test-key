@@ -16,9 +16,9 @@ generate_otp(){
     \"connector\": \"say-hello\", \
     \"githubSlug\": \"octoblu/meshblu-connector-say-hello\", \
     \"dependencyManagerVersion\": \"v3.0.6\", \
-    \"ignitionVersion\": \"v6.0.0\", \
+    \"ignitionVersion\": \"v6.2.1\", \
     \"connectorAssemblerVersion\": \"v14.0.0\", \
-    \"installerVersion\": \"v2.0.1\", \
+    \"installerVersion\": \"v2.0.3\", \
     \"tag\": \"v6.0.0\"
   }"
 

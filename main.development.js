@@ -6,8 +6,6 @@ let mainWindow = null;
 const alwaysDev = false;
 let filedir = app.getAppPath()
 
-require('electron-debug')();
-
 if (alwaysDev || process.env.NODE_ENV === 'development') {
   require('electron-debug')();
   filedir = __dirname
@@ -40,7 +38,6 @@ app.on('ready', () => {
   if (alwaysDev || process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
   }
-  mainWindow.openDevTools();
 
   if (process.platform === 'darwin') {
     template = [{

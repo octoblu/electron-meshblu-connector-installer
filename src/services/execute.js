@@ -1,6 +1,7 @@
 import async from 'async';
 import path from 'path';
 import _ from 'lodash';
+import spawn from 'cross-spawn';
 import Sudoer from 'electron-sudo';
 
 export default class Execute {
