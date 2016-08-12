@@ -52,7 +52,7 @@ export default class Execute {
         }
         callback();
       });
-    })
+    }).catch(callback)
   }
 
   doAndRetry({ executable, args, cwd }, callback) {
