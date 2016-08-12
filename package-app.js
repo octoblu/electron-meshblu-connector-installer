@@ -55,7 +55,9 @@ if (version) {
     if (err) {
       DEFAULT_OPTS.version = '1.0.2';
     } else {
-      DEFAULT_OPTS.version = stdout.split('electron-prebuilt@')[1].replace(/\s/g, '');
+      let v = stdout.split('electron-prebuilt@')[1]
+      v = v || ''
+      DEFAULT_OPTS.version = v.replace(/\s/g, '');
     }
 
     startPack();
