@@ -23,6 +23,9 @@ class DependencyDownloader {
   download = ({ projectName, filePath, tag }, callback) => {
     const uri = this.getURL({ projectName, tag });
     this.emitDebug(`Downloading ${uri}...`)
+    const writeStream = this.getWriteStream({ filePath })
+    writeStream.on('end', callback)
+
     const stream = request.get(uri)
     .on('error', callback)
     .on('response', (response) => {
@@ -30,8 +33,8 @@ class DependencyDownloader {
         this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
         return callback(new Error('Invalid Dependency Download'))
       }
-      stream.on('end', callback).pipe(this.getWriteStream({ filePath }))
-    });
+    })
+    .pipe(writeStream)
   }
 
   makeExecutable = ({ filePath }, callback) => {
