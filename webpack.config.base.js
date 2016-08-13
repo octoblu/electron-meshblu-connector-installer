@@ -12,7 +12,7 @@ export default {
         loader: 'json-loader',
       },
     ],
-    noParse: /node_modules\/json-schema\/lib\/validate\.js/,
+    noParse: /validate\.js/,
   },
   output: {
     path: path.join(__dirname, 'dist'),

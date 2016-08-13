@@ -3,7 +3,7 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
-const alwaysDev = true;
+const alwaysDev = false;
 global.appPath = app.getAppPath() // yeah, I know.
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
