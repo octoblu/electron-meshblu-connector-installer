@@ -21,9 +21,9 @@ export default class Execute {
     let child;
     this.emitDebug(`Executing: ${executable} ${args}`)
     if (this.serviceType == 'service') {
-      child = await this.sudoer.spawn(executable, args, { cwd, env, shell: true })
+      child = await this.sudoer.spawn(executable, args, { cwd, env })
     } else {
-      child = spawn(executable, args, { cwd, env, shell: true })
+      child = spawn(executable, args, { cwd, env })
     }
     return child
   }
