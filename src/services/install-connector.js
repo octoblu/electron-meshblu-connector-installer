@@ -30,10 +30,13 @@ class InstallConnector {
       serviceType,
     ];
     this.emitDebug(`Installing connector ${connector}`)
-    this.execute.do({ executable, args, cwd: binPath }, (error) => {
-      if (error) return callback(new Error('Connector Install Failure'))
-      callback()
-    });
+    process.nextTick(() => {
+      this.execute.do({ executable, args, cwd: binPath }, (error) => {
+        if (error) this.emitDebug(`Connector install error: ${error.message}`)
+        if (error) return callback(new Error("Connector Install Failure"))
+        callback()
+      })
+    })
   }
 }
 

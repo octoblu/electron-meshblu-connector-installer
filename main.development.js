@@ -3,15 +3,16 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
-const alwaysDev = false;
-let filedir = app.getAppPath()
+const alwaysDev = true;
+global.appPath = app.getAppPath() // yeah, I know.
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
   require('electron-debug')();
-  filedir = __dirname
 }
 
-process.env['FILEDIR'] = filedir
+if (process.env.NODE_ENV === 'development') {
+  global.appPath = __dirname
+}
 
 app.on('window-all-closed', () => {
   app.quit();
@@ -24,7 +25,7 @@ app.on('ready', () => {
     height: 728,
   });
 
-  mainWindow.loadURL(`file://${filedir}/src/app.html`);
+  mainWindow.loadURL(`file://${global.appPath}/src/app.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();

@@ -10,7 +10,7 @@ main() {
   rm -rf "./release/${platform}-${arch}"
 
   echo "* packaging..."
-  npm run package -- --platform "$platform" --arch "$arch"
+  cross-env NODE_ENV=production npm run package -- --platform "$platform" --arch "$arch"
 
   echo "* generating key"
   local key="$(./scripts/create-test-key)"

@@ -1,8 +1,9 @@
-import async from 'async';
-import path from 'path';
-import _ from 'lodash';
-import spawn from 'cross-spawn';
-import Sudoer from 'electron-sudo';
+import async from 'async'
+import path from 'path'
+import _ from 'lodash'
+import spawn from 'cross-spawn'
+import Sudoer from 'electron-sudo'
+import { remote } from 'electron'
 
 export default class Execute {
   constructor({ emitDebug, serviceType }) {
@@ -12,16 +13,17 @@ export default class Execute {
     this.doAndRetry = this.doAndRetry.bind(this)
     this.sudoer = new Sudoer({
       name: 'Meshblu Connector Installer',
-      bindir: path.normalize(path.join(process.env['FILEDIR'], 'node_modules/electron-sudo/dist/bin')),
+      bindir: path.normalize(path.join(remote.getGlobal('appPath'), 'node_modules/electron-sudo/dist/bin')),
     })
   }
 
   async createSpawn({executable, args, cwd, env}) {
     let child;
+    this.emitDebug(`Executing: ${executable} ${args}`)
     if (this.serviceType == 'service') {
-      child = await this.sudoer.spawn(executable, args, { cwd, env })
+      child = await this.sudoer.spawn(executable, args, { cwd, env, shell: true })
     } else {
-      child = spawn(executable, args, { cwd, env })
+      child = spawn(executable, args, { cwd, env, shell: true })
     }
     return child
   }
