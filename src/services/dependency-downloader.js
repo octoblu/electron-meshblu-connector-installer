@@ -24,7 +24,7 @@ class DependencyDownloader {
     const uri = this.getURL({ projectName, tag });
     this.emitDebug(`Downloading ${uri}...`)
     const writeStream = this.getWriteStream({ filePath })
-    writeStream.on('end', callback)
+    writeStream.on('close', callback)
 
     const stream = request.get(uri)
     .on('error', callback)
