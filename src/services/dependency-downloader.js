@@ -51,7 +51,7 @@ class DependencyDownloader {
   getFullFilePath({ fileName }) {
     const { platform } = process;
     const ext = platform === 'win32' ? '.exe' : '';
-    return temp.path({prefix: fileName, suffix: ext})
+    return temp.path({suffix: ext})
   }
 
   getURL({ projectName, tag }) {
