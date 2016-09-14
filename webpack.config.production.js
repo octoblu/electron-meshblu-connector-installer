@@ -8,11 +8,13 @@ const config = {
 
   devtool: 'cheap-source-map',
 
-  entry: './src/index',
+  entry: [
+    'babel-polyfill',
+    './src/index'
+  ],
 
   output: {
     ...baseConfig.output,
-
     publicPath: '../dist/',
   },
 

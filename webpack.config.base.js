@@ -20,13 +20,14 @@ export default {
     libraryTarget: 'commonjs2',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
-    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
+    extensions: ['', '.js', '.jsx', '.json'],
+    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
   },
   plugins: [
 
   ],
   externals: [
+    'electron',
     'is-admin',
     'cross-spawn'
   ],

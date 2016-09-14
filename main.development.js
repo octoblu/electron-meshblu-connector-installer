@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
-import ElectronDebug from 'electron-debug';
 
 let menu;
 let template;
@@ -8,7 +7,7 @@ const alwaysDev = false;
 global.appPath = app.getAppPath() // yeah, I know.
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
-  ElectronDebug();
+  require('electron-debug')(); // eslint-disable-line global-require
 }
 
 if (process.env.NODE_ENV === 'development') {

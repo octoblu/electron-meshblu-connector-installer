@@ -6,7 +6,7 @@ export default {
 
   devtool: 'source-map',
 
-  entry: './main.development',
+  entry: ['babel-polyfill', './main.development'],
 
   output: {
     path: __dirname,
@@ -28,7 +28,7 @@ export default {
     }),
   ],
 
-  target: 'electron',
+  target: 'electron-main',
 
   node: {
     __dirname: false,
