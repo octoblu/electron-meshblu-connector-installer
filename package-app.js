@@ -50,16 +50,12 @@ if (version) {
   DEFAULT_OPTS.version = version;
   startPack();
 } else {
-  // use the same version as the currently-installed electron-prebuilt
-  exec('npm list electron-prebuilt --dev', (err, stdout) => {
+  exec('npm list electron --dev', (err, stdout) => {
     if (err) {
-      DEFAULT_OPTS.version = '1.0.2';
+      DEFAULT_OPTS.version = '1.2.0';
     } else {
-      let v = stdout.split('electron-prebuilt@')[1]
-      v = v || ''
-      DEFAULT_OPTS.version = v.replace(/\s/g, '');
+      DEFAULT_OPTS.version = stdout.split('electron@')[1].replace(/\s/g, '');
     }
-
     startPack();
   });
 }
