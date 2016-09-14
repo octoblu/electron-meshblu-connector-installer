@@ -14,11 +14,30 @@ if (process.env.NODE_ENV === 'development') {
   global.appPath = __dirname
 }
 
+const installExtensions = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+
+    const extensions = [
+      'REACT_DEVELOPER_TOOLS',
+      'REDUX_DEVTOOLS'
+    ];
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+    for (const name of extensions) {
+      try {
+        await installer.default(installer[name], forceDownload);
+      } catch (e) {} // eslint-disable-line
+    }
+  }
+};
+
 app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on('ready', () => {
+app.on('ready', async () => {
+  await installExtensions();
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -38,6 +57,16 @@ app.on('ready', () => {
 
   if (alwaysDev || process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
+    mainWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props;
+
+      Menu.buildFromTemplate([{
+        label: 'Inspect element',
+        click() {
+          mainWindow.inspectElement(x, y);
+        }
+      }]).popup(mainWindow);
+    });
   }
 
   if (process.platform === 'darwin') {

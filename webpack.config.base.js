@@ -27,7 +27,6 @@ export default {
 
   ],
   externals: [
-    'electron',
     'is-admin',
     'cross-spawn'
   ],
