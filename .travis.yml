@@ -25,12 +25,13 @@ addons:
     - gcc-multilib
     - build-essential
 before_install:
-- PACKAGER_URL="https://meshblu-connector.octoblu.com/tools/packager/v7.0.0"
+- PACKAGER_URL="https://meshblu-connector.octoblu.com/tools/packager/latest"
 - export PACKAGER_ARCH="$ARCH"
 - curl -fsS "${PACKAGER_URL}/travis_install_node.sh" -o /tmp/travis_install_node.sh
 - chmod +x /tmp/travis_install_node.sh
 - . /tmp/travis_install_node.sh
 install:
+- npm install
 - npm install
 before_script:
 - export DISPLAY=:99.0
