@@ -37,6 +37,7 @@ export default {
 
   externals: [
     ...baseConfig.externals,
+    'electron-debug',
     'electron-sudo',
     'font-awesome',
     'source-map-support',
