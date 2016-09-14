@@ -8,6 +8,7 @@ class InstallConnector {
   }
 
   getServiceType(serviceType) {
+    this.emitDebug(`getServiceType ${serviceType}`)
     if (serviceType == 'service') return 'Service'
     if (serviceType == 'user-service') return 'UserService'
     if (serviceType == 'user-login') return 'UserLogin'
@@ -22,6 +23,7 @@ class InstallConnector {
     const { installer } = this.config.coreDependencies;
     const executable = installer.filePath
     const serviceType = this.getServiceType(this.config.serviceType)
+    this.emitDebug(`install ${serviceType}`)
 
     const args = [
       '--one-time-password',
