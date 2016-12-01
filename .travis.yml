@@ -40,8 +40,6 @@ before_script:
 script:
 - yarn test
 - yarn build
-after_success:
-- yarn install --production --ignore-scripts --prefer-offline
 before_deploy:
 - "./deploy/build"
 - if [ "$TRAVIS_OS_NAME" == "linux" -a "$MAIN_BUILD" == "true" ]; then export NPM_PUBLISH=true; fi
