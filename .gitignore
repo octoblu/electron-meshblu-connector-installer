@@ -37,3 +37,4 @@ main.js.map
 deploy/cache
 dpl_s3
 dpl_github
+*.log

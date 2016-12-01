@@ -17,7 +17,7 @@ build_app(){
   if [ "$skip" == "1" -a -d "${base_dir}" ]; then
     echo "### skipping build"
   else
-    yarn package --platform "$platform" --arch "$arch"
+    yarn package -- --platform "$platform" --arch "$arch"
   fi
 }
 
