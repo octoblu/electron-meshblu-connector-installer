@@ -24,10 +24,10 @@ function fakeRetrieveOTP({ otpKey }, callback) {
     token: 'a7702204e157e51fd63c924a7b77db00121a0d5d',
     metadata: {
       githubSlug: 'octoblu/meshblu-connector-say-hello',
-      ignitionVersion: 'v6.2.1',
-      installerVersion: 'v2.0.3',
+      ignitionVersion: 'v8.0.2',
+      installerVersion: 'v2.0.10',
       connector: 'say-hello',
-      tag: 'v6.0.0',
+      tag: 'v7.0.4',
     },
   });
 }

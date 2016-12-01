@@ -9,8 +9,10 @@
         if (!process.env.HOT) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = '../dist/style.css';
-          document.write(link.outerHTML);
+          link.href = './dist/style.css';
+          link.async = true;
+          const firstLink = document.getElementsByTagName('link')[0];
+          firstLink.parentNode.insertBefore(link, firstLink);
         }
       }());
     </script>
@@ -18,11 +20,17 @@
   <body>
     <div id="app"></div>
     <script>
-      (function() {
+      {
         const script = document.createElement('script');
-        script.src = (process.env.HOT) ? 'http://localhost:3000/dist/bundle.js' : '../dist/bundle.js';
+        const port = process.env.PORT || 3000;
+        script.src = (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/bundle.js'
+          : './dist/bundle.js';
+        script.async = true;
+        const firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
         document.write(script.outerHTML);
-      }());
+      }
     </script>
   </body>
 </html>

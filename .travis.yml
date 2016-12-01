@@ -30,16 +30,18 @@ before_install:
 - curl -fsS "${PACKAGER_URL}/travis_install_node.sh" -o /tmp/travis_install_node.sh
 - chmod +x /tmp/travis_install_node.sh
 - . /tmp/travis_install_node.sh
+- npm install --global yarn
 install:
-- npm install
-- npm install
+- yarn install
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 3
 script:
-- npm run test
-- npm run build
+- yarn test
+- yarn build
+after_success:
+- yarn install --production --ignore-scripts --prefer-offline
 before_deploy:
 - "./deploy/build"
 - if [ "$TRAVIS_OS_NAME" == "linux" -a "$MAIN_BUILD" == "true" ]; then export NPM_PUBLISH=true; fi

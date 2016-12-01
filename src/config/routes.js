@@ -6,16 +6,10 @@ import ServiceContainer from '../containers/service-container';
 import Installer from '../containers/installer';
 import NoMatch from '../components/no-match';
 import GetOTPKey from '../services/get-otp-key'
-import isAdmin from 'is-admin';
 
 const checkIfPrivileged = (callback) => {
   const { platform } = process
-
-  if (platform !== 'win32') return callback(null, false)
-
-  isAdmin().then((admin) => {
-    callback(null, admin)
-  }).catch(callback)
+  callback(null, false)
 }
 
 const platformHome = (nextState, replace, callback) => {
