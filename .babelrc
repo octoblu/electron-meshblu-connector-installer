@@ -1,6 +1,5 @@
 {
-  "presets": ["es2015", "stage-0", "react"],
-  "plugins": ["add-module-exports"],
+  "presets": ["react", "es2015", "stage-0"],
   "env": {
     "production": {
       "presets": ["react-optimize"],
@@ -13,7 +12,11 @@
     },
     "test": {
       "plugins": [
-        ["webpack-loaders", { "config": "webpack.config.node.js", "verbose": false }]
+        [
+          "babel-plugin-webpack-alias",
+          "webpack-loaders",
+          { "config": "webpack.config.node.js", "verbose": false }
+        ]
       ]
     }
   }

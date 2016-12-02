@@ -1,20 +1,10 @@
-import React, { PropTypes, Component } from 'react';
-import ReactDOM from 'react-dom';
-import { hashHistory, Link } from 'react-router';
-import isAdmin from 'is-admin';
+import React, { PropTypes, Component } from 'react'
+import { hashHistory } from 'react-router'
 
 import ErrorState from 'zooid-error-state'
 import CustomErrorState from '../error-state'
 
-import './index.css';
-
-import {
-  Spinner,
-  Button,
-  FormActions,
-  FormField,
-  FormInput,
-} from 'zooid-ui';
+import './index.css'
 
 class Service extends Component {
   static propTypes = {
@@ -43,8 +33,7 @@ class Service extends Component {
   }
 
   render() {
-    const { otpKey, serviceType, platform } = this.props || {}
-    const { error, message } = this.state || {}
+    const { error } = this.state || {}
 
     if (error) return (<CustomErrorState message={error.message} />)
     return (

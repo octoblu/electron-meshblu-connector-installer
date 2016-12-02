@@ -3,4 +3,4 @@ export const DOWNLOAD_MAP = {
     projectName: 'meshblu-connector-installer',
     fileName: 'connector-installer',
   }
-};
+}

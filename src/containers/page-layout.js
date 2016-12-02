@@ -1,15 +1,11 @@
 import _ from 'lodash'
 import React, { PropTypes, Component } from 'react'
-import { Link } from 'react-router'
 import DeviceIcon from 'zooid-device-icon'
 import ErrorState from 'zooid-error-state'
 import {
   Spinner,
-  Breadcrumb,
-  TopBar,
   Page,
   PageHeader,
-  PageActions,
   PageTitle,
 } from 'zooid-ui'
 

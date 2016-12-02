@@ -1,14 +1,13 @@
-import React from 'react';
-import { browserHistory, Route, Router, IndexRoute } from 'react-router';
-import AppLayout from '../containers/app-layout';
-import InputKey from '../containers/input-key';
-import ServiceContainer from '../containers/service-container';
-import Installer from '../containers/installer';
-import NoMatch from '../components/no-match';
+import React from 'react'
+import { Route, IndexRoute } from 'react-router'
+import AppLayout from '../containers/app-layout'
+import InputKey from '../containers/input-key'
+import ServiceContainer from '../containers/service-container'
+import Installer from '../containers/installer'
+import NoMatch from '../components/no-match'
 import GetOTPKey from '../services/get-otp-key'
 
 const checkIfPrivileged = (callback) => {
-  const { platform } = process
   callback(null, false)
 }
 
@@ -59,4 +58,4 @@ export default (
     <Route path="service/:platform/:serviceType" component={ServiceContainer} />
     <Route path="*" status={404} component={NoMatch} />
   </Route>
-);
+)

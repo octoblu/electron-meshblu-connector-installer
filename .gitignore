@@ -38,3 +38,4 @@ deploy/cache
 dpl_s3
 dpl_github
 *.log
+npm-debug.log*

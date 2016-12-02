@@ -1,5 +1,5 @@
-import webpack from 'webpack';
-import baseConfig from './webpack.config.base';
+import webpack from 'webpack'
+import baseConfig from './webpack.config.base'
 
 export default {
   ...baseConfig,
@@ -42,4 +42,4 @@ export default {
     'font-awesome',
     'source-map-support',
   ],
-};
+}

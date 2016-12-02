@@ -1,19 +1,18 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-import './index.css';
+import React, { Component, PropTypes } from 'react'
+import './index.css'
 
 import ZooidOctobluIntercom from 'zooid-octoblu-intercom'
-import DebugConfig from '../debug-config';
-import DebugLines from '../debug-lines';
-import ErrorState from '../error-state';
-import InstallerMaster from './installer-master';
+import DebugConfig from '../debug-config'
+import DebugLines from '../debug-lines'
+import ErrorState from '../error-state'
+import InstallerMaster from './installer-master'
 
 import {
   Spinner,
   ProgressBar,
-} from 'zooid-ui';
+} from 'zooid-ui'
 
-const MAX_STEPS = 5;
+const MAX_STEPS = 5
 
 class Installer extends Component {
   static propTypes = {
@@ -33,34 +32,31 @@ class Installer extends Component {
   }
 
   componentDidMount() {
-    const { otpKey, serviceType, platform } = this.props
+    const { otpKey, serviceType } = this.props
     this.installer = new InstallerMaster({ otpKey, serviceType })
     this.installer.on('debug', (line) => {
-      const { lines } = this.state;
+      const { lines } = this.state
       lines.push(`-- ${line}`)
-      this.setState({ lines });
-    });
+      this.setState({ lines })
+    })
     this.installer.on('step', (message) => {
-      const { step, lines } = this.state;
-      const newStep = step + 1;
-      lines.push(`[Step ${newStep}]: ${message}`);
-      this.setState({ message, step: newStep });
-    });
+      const { step, lines } = this.state
+      const newStep = step + 1
+      lines.push(`[Step ${newStep}]: ${message}`)
+      this.setState({ message, step: newStep })
+    })
     this.installer.on('config', (config) => {
-      this.setState({ config, configLoading: false });
-    });
+      this.setState({ config, configLoading: false })
+    })
     this.installer.on('error', (error) => {
-      this.setState({ error });
-    });
+      this.setState({ error })
+    })
     this.installer.start(() => {
       this.setState({ done: true, step: 5, message: 'done' })
     })
   }
 
   getIntercom({ uuid, token } = {}) {
-    if (true) {
-      return <ZooidOctobluIntercom appId="ux5bbkjz" uuid="0759a161-f8db-4393-a4e0-03b566591fd2" token="43f280b54849f77eb94114f4682bc447204d1841" />
-    }
     if (!uuid || !token) {
       return null
     }
@@ -68,7 +64,7 @@ class Installer extends Component {
   }
 
   getDebug = () => {
-    const { config, lines, showDebug } = this.state;
+    const { config, lines, showDebug } = this.state
     if (!showDebug) {
       return (
         <div
@@ -77,7 +73,7 @@ class Installer extends Component {
         >
           <i className="fa fa-bug"></i> Show Debug
         </div>
-      );
+      )
     }
     return (
       <div className="Installer--split">
@@ -88,14 +84,14 @@ class Installer extends Component {
           <DebugLines lines={lines} />
         </div>
       </div>
-    );
+    )
   }
 
   exitApp = () => {
   }
 
   toggleDebug = () => {
-    this.setState({ showDebug: !this.state.showDebug });
+    this.setState({ showDebug: !this.state.showDebug })
   }
 
   renderContent = (content) => {
@@ -106,26 +102,26 @@ class Installer extends Component {
         </div>
         {this.getDebug()}
       </div>
-    );
+    )
   }
 
   render() {
-    const { error, configLoading, done } = this.state;
+    const { error, configLoading, done } = this.state
 
-    if (error) return this.renderContent(<ErrorState message={error.message} />);
-    if (configLoading) return this.renderContent(<Spinner size="large" />);
+    if (error) return this.renderContent(<ErrorState message={error.message} />)
+    if (configLoading) return this.renderContent(<Spinner size="large" />)
     if (done) {
       return this.renderContent(
         <div className="Installer--done">
           Success! Please Close. <br />
           <small>* Sorry I currently can't do it for you *</small>
         </div>
-      );
+      )
     }
 
     const { config, message, step } = this.state
-    const { connector, octoblu } = config;
-    const percentage = step / MAX_STEPS * 100;
+    const { connector, octoblu } = config
+    const percentage = step / MAX_STEPS * 100
 
     return this.renderContent(
       <div>
@@ -134,8 +130,8 @@ class Installer extends Component {
         <h3>Step: {step} / {MAX_STEPS} {message}</h3>
         {this.getIntercom(octoblu)}
       </div>
-    );
+    )
   }
 }
 
-export default Installer;
+export default Installer

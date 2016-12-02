@@ -1,7 +1,7 @@
-import React, { PropTypes, Component } from 'react';
-import ReactDOM from 'react-dom';
-import _ from 'lodash';
-import './index.css';
+import React, { PropTypes, Component } from 'react'
+import ReactDOM from 'react-dom'
+import _ from 'lodash'
+import './index.css'
 
 class DebugLines extends Component {
   static propTypes = {
@@ -9,18 +9,18 @@ class DebugLines extends Component {
   }
 
   updateScroll = () => {
-    const { thing } = this.refs;
-    ReactDOM.findDOMNode(thing).scrollTop = thing.scrollHeight;
+    const { thing } = this.refs
+    ReactDOM.findDOMNode(thing).scrollTop = thing.scrollHeight
   }
 
   render() {
-    const { lines } = this.props;
+    const { lines } = this.props
     const theLines = _.map(lines, (line, key) => {
-      return <li key={key}>{line}</li>;
-    });
+      return <li key={key}>{line}</li>
+    })
 
     _.delay(() => {
-      this.updateScroll();
+      this.updateScroll()
     }, 50)
 
     return (
@@ -32,7 +32,7 @@ class DebugLines extends Component {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 

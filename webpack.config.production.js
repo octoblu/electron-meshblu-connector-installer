@@ -1,7 +1,7 @@
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import baseConfig from './webpack.config.base';
-import autoprefixer from 'autoprefixer';
+import webpack from 'webpack'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import baseConfig from './webpack.config.base'
+import autoprefixer from 'autoprefixer'
 
 const config = {
   ...baseConfig,
@@ -45,10 +45,10 @@ const config = {
     new ExtractTextPlugin('style.css', { allChunks: true }),
   ],
   postcss: () => {
-    return [autoprefixer];
+    return [autoprefixer]
   },
 
   target: 'electron-renderer',
-};
+}
 
-export default config;
+export default config

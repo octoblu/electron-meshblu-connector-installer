@@ -1,17 +1,15 @@
-import React, { PropTypes, Component } from 'react';
-import ReactDOM from 'react-dom';
-import { hashHistory } from 'react-router';
-import isAdmin from 'is-admin';
+import React, { PropTypes, Component } from 'react'
+import ReactDOM from 'react-dom'
+import { hashHistory } from 'react-router'
 
-import './index.css';
+import './index.css'
 
 import {
-  Spinner,
   Button,
   FormActions,
   FormField,
   FormInput,
-} from 'zooid-ui';
+} from 'zooid-ui'
 
 import ErrorState from '../error-state'
 
@@ -25,7 +23,7 @@ export default class InputKey extends Component {
     this.state = {
       otpKey: null,
     }
-    this.handleKeyChange = this.handleKeyChange.bind(this);
+    this.handleKeyChange = this.handleKeyChange.bind(this)
   }
 
   componentDidMount() {
@@ -38,12 +36,11 @@ export default class InputKey extends Component {
   }
 
   handleKeyChange() {
-    const ref = this.refs.otpKey;
-    const otpKey = ReactDOM.findDOMNode(ref).value;
-    let message = null
-    let editKey = true
+    const ref = this.refs.otpKey
+    const otpKey = ReactDOM.findDOMNode(ref).value
     if (!otpKey) {
-      message = 'Missing One Time Password'
+      this.setStatus({ message: 'Missing One Time Password' })
+      return
     }
     hashHistory.push({
       pathname: '/service-types',
@@ -62,7 +59,7 @@ export default class InputKey extends Component {
   }
 
   render() {
-    const { error, editKey, otpKey, message } = this.state
+    const { error, otpKey, message } = this.state
 
     if (error) return this.renderContent(<ErrorState message={error.message} />)
     return this.renderContent(

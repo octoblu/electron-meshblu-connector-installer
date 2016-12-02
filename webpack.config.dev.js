@@ -1,6 +1,6 @@
 /* eslint max-len: 0 */
-import webpack from 'webpack';
-import baseConfig from './webpack.config.base';
+import webpack from 'webpack'
+import baseConfig from './webpack.config.base'
 import autoprefixer from 'autoprefixer'
 
 const config = {
@@ -43,10 +43,10 @@ const config = {
   ],
 
   postcss: () => {
-    return [autoprefixer];
+    return [autoprefixer]
   },
 
   target: 'electron-renderer',
-};
+}
 
-export default config;
+export default config

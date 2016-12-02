@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import Installer from '../components/installer'
 
 export default class InstallerPage extends Component {
@@ -7,6 +7,6 @@ export default class InstallerPage extends Component {
 
     return (
       <Installer otpKey={otpKey} serviceType={serviceType} platform={platform} />
-    );
+    )
   }
 }

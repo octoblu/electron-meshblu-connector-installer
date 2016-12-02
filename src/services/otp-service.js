@@ -1,21 +1,21 @@
-import request from 'request';
+import request from 'request'
 
-const OTP_SERVICE_URL = 'https://meshblu-otp.octoblu.com';
+const OTP_SERVICE_URL = 'https://meshblu-otp.octoblu.com'
 
 export function retrieveOTP({ otpKey }, callback) {
   if (process.env.NODE_ENV === 'development') {
-    fakeRetrieveOTP({ otpKey }, callback);
-    return;
+    fakeRetrieveOTP({ otpKey }, callback)
+    return
   }
   request({
     baseUrl: OTP_SERVICE_URL,
     uri: `/retrieve/${otpKey}`,
     json: true,
   }, (error, response, body) => {
-    if (error) return callback(error);
-    if (response.statusCode !== 200) return callback(new Error(body.error));
-    callback(null, body);
-  });
+    if (error) return callback(error)
+    if (response.statusCode !== 200) return callback(new Error(body.error))
+    callback(null, body)
+  })
 }
 
 function fakeRetrieveOTP({ otpKey }, callback) {
@@ -29,5 +29,5 @@ function fakeRetrieveOTP({ otpKey }, callback) {
       connector: 'say-hello',
       tag: 'v7.0.4',
     },
-  });
+  })
 }

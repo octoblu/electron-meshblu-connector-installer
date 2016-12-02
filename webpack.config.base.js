@@ -1,12 +1,12 @@
-import path from 'path';
+import path from 'path'
 
 export default {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.js?$/,
         loaders: ['babel-loader'],
-        exclude: /node_modules/,
+        include: path.join(__dirname, 'src'),
       }, {
         test: /\.json$/,
         loader: 'json-loader',
@@ -30,4 +30,4 @@ export default {
     'is-admin',
     'cross-spawn'
   ],
-};
+}
