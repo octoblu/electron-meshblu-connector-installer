@@ -10,6 +10,7 @@ class InstallerMaster extends EventEmitter {
     super()
     this.otpKey = otpKey
     this.serviceType = serviceType
+    this.shouldStop = false
   }
 
   emitDebug = (debug) => {
@@ -17,12 +18,18 @@ class InstallerMaster extends EventEmitter {
   }
 
   getInfo = (done) => {
+    if (this.shouldStop) {
+      return done()
+    }
     this.emit('step', 'Getting installer information')
     const { otpKey, serviceType } = this
 
     new InstallerInfo({ emitDebug: this.emitDebug })
       .getInfo({ otpKey, serviceType }, (error, config) => {
-        if (error) return this.emit('error', error)
+        if (error) {
+          this.emit('error', error)
+          return done(error)
+        }
         this.config = config
         this.emit('config', config)
         this.emitDebug(`Got otpKey: ${config.otpKey}, serviceType: ${config.serviceType}`)
@@ -31,19 +38,31 @@ class InstallerMaster extends EventEmitter {
   }
 
   downloadDeps = (done) => {
+    if (this.shouldStop) {
+      return done()
+    }
     this.emit('step', 'Downloading dependencies')
     new DependencyDownloader({ emitDebug: this.emitDebug, config: this.config })
       .downloadAll((error) => {
-        if (error) return this.emit('error', error)
+        if (error) {
+          this.emit('error', error)
+          return done(error)
+        }
         done()
       })
   }
 
   installConnector = (done) => {
+    if (this.shouldStop) {
+      return done()
+    }
     this.emit('step', 'Installing Connector')
     new InstallConnector({ emitDebug: this.emitDebug, config: this.config })
       .install((error) => {
-        if (error) return this.emit('error', error)
+        if (error) {
+          this.emit('error', error)
+          return done(error)
+        }
         done()
       })
   }
@@ -54,9 +73,16 @@ class InstallerMaster extends EventEmitter {
       this.downloadDeps,
       this.installConnector,
     ], (error) => {
-      if (error) return this.emit('error', error)
+      if (error) {
+        this.emit('error', error)
+        return done(error)
+      }
       done()
     })
+  }
+
+  stop() {
+    this.shouldStop = true
   }
 }
 

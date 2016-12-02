@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
 import { hashHistory } from 'react-router'
@@ -24,28 +25,30 @@ export default class InputKey extends Component {
       otpKey: null,
     }
     this.handleKeyChange = this.handleKeyChange.bind(this)
+    this.handleKeySubmit = this.handleKeySubmit.bind(this)
   }
 
   componentDidMount() {
-    let otpKey
-    if (this.props) {
-      otpKey = this.props.otpKey
-    }
-
+    const otpKey = _.get(this.props, 'otpKey', _.get(this.props, 'location.query.otpKey'))
     this.setState({otpKey})
+  }
+
+  handleKeySubmit() {
+    const { otpKey } = this.state
+    if (!otpKey) {
+      this.setState({ message: 'Missing One Time Password' })
+      return
+    }
+    hashHistory.push({
+      pathname: '/service-types',
+      query: { otpKey },
+    })
   }
 
   handleKeyChange() {
     const ref = this.refs.otpKey
     const otpKey = ReactDOM.findDOMNode(ref).value
-    if (!otpKey) {
-      this.setStatus({ message: 'Missing One Time Password' })
-      return
-    }
-    hashHistory.push({
-      pathname: '/service-types',
-      query: {otpKey},
-    })
+    this.setState({ otpKey })
   }
 
   renderContent(content) {
@@ -66,10 +69,10 @@ export default class InputKey extends Component {
       <div className="InputKey--change-key">
         <div className="InputKey--warning-message">{message}</div>
         <FormField className="InputKey--form-field" label="Enter One Time Password" name="otpKey">
-          <FormInput type="text" ref="otpKey" name="otpKey" defaultValue={otpKey} />
+          <FormInput onChange={this.handleKeyChange} type="text" ref="otpKey" name="otpKey" value={otpKey || ''} />
         </FormField>
         <FormActions>
-          <Button onClick={this.handleKeyChange} kind="primary">Use Key</Button>
+          <Button onClick={this.handleKeySubmit} kind="primary">Use Key</Button>
         </FormActions>
       </div>
     )

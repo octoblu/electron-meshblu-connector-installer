@@ -11,3 +11,10 @@
   font-weight: bold;
   word-wrap: break-word;
 }
+
+.DebugConfig--list {
+  list-style-type: none;
+  word-wrap: break-word;
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+}

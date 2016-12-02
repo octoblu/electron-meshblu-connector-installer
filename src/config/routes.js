@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React from 'react'
 import { Route, IndexRoute } from 'react-router'
 import AppLayout from '../containers/app-layout'
@@ -37,10 +38,15 @@ const platformHome = (nextState, replace, callback) => {
 const needOTP = (nextState, replace, callback) => {
   new GetOTPKey().getKey((error, response) => {
     const { otpKey } = response
-    if (otpKey) {
+    if (_.startsWith(_.get(nextState, 'location.hash'), '#/input-key')) {
+      replace({
+        pathname: '/input-key',
+        query: { otpKey }
+      })
+    } else if (otpKey) {
       replace({
         pathname: '/service-types',
-        query: {otpKey},
+        query: { otpKey },
       })
     } else {
       replace('/input-key')

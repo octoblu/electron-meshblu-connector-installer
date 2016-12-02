@@ -20,7 +20,9 @@ const DebugConfig = ({ config }) => {
   const items = convertObject(config, '')
   return (<div className="DebugConfig">
     <h3>Installer Information:</h3>
-    {items}
+    <ul className="DebugConfig--list">
+      {items}
+    </ul>
   </div>)
 }
 

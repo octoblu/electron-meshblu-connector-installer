@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react'
+import _ from 'lodash'
+import React, { Component } from 'react'
 import { Link } from 'react-router'
-import Toast from 'zooid-ui-toast'
 
 import {
   AppBar,
@@ -13,10 +13,7 @@ import '../styles/the-app.css'
 
 class AppLayout extends Component {
   render() {
-    let otpKey
-    if (this.props && this.props.location && this.props.location.query) {
-      otpKey = this.props.otpKey || this.props.location.query.otpKey
-    }
+    const otpKey = _.get(this.props, 'otpKey', _.get(this.props, 'location.query.otpKey'))
     return (
       <div>
         <AppBar>
@@ -27,7 +24,9 @@ class AppLayout extends Component {
           </AppBarPrimary>
           <AppBarSecondary>
             <nav role="navigation">
-              <Link className="OctobluAppBar-link" to={{pathname: '#/input-key', query: {otpKey: otpKey}}}>{otpKey} <i className="fa fa-pencil"></i></Link>
+              <Link className="OctobluAppBar-link" to={{ pathname: '#/input-key', query: { otpKey } }}>
+                {otpKey} <i className="fa fa-pencil"></i>
+              </Link>
             </nav>
           </AppBarSecondary>
         </AppBar>

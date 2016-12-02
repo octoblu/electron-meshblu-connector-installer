@@ -56,6 +56,11 @@ class Installer extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.installer.removeAllListeners()
+    this.installer.stop()
+  }
+
   getIntercom({ uuid, token } = {}) {
     if (!uuid || !token) {
       return null
