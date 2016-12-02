@@ -1,17 +1,12 @@
-language: cpp
-os:
-- linux
-- osx
-env:
-  matrix:
-  - PACKAGER_NODE_VERSION="5.5" ARCH="amd64" MAIN_BUILD=true
-  - PACKAGER_NODE_VERSION="5.5" ARCH="386"
-  global:
-    secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
-matrix:
-  exclude:
-  - os: osx
-    env: PACKAGER_NODE_VERSION="5.5" ARCH="386"
+sudo: false
+language: node_js
+node_js:
+  - 6
+cache:
+  directories:
+    - node_modules
+global:
+  secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
 branches:
   only:
   - /^v[0-9]/
@@ -21,27 +16,23 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-    - g++-4.8-multilib
-    - gcc-multilib
-    - build-essential
-before_install:
-- PACKAGER_URL="https://meshblu-connector.octoblu.com/tools/packager/latest"
-- export PACKAGER_ARCH="$ARCH"
-- curl -fsS "${PACKAGER_URL}/travis_install_node.sh" -o /tmp/travis_install_node.sh
-- chmod +x /tmp/travis_install_node.sh
-- . /tmp/travis_install_node.sh
-- npm install --global yarn
+    - icnsutils
+    - graphicsmagick
+    - xz-utils
+    - xorriso
 install:
-- yarn install
+- export CXX="g++-4.8"
+- npm install -g npm@latest
+- npm install
+- "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 3
 script:
-- yarn test
-before_deploy:
-- "./deploy/build"
-- if [ "$TRAVIS_OS_NAME" == "linux" -a "$MAIN_BUILD" == "true" ]; then export NPM_PUBLISH=true; fi
+- npm test
+- npm run build
+- npm run package
 deploy:
 - provider: releases
   api_key:
@@ -58,4 +49,3 @@ deploy:
     secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
   on:
     tags: true
-    condition: "$NPM_PUBLISH == true"

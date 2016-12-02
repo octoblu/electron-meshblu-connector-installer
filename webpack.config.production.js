@@ -1,78 +1,94 @@
-import webpack from 'webpack'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import baseConfig from './webpack.config.base'
-import autoprefixer from 'autoprefixer'
+/**
+ * Build config for electron 'Renderer Process' file
+ */
 
-const config = {
-  ...baseConfig,
+import path from 'path';
+import webpack from 'webpack';
+import validate from 'webpack-validator';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import merge from 'webpack-merge';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import baseConfig from './webpack.config.base';
+import autoprefixer from 'autoprefixer';
 
-  devtool: 'cheap-source-map',
+const config = validate(merge(baseConfig, {
+  devtool: 'cheap-module-source-map',
 
   entry: [
     'babel-polyfill',
-    './src/index'
+    './app/index'
   ],
 
   output: {
-    ...baseConfig.output,
-    publicPath: '/',
+    path: path.join(__dirname, 'app/dist'),
+    publicPath: '../dist/'
   },
 
   module: {
-    ...baseConfig.module,
-
     loaders: [
-      ...baseConfig.module.loaders,
+      {
+        test: /\.coffee$/,
+        loader: "coffee-loader",
+        include: './node_modules'
+      },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'postcss-loader'),
+        loader: 'style-loader!css-loader!postcss-loader'
+        include: path.join(__dirname, 'node_modules'),
       },
-    ],
+      {
+        test:   /\.css$/,
+        loader: 'style-loader!css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=1!postcss-loader!',
+        include: path.join(__dirname, 'app')
+      },
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
+    ]
   },
 
   plugins: [
-    ...baseConfig.plugins,
+    // https://webpack.github.io/docs/list-of-plugins.html#occurrenceorderplugin
+    // https://github.com/webpack/webpack/issues/864
+    new webpack.optimize.OccurrenceOrderPlugin(),
+
+    // NODE_ENV should be production so that modules do not perform certain development checks
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: path.join(__dirname, 'src', 'app.html'),
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
-      }
-    })
+
+    // Minify without warning messages and IE8 support
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
+      compressor: {
         screw_ie8: true,
         warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      },
+      }
     }),
-    new webpack.optimize.OccurenceOrderPlugin(),
     new ExtractTextPlugin('style.css', { allChunks: true }),
+    new HtmlWebpackPlugin({
+      filename: '../app.html',
+      template: 'app/app.html',
+      inject: false
+    })
   ],
-  postcss: () => {
-    return [autoprefixer]
-  },
 
+  // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer',
-}
 
-export default config
+  postcss: function() {
+    return [
+     autoprefixer({
+       browsers: [
+         '>1%',
+         'last 4 versions',
+         'Firefox ESR',
+         'not ie < 9', // React doesn't support IE8 anyway
+       ]
+     }),
+    ];
+  }
+}));
+
+export default config;

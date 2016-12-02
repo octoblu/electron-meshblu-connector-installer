@@ -1,0 +1,21 @@
+{
+  "name": "electron-meshblu-connector-installer",
+  "productName": "MeshbluConnectorInstaller",
+  "main": "./main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoblu/electron-meshblu-connector-installer.git"
+  },
+  "author": {
+    "name": "Octoblu, Inc.",
+    "email": "npm@octoblu.com",
+    "url": "https://github.com/octoblu"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/octoblu/electron-meshblu-connector-installer/issues"
+  },
+  "homepage": "https://github.com/octoblu/electron-meshblu-connector-installer#readme",
+  "dependencies": {
+  }
+}
