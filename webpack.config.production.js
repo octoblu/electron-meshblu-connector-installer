@@ -33,13 +33,13 @@ const config = validate(merge(baseConfig, {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader'
+        loader: 'style-loader!css-loader!postcss-loader',
         include: path.join(__dirname, 'node_modules'),
       },
       {
         test:   /\.css$/,
-        loader: 'style-loader!css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=1!postcss-loader!',
-        include: path.join(__dirname, 'app')
+        include: path.join(__dirname, 'app'),
+        loader: 'style-loader!css-loader!postcss-loader!'
       },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
@@ -76,6 +76,10 @@ const config = validate(merge(baseConfig, {
 
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer',
+
+  externals: [
+    'try-thread-sleep'
+  ],
 
   postcss: function() {
     return [
