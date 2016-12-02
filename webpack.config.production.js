@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import baseConfig from './webpack.config.base'
 import autoprefixer from 'autoprefixer'
 
@@ -15,7 +16,7 @@ const config = {
 
   output: {
     ...baseConfig.output,
-    publicPath: '../dist/',
+    publicPath: '/',
   },
 
   module: {
@@ -32,16 +33,39 @@ const config = {
 
   plugins: [
     ...baseConfig.plugins,
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.join(__dirname, 'src', 'app.html'),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      }
+    })
     new webpack.optimize.UglifyJsPlugin({
-      compressor: {
+      compress: {
         screw_ie8: true,
-        warnings: false,
+        warnings: false
+      },
+      mangle: {
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+        screw_ie8: true
       },
     }),
+    new webpack.optimize.OccurenceOrderPlugin(),
     new ExtractTextPlugin('style.css', { allChunks: true }),
   ],
   postcss: () => {

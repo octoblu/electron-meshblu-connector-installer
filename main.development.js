@@ -3,19 +3,16 @@ import { app, BrowserWindow, Menu, shell } from 'electron'
 let menu
 let template
 let mainWindow = null
-const alwaysDev = false
+const alwaysDev = process.env.ALWAYS_DEV === "true"
 global.appPath = app.getAppPath() // yeah, I know.
 
 if (alwaysDev || process.env.NODE_ENV === 'development') {
   require('electron-debug')() // eslint-disable-line global-require
-}
-
-if (process.env.NODE_ENV === 'development') {
   global.appPath = __dirname
 }
 
 const installExtensions = async () => {
-  if (process.env.NODE_ENV === 'development') {
+  if (alwaysDev || process.env.NODE_ENV === 'development') {
     const installer = require('electron-devtools-installer') // eslint-disable-line global-require
 
     const extensions = [

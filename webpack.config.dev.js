@@ -1,6 +1,8 @@
 /* eslint max-len: 0 */
+import path from 'path'
 import webpack from 'webpack'
 import baseConfig from './webpack.config.base'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import autoprefixer from 'autoprefixer'
 
 const config = {
@@ -13,27 +15,33 @@ const config = {
   entry: [
     'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
     'babel-polyfill',
-    './src/index',
+    path.join(__dirname, 'src', 'index'),
   ],
 
   output: {
     ...baseConfig.output,
-    publicPath: 'http://localhost:3000/dist/',
+    publicPath: 'http://localhost:3000/',
   },
 
   module: {
     ...baseConfig.module,
     loaders: [
+      new HtmlWebpackPlugin(),
       ...baseConfig.module.loaders,
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader',
+        loader: 'css-loader!postcss-loader'
       },
     ],
   },
 
   plugins: [
     ...baseConfig.plugins,
+    new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'app.html',
+      template: path.join(__dirname, 'src', 'app.html'),
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({

@@ -1,6 +1,7 @@
 // for babel-plugin-webpack-loaders
 require('babel-register')
 const devConfigs = require('./webpack.config.dev')
+console.log('devConfigs', devConfigs)
 
 module.exports = {
   output: {

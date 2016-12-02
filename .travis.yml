@@ -39,7 +39,6 @@ before_script:
 - sleep 3
 script:
 - yarn test
-- yarn build
 before_deploy:
 - "./deploy/build"
 - if [ "$TRAVIS_OS_NAME" == "linux" -a "$MAIN_BUILD" == "true" ]; then export NPM_PUBLISH=true; fi

@@ -2,17 +2,19 @@
 'use strict'
 
 require('babel-polyfill')
+const _           = require('lodash')
 const os          = require('os')
+const rimraf      = require('rimraf')
+const async       = require('async')
+const path        = require('path')
 const webpack     = require('webpack')
-const electronCfg = require('./webpack.config.electron.js')
-const cfg         = require('./webpack.config.production.js')
-const packager    = require('electron-packager')
-const del         = require('del')
-const exec        = require('child_process').exec
 const argv        = require('minimist')(process.argv.slice(2))
+const packager    = require('electron-packager')
+const electronCfg = require('./webpack.config.electron.js').default
+const cfg         = require('./webpack.config.production.js').default
 const pkg         = require('./package.json')
-const deps        = Object.keys(pkg.dependencies)
-const devDeps     = Object.keys(pkg.devDependencies)
+const deps        = _.keys(pkg.dependencies)
+const devDeps     = _.keys(pkg.devDependencies)
 
 const appName = argv.name || argv.n || pkg.productName
 const shouldUseAsar = argv.asar || argv.a || false
@@ -20,20 +22,25 @@ const shouldBuildAll = argv.all || false
 const buildPlatform = argv.platform || false
 const buildArch = argv.arch || false
 
+let ignorePaths = [
+  '/test($|/)',
+  '/release($|/)',
+  '/deploy($|/)',
+  '/main.development.js',
+]
+
+ignorePaths = _.union(ignorePaths, _.map(devDeps, name => `/node_modules/${name}($|/)`))
+const filteredDeps = _.filter(deps, name => _.includes(electronCfg.externals, name))
+ignorePaths = _.union(ignorePaths, _.map(filteredDeps, name => `/node_modules/${name}($|/)`))
+
 const DEFAULT_OPTS = {
   dir: './',
   name: appName,
   asar: shouldUseAsar,
-  ignore: [
-    '/test($|/)',
-    '/release($|/)',
-    '/deploy($|/)',
-    '/main.development.js',
-  ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
-    .concat(
-      deps.filter(name => !electronCfg.externals.includes(name))
-        .map(name => `/node_modules/${name}($|/)`)
-    ),
+  'app-bundle-id': pkg.appBundleId,
+  'app-version': pkg.version,
+  out: 'release',
+  ignore: ignorePaths,
 }
 
 const icon = argv.icon || argv.i || 'src/app'
@@ -46,102 +53,84 @@ const version = argv.version || argv.v
 
 console.log('initializing...')
 
-if (version) {
-  DEFAULT_OPTS.version = version
-  startPack()
-} else {
-  exec('npm list electron --dev', (err, stdout) => {
-    if (err) {
-      DEFAULT_OPTS.version = '1.2.0'
-    } else {
-      DEFAULT_OPTS.version = stdout.split('electron@')[1].replace(/\s/g, '')
-    }
-    startPack()
-  })
+DEFAULT_OPTS.version = version || require('electron/package.json').version
+
+startPack((error) => {
+  if (error) {
+    console.error(error)
+    process.exit(1)
+  }
+  console.log("Done!")
+})
+
+function startBuild(callback) {
+  const archs = ['ia32', 'x64']
+  const platforms = ['linux', 'win32', 'darwin']
+  if (shouldBuildAll) {
+    console.log('build all', platforms, archs)
+    async.each(platforms, (plat, done) => {
+      async.each(archs, async.apply(pack, plat), done)
+    }, callback)
+    return
+  }
+  if (buildArch && buildPlatform) {
+    console.log('build specific', buildPlatform, buildArch)
+    pack(buildPlatform, buildArch, callback)
+    return
+  }
+  if (buildPlatform) {
+    console.log('build all for platform', buildPlatform, archs)
+    async.each(archs, async.apply(pack, buildPlatform), callback)
+    return
+  }
+  console.log('build current', os.platform(), os.arch())
+  pack(os.platform(), os.arch(), callback)
 }
 
-
-function build(cfg) {
-  console.log('building...')
-  return new Promise((resolve, reject) => {
-    webpack(cfg, (err, stats) => {
-      if (err) {
-        console.error('Building error', err)
-        return reject(err)
-      }
-      console.log('done building')
-      resolve(stats)
-    })
-  })
-}
-
-function startPack() {
+function startPack(callback) {
   console.log('start pack...')
-  build(electronCfg)
-    .then(() => build(cfg))
-    .then(() => del('release'))
-    .then(paths => {
-      const archs = ['ia32', 'x64']
-      if (shouldBuildAll) {
-        // build for all platforms
-        const platforms = ['linux', 'win32', 'darwin']
-
-        platforms.forEach(plat => {
-          archs.forEach(arch => {
-            pack(plat, arch, log(plat, arch))
-          })
-        })
-      } else if (buildArch && buildPlatform) {
-        pack(buildPlatform, buildArch, log(buildPlatform, buildArch))
-      } else if (buildPlatform) {
-        archs.forEach(arch => {
-          pack(buildPlatform, arch, log(buildPlatform, arch))
-        })
-      } else {
-        // build for current platform only
-        pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+  console.log('building electron config')
+  webpack(electronCfg, (error, stats) => {
+    if(error) {
+      return callback(error)
+    }
+    console.log(stats.toString("minimal"))
+    webpack(cfg, (error, stats) => {
+      if(error) {
+        return callback(error)
       }
+      console.log('building production config')
+      console.log(stats.toString("minimal"))
+      rimraf(path.join(__dirname, 'release'), (error) => {
+        if(error) {
+          return callback(error)
+        }
+        startBuild(callback)
+      })
     })
-    .catch(err => {
-      console.error(err)
-      process.exit(1)
-    })
+  })
 }
 
-function pack(plat, arch, cb) {
+function pack(platform, arch, cb) {
   // there is no darwin ia32 electron
-  if (plat === 'darwin' && arch === 'ia32') return
+  if (platform === 'darwin' && arch === 'ia32') return cb()
 
   const iconObj = {
     icon: DEFAULT_OPTS.icon + (() => {
       let extension = '.png'
-      if (plat === 'darwin') {
+      if (platform === 'darwin') {
         extension = '.icns'
-      } else if (plat === 'win32') {
+      } else if (platform === 'win32') {
         extension = '.ico'
       }
       return extension
     })(),
   }
 
-  const appVersion = pkg.version || DEFAULT_OPTS.version
-
-  const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
-    platform: plat,
+  const opts = _.assign({}, DEFAULT_OPTS, iconObj, {
+    platform,
     arch,
-    prune: true,
-    'app-bundle-id': pkg.appBundleId,
-    'app-version': appVersion,
-    out: 'release',
   })
-  console.log(`packaging v${appVersion} for ${plat}-${arch} to ./${opts.out}`)
+  console.log(`packaging v${pkg.version} for ${platform}-${arch} to ./${opts.out}`)
   packager(opts, cb)
-}
-
-function log(plat, arch) {
-  return (err, filepath) => {
-    if (err) return console.error(err)
-    console.log(`${plat}-${arch} finished!`)
-    process.exit(0)
-  }
 }

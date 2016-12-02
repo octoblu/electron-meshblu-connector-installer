@@ -4,20 +4,39 @@ export default {
   module: {
     loaders: [
       {
-        test: /\.js?$/,
+        test: /\.js$/,
         loaders: ['babel-loader'],
-        include: path.join(__dirname, 'src'),
+        include: path.join(__dirname, 'src')
       }, {
         test: /\.json$/,
         loader: 'json-loader',
       },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+        query: {
+          attrs: ['link:href'],
+        }
+      },
+      {
+        test: /\.(ico|jpg|png|gif|eot|otf|svg|ttf|woff|woff2)(\?.*)?$/,
+        exclude: /\/favicon.ico$/,
+        include: [
+          path.join(__dirname, 'src'),
+          path.join(__dirname, 'node_modules')
+        ],
+        loader: 'file',
+        query: {
+          name: '/files/[name].[ext]'
+        }
+      }
     ],
     noParse: /validate\.js/,
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
     libraryTarget: 'commonjs2',
+    filename: 'bundle.js',
   },
   resolve: {
     extensions: ['', '.js', '.jsx', '.json'],
