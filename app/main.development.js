@@ -3,13 +3,14 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
+const isDev = process.env.ALWAYS_DEV === 'true' || process.env.NODE_ENV === 'development'
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
   sourceMapSupport.install();
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (isDev) {
   require('electron-debug')(); // eslint-disable-line global-require
   const path = require('path'); // eslint-disable-line
   const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
@@ -22,7 +23,7 @@ app.on('window-all-closed', () => {
 
 
 const installExtensions = async () => {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
 
     const extensions = [
@@ -58,7 +59,7 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     mainWindow.openDevTools();
     mainWindow.webContents.on('context-menu', (e, props) => {
       const { x, y } = props;
@@ -74,9 +75,9 @@ app.on('ready', async () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'Connector Installer',
       submenu: [{
-        label: 'About ElectronReact',
+        label: 'About Connector Installer',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
@@ -86,7 +87,7 @@ app.on('ready', async () => {
       }, {
         type: 'separator'
       }, {
-        label: 'Hide ElectronReact',
+        label: 'Hide Connector Installer',
         accelerator: 'Command+H',
         selector: 'hide:'
       }, {
@@ -136,7 +137,7 @@ app.on('ready', async () => {
       }]
     }, {
       label: 'View',
-      submenu: (process.env.NODE_ENV === 'development') ? [{
+      submenu: (isDev) ? [{
         label: 'Reload',
         accelerator: 'Command+R',
         click() {
@@ -219,7 +220,7 @@ app.on('ready', async () => {
       }]
     }, {
       label: '&View',
-      submenu: (process.env.NODE_ENV === 'development') ? [{
+      submenu: (isDev) ? [{
         label: '&Reload',
         accelerator: 'Ctrl+R',
         click() {

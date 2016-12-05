@@ -53,7 +53,7 @@ export default validate(merge(baseConfig, {
   ],
 
   node: {
-    __dirname: true,
+    __dirname: false,
     __filename: false
   }
 

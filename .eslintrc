@@ -1,23 +1,41 @@
 {
+  "parser": "babel-eslint",
+  "extends": "airbnb",
   "env": {
-    "mocha": true
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "semi": "off",
+    "arrow-body-style": "off",
+    "arrow-parens": ["off"],
+    "consistent-return": "off",
+    "comma-dangle": "off",
+    "generator-star-spacing": "off",
+    "import/no-unresolved": ["error", { "ignore": ["electron"] }],
+    "import/no-extraneous-dependencies": "off",
+    "no-use-before-define": "off",
+    "promise/param-names": 2,
+    "promise/always-return": 2,
+    "promise/catch-or-return": 2,
+    "promise/no-native": 0,
+    "react/jsx-no-bind": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
+    "react/prefer-stateless-function": "off",
+    "flowtype-errors/show-errors": 2
   },
   "plugins": [
-    "mocha"
+    "flowtype-errors",
+    "import",
+    "promise",
+    "react"
   ],
-  "rules": {
-    "mocha/no-exclusive-tests": 2,
-    "mocha/no-skipped-tests": 0,
-    "mocha/no-pending-tests": 2,
-    "mocha/handle-done-callback": 2,
-    "mocha/no-synchronous-tests": 0,
-    "mocha/no-global-tests": 2,
-    "mocha/valid-test-description": 2,
-    "mocha/valid-suite-description": 2,
-    "mocha/no-sibling-hooks": 0,
-    "mocha/no-mocha-arrows": 0,
-    "mocha/no-hooks": 0,
-    "mocha/no-top-level-hooks": 0,
-    "no-unused-expressions": 0
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.eslint.js"
+      }
+    }
   }
 }

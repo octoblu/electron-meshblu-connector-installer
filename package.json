@@ -28,8 +28,8 @@
     "appId": "com.octoblu.MeshbluConnectorInstaller",
     "category": "public.app-category.tools",
     "dmg": {
-      "background": "build/background.png",
-      "icon": "build/drive-icon.icns",
+      "background": "resources/background.png",
+      "icon": "resources/drive-icon.icns",
       "iconSize": 128,
       "window": {
         "x": 256,
@@ -52,6 +52,7 @@
       ]
     },
     "files": [
+      "!**/bin/applet.app/LICENSE",
       "dist/",
       "node_modules/",
       "app.html",
