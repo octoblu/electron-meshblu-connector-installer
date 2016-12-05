@@ -32,21 +32,19 @@
       "icon": "resources/drive-icon.icns",
       "iconSize": 128,
       "window": {
-        "x": 256,
-        "y": 200,
         "width": 512,
         "height": 524
       },
       "contents": [
         {
-          "x": 410,
-          "y": 150,
+          "x": 10000,
+          "y": 10000,
           "type": "link",
           "path": "/Applications"
         },
         {
-          "x": 130,
-          "y": 150,
+          "x": 256,
+          "y": 200,
           "type": "file"
         }
       ]
