@@ -25,7 +25,7 @@ class AppLayout extends Component {
           <AppBarSecondary>
             <nav role="navigation">
               <Link className="OctobluAppBar-link" to={{ pathname: '#/input-key', query: { otpKey } }}>
-                {otpKey} <i className="fa fa-pencil"></i>
+                {otpKey} <i className="fa fa-pencil" />
               </Link>
             </nav>
           </AppBarSecondary>

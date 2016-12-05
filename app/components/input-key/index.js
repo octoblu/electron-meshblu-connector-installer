@@ -3,8 +3,6 @@ import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
 import { hashHistory } from 'react-router'
 
-import './index.css'
-
 import {
   Button,
   FormActions,
@@ -13,6 +11,7 @@ import {
 } from 'zooid-ui'
 
 import ErrorState from '../error-state'
+import './index.css'
 
 export default class InputKey extends Component {
   static propTypes = {
@@ -30,7 +29,7 @@ export default class InputKey extends Component {
 
   componentDidMount() {
     const otpKey = _.get(this.props, 'otpKey', _.get(this.props, 'location.query.otpKey'))
-    this.setState({otpKey})
+    this.setState({ otpKey })
   }
 
   handleKeySubmit() {

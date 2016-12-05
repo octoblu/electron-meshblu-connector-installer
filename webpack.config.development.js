@@ -44,7 +44,7 @@ export default validate(merge(baseConfig, {
         loader: 'style-loader!css-loader!postcss-loader'
       },
       {
-        test:   /\.css$/,
+        test: /\.css$/,
         include: path.join(__dirname, 'app'),
         loader: 'style-loader!css-loader!postcss-loader!'
       },
@@ -78,7 +78,7 @@ export default validate(merge(baseConfig, {
   target: 'electron-renderer',
 
   // We use PostCSS for autoprefixing only.
-  postcss: function() {
+  postcss() {
     return [
       autoprefixer({
         browsers: [

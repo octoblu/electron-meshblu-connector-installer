@@ -12,6 +12,7 @@
     "arrow-parens": ["off"],
     "consistent-return": "off",
     "comma-dangle": "off",
+    "class-methods-use-this": "off",
     "generator-star-spacing": "off",
     "import/no-unresolved": ["error", { "ignore": ["electron"] }],
     "import/no-extraneous-dependencies": "off",

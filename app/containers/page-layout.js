@@ -60,7 +60,7 @@ class PageLayout extends Component {
     }
 
     if (!children) {
-      return this.renderPage(<div></div>)
+      return this.renderPage(<div />)
     }
 
     return this.renderPage(children)

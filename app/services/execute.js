@@ -17,10 +17,10 @@ export default class Execute {
     })
   }
 
-  async createSpawn({executable, args, cwd, env}) {
+  async createSpawn({ executable, args, cwd, env }) {
     let child
     this.emitDebug(`Executing: ${executable} ${args}`)
-    if (this.serviceType == 'service') {
+    if (this.serviceType === 'service') {
       child = await this.sudoer.spawn(executable, args, { cwd, env })
     } else {
       child = spawn(executable, args, { cwd, env })
@@ -33,28 +33,30 @@ export default class Execute {
     const env = _.assign(process.env, {
       DEBUG: 'meshblu-connector-*',
     })
-    this.createSpawn({executable, args, cwd, env}).then((child) => {
-      child.on('error', (error) => {
-        this.emitDebug(`${executable} exited with error ${error.message}`)
-        callback(error)
-      })
+    this.createSpawn({ executable, args, cwd, env })
+      .then((child) => {
+        child.on('error', (error) => {
+          this.emitDebug(`${executable} exited with error ${error.message}`)
+          callback(error)
+        })
 
-      child.stdout.on('data', (data) => {
-        this.logOutput('stdout', data)
-      })
+        child.stdout.on('data', (data) => {
+          this.logOutput('stdout', data)
+        })
 
-      child.stderr.on('data', (data) => {
-        this.logOutput('stderr', data)
-      })
+        child.stderr.on('data', (data) => {
+          this.logOutput('stderr', data)
+        })
 
-      child.on('close', (code) => {
-        this.emitDebug(`${executable} exited ${code}`)
-        if (code > 0) {
-          return callback(new Error('Error during installation'))
-        }
-        callback()
-      })
-    }).catch(callback)
+        child.on('close', (code) => {
+          this.emitDebug(`${executable} exited ${code}`)
+          if (code > 0) {
+            return callback(new Error('Error during installation'))
+          }
+          callback()
+        })
+        return null
+      }).catch(callback)
   }
 
   doAndRetry({ executable, args, cwd }, callback) {

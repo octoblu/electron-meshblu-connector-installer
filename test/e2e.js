@@ -30,5 +30,4 @@ describe('main window', function spec() {
     const title = await browserWindow.getTitle();
     expect(title).to.equal('Meshblu Connector Installer');
   });
-
 });

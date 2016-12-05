@@ -28,7 +28,7 @@ const config = validate(merge(baseConfig, {
     loaders: [
       {
         test: /\.coffee$/,
-        loader: "coffee-loader",
+        loader: 'coffee-loader',
         include: './node_modules'
       },
       {
@@ -37,7 +37,7 @@ const config = validate(merge(baseConfig, {
         include: path.join(__dirname, 'node_modules'),
       },
       {
-        test:   /\.css$/,
+        test: /\.css$/,
         include: path.join(__dirname, 'app'),
         loader: 'style-loader!css-loader!postcss-loader!'
       },
@@ -77,16 +77,16 @@ const config = validate(merge(baseConfig, {
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer',
 
-  postcss: function() {
+  postcss() {
     return [
-     autoprefixer({
-       browsers: [
-         '>1%',
-         'last 4 versions',
-         'Firefox ESR',
-         'not ie < 9', // React doesn't support IE8 anyway
-       ]
-     }),
+      autoprefixer({
+        browsers: [
+          '>1%',
+          'last 4 versions',
+          'Firefox ESR',
+          'not ie < 9', // React doesn't support IE8 anyway
+        ]
+      }),
     ];
   }
 }));

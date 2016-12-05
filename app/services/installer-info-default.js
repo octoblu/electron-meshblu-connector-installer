@@ -8,6 +8,6 @@ export function defaultGetAppName({ launchPath }, callback) {
 function getAppNameFromLaunchPath(launchPath) {
   const parts = launchPath.split(path.sep)
   return _.find(parts, (part) => {
-    return /^MeshbluConnectorInstaller\-\w+$/.test(part)
+    return /^MeshbluConnectorInstaller-\w+$/.test(part)
   })
 }

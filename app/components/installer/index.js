@@ -76,7 +76,7 @@ class Installer extends Component {
           onClick={this.toggleDebug}
           className="Button Button--hollow-neutral Installer--button"
         >
-          <i className="fa fa-bug"></i> Show Debug
+          <i className="fa fa-bug" /> Show Debug
         </div>
       )
     }
@@ -126,7 +126,7 @@ class Installer extends Component {
 
     const { config, message, step } = this.state
     const { connector, octoblu } = config
-    const percentage = step / MAX_STEPS * 100
+    const percentage = (step / MAX_STEPS) * 100
 
     return this.renderContent(
       <div>

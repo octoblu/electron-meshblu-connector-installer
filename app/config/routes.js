@@ -29,7 +29,7 @@ const platformHome = (nextState, replace, callback) => {
     }
     replace({
       pathname,
-      query: {otpKey},
+      query: { otpKey },
     })
     callback()
   })

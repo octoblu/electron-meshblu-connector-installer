@@ -18,7 +18,7 @@ class Service extends Component {
 
     hashHistory.push({
       pathname: '/install',
-      query: {otpKey, serviceType, platform},
+      query: { otpKey, serviceType, platform },
     })
   }
 
@@ -27,8 +27,8 @@ class Service extends Component {
     const serviceType = 'service'
 
     hashHistory.push({
-      pathname: `/install`,
-      query: {otpKey, serviceType, platform},
+      pathname: '/install',
+      query: { otpKey, serviceType, platform },
     })
   }
 
@@ -38,17 +38,21 @@ class Service extends Component {
     if (error) return (<CustomErrorState message={error.message} />)
     return (
       <div>
-        <ErrorState title="Ready to install!"
-            description="Your connector will be installed as the current user."
-            buttonText="Begin Install"
-            onClick={() => this.goInstall()}/>
+        <ErrorState
+          title="Ready to install!"
+          description="Your connector will be installed as the current user."
+          buttonText="Begin Install"
+          onClick={() => this.goInstall()}
+        />
         <hr className="Divider" />
-        <ErrorState title="Install as Administrator"
-            description="Install the connector as a system-level service. You will be asked to provide administrator credentials before the install process begins."
-            buttonText="Admin Install"
-            buttonKind="danger"
-            className="AdminInstall"
-            onClick={() => this.goAdminInstall()}/>
+        <ErrorState
+          title="Install as Administrator"
+          description="Install the connector as a system-level service. You will be asked to provide administrator credentials before the install process begins."
+          buttonText="Admin Install"
+          buttonKind="danger"
+          className="AdminInstall"
+          onClick={() => this.goAdminInstall()}
+        />
       </div>
     )
   }

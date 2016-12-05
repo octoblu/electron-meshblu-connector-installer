@@ -6,9 +6,9 @@ export default class ServiceContainer extends Component {
   render() {
     const { platform, serviceType } = this.props.params
     const { otpKey } = this.props.location.query
-    let title = "Install Connector"
+    let title = 'Install Connector'
     if (serviceType === 'service') {
-      title = "Install Connector as Admin"
+      title = 'Install Connector as Admin'
     }
     return (
       <PageLayout>

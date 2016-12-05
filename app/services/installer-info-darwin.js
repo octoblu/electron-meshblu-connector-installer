@@ -70,6 +70,6 @@ function parseLines(section) {
 function getAppNameFromImagePath(imagePath) {
   const parts = imagePath.split('/')
   return _.find(parts, (part) => {
-    return /^MeshbluConnectorInstaller\-.+\.dmg$/.test(part)
+    return /^MeshbluConnectorInstaller-.+\.dmg$/.test(part)
   })
 }

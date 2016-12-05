@@ -14,7 +14,7 @@ module.exports = validate({
     // Use base + development loaders, but exclude 'babel-loader'
     loaders: devConfig.module.loaders.slice(1)
   },
-  postcss: function () {
-    return [ autoprefixer ];
+  postcss() {
+    return [autoprefixer];
   }
 });
