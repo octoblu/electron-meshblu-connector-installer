@@ -14,7 +14,7 @@ const checkIfPrivileged = (callback) => {
 
 const platformHome = (nextState, replace, callback) => {
   const { platform } = process
-  const { otpKey } = nextState.location.query
+  const otpKey = _.get(nextState, 'location.query.otpKey')
   let pathname
   checkIfPrivileged((error, admin) => {
     if (error) return callback(error)
@@ -37,7 +37,7 @@ const platformHome = (nextState, replace, callback) => {
 
 const needOTP = (nextState, replace, callback) => {
   new GetOTPKey().getKey((error, response) => {
-    const { otpKey } = response
+    const otpKey = _.get(response, 'otpKey')
     if (_.startsWith(_.get(nextState, 'location.hash'), '#/input-key')) {
       replace({
         pathname: '/input-key',

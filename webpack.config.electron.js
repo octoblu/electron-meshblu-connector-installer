@@ -20,11 +20,11 @@ export default validate(merge(baseConfig, {
 
   plugins: [
     // Minify the output
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compressor: {
+    //     warnings: true
+    //   }
+    // }),
     // Add source map support for stack traces in node
     // https://github.com/evanw/node-source-map-support
     // new webpack.BannerPlugin(
@@ -32,7 +32,9 @@ export default validate(merge(baseConfig, {
     //   { raw: true, entryOnly: false }
     // ),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
     })
   ],
 
@@ -47,10 +49,6 @@ export default validate(merge(baseConfig, {
    * If you run the bundle in node.js it falls back to these values of node.js.
    * https://github.com/webpack/webpack/issues/2010
    */
-
-  externals: [
-    'electron-sudo'
-  ],
 
   node: {
     __dirname: false,

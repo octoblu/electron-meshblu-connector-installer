@@ -27,13 +27,13 @@ export default class InputKey extends Component {
     this.handleKeySubmit = this.handleKeySubmit.bind(this)
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const otpKey = _.get(this.props, 'otpKey', _.get(this.props, 'location.query.otpKey'))
     this.setState({ otpKey })
   }
 
   handleKeySubmit() {
-    const { otpKey } = this.state
+    const { otpKey } = this.state || {}
     if (!otpKey) {
       this.setState({ message: 'Missing One Time Password' })
       return
@@ -45,7 +45,7 @@ export default class InputKey extends Component {
   }
 
   handleKeyChange() {
-    const ref = this.refs.otpKey
+    const ref = _.get(this.refs, 'otpKey')
     const otpKey = ReactDOM.findDOMNode(ref).value
     this.setState({ otpKey })
   }

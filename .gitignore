@@ -39,11 +39,6 @@ app/bundle.js.map
 app/style.css
 app/style.css.map
 dist
-release
 main.js
 main.js.map
 deploy/cache
-dpl_s3
-dpl_github
-*.log
-npm-debug.log*

@@ -8,10 +8,11 @@ import validate from 'webpack-validator';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import baseConfig from './webpack.config.base';
 import autoprefixer from 'autoprefixer';
+import baseConfig from './webpack.config.base';
 
 const config = validate(merge(baseConfig, {
+  debug: true,
   devtool: 'cheap-module-source-map',
 
   entry: [
@@ -33,13 +34,21 @@ const config = validate(merge(baseConfig, {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader',
         include: path.join(__dirname, 'node_modules'),
+        loader: ExtractTextPlugin.extract(
+          'style-loader!',
+          'css-loader!',
+          'postcss-loader',
+        ),
       },
       {
         test: /\.css$/,
         include: path.join(__dirname, 'app'),
-        loader: 'style-loader!css-loader!postcss-loader!'
+        loader: ExtractTextPlugin.extract(
+          'style-loader!',
+          'css-loader!',
+          'postcss-loader',
+        )
       },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
@@ -66,11 +75,28 @@ const config = validate(merge(baseConfig, {
         warnings: false
       }
     }),
+    // new webpack.BannerPlugin(
+    //   'require("source-map-support").install();',
+    //   { raw: true, entryOnly: false }
+    // ),
     new ExtractTextPlugin('style.css', { allChunks: true }),
     new HtmlWebpackPlugin({
       filename: '../app.html',
       template: 'app/app.html',
-      inject: false
+      showErrors: true,
+      inject: false,
+      // minify: {
+      //   removeComments: true,
+      //   collapseWhitespace: true,
+      //   removeRedundantAttributes: true,
+      //   useShortDoctype: true,
+      //   removeEmptyAttributes: true,
+      //   removeStyleLinkTypeAttributes: true,
+      //   keepClosingSlash: true,
+      //   minifyJS: true,
+      //   minifyCSS: true,
+      //   minifyURLs: true
+      // }
     })
   ],
 

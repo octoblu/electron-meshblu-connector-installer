@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import FaPencil from 'react-icons/lib/fa/pencil'
 
 import {
   AppBar,
@@ -25,7 +26,7 @@ class AppLayout extends Component {
           <AppBarSecondary>
             <nav role="navigation">
               <Link className="OctobluAppBar-link" to={{ pathname: '#/input-key', query: { otpKey } }}>
-                {otpKey} <i className="fa fa-pencil" />
+                {otpKey} <FaPencil />
               </Link>
             </nav>
           </AppBarSecondary>

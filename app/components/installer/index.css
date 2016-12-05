@@ -41,7 +41,7 @@
   margin: 0 auto;
 }
 
-.Installer--button i {
+.Installer--button .Installer--faicon {
   font-size: 1em;
 }
 

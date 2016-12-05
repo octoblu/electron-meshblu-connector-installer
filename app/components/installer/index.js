@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import './index.css'
+import FaBug from 'react-icons/lib/fa/bug'
+import {
+  Spinner,
+  ProgressBar,
+} from 'zooid-ui'
 
 import ZooidOctobluIntercom from 'zooid-octoblu-intercom'
 import DebugConfig from '../debug-config'
@@ -7,10 +11,7 @@ import DebugLines from '../debug-lines'
 import ErrorState from '../error-state'
 import InstallerMaster from './installer-master'
 
-import {
-  Spinner,
-  ProgressBar,
-} from 'zooid-ui'
+import './index.css'
 
 const MAX_STEPS = 5
 
@@ -76,7 +77,7 @@ class Installer extends Component {
           onClick={this.toggleDebug}
           className="Button Button--hollow-neutral Installer--button"
         >
-          <i className="fa fa-bug" /> Show Debug
+          <FaBug className="Installer--faicon" /> Show Debug
         </div>
       )
     }
