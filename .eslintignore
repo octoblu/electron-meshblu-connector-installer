@@ -1,8 +1,0 @@
-main.js.*
-test/e2e.js
-dist
-releases
-deploy
-lib
-node_modules
-webpack.config.*

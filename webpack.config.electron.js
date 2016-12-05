@@ -47,13 +47,14 @@ export default validate(merge(baseConfig, {
    * If you run the bundle in node.js it falls back to these values of node.js.
    * https://github.com/webpack/webpack/issues/2010
    */
-  node: {
-    __dirname: false,
-    __filename: false
-  },
 
   externals: [
-    'electron-debug',
-    'electron-sudo',
-  ]
+    'electron-sudo'
+  ],
+
+  node: {
+    __dirname: true,
+    __filename: false
+  }
+
 }));

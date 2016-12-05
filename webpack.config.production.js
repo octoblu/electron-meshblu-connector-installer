@@ -77,10 +77,6 @@ const config = validate(merge(baseConfig, {
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer',
 
-  externals: [
-    'try-thread-sleep'
-  ],
-
   postcss: function() {
     return [
      autoprefixer({

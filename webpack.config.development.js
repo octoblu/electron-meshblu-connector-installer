@@ -74,10 +74,6 @@ export default validate(merge(baseConfig, {
     })
   ],
 
-  externals: [
-    'try-thread-sleep'
-  ],
-
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer',
 
