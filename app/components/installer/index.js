@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import FaBug from 'react-icons/lib/fa/bug'
 import {
-  Spinner,
   ProgressBar,
 } from 'zooid-ui'
+
+import Spinner from 'zooid-spinner'
 
 import ZooidOctobluIntercom from 'zooid-octoblu-intercom'
 import DebugConfig from '../debug-config'
@@ -77,7 +78,7 @@ class Installer extends Component {
           onClick={this.toggleDebug}
           className="Button Button--hollow-neutral Installer--button"
         >
-          <FaBug className="Installer--faicon" /> Show Debug
+          <FaBug size="1rem" /> Show Debug
         </div>
       )
     }

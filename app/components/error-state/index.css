@@ -4,8 +4,3 @@
 .ErrorState--header {
   font-size: 2.5rem;
 }
-
-.ErrorState--icon, .ErrorState--icon .ErrorState--faicon {
-  font-size: 5rem;
-  color: orange;
-}

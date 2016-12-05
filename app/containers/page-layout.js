@@ -3,11 +3,12 @@ import React, { PropTypes, Component } from 'react'
 import DeviceIcon from 'zooid-device-icon'
 import ErrorState from 'zooid-error-state'
 import {
-  Spinner,
   Page,
   PageHeader,
   PageTitle,
 } from 'zooid-ui'
+
+import Spinner from 'zooid-spinner'
 
 import '../styles/page-layout.css'
 

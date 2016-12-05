@@ -41,10 +41,6 @@
   margin: 0 auto;
 }
 
-.Installer--button .Installer--faicon {
-  font-size: 1em;
-}
-
 .Installer--done {
   font-size: 2rem !important;
   padding: 0.5rem 1rem;

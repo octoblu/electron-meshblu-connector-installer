@@ -23,6 +23,7 @@ class InstallerMaster extends EventEmitter {
     }
     this.emit('step', 'Getting installer information')
     const { otpKey, serviceType } = this
+    return _.delay(done, 20000)
 
     new InstallerInfo({ emitDebug: this.emitDebug })
       .getInfo({ otpKey, serviceType }, (error, config) => {

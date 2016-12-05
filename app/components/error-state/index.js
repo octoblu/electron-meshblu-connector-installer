@@ -12,7 +12,7 @@ class ErrorState extends Component {
     const friendlyMessage = message.replace(/^Error/i, '')
     return (
       <div className="ErrorState">
-        <h1 className="ErrorState--icon"><FaWarning className="ErrorState--faicon" /></h1>
+        <h1 className="ErrorState--icon"><FaWarning size="5rem" color="orange" /></h1>
         <h2 className="ErrorState--header"><strong>Error:</strong> <span className="ErrorState--message">{friendlyMessage}</span></h2>
       </div>
     )
