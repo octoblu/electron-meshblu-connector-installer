@@ -40,7 +40,7 @@ matrix:
           travis/electron-meshblu-connector-installer
       after_success:
         - ls -la $PWD/release
-        - provider: releases
+        - chmod -R 777 $PWD/release/MeshbluConnectorInstaller*
       deploy:
         - provider: releases
           api_key:
