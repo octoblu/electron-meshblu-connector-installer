@@ -33,24 +33,26 @@ matrix:
       install:
       - docker build --tag travis/electron-meshblu-connector-installer .
       script:
+      - mkdir release
+      - chmod -R 775 release
       - |
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
           --volume "$PWD/release:/project/release" \
           travis/electron-meshblu-connector-installer
       after_success:
-        - ls -la $PWD/release
-        - chmod -R 777 $PWD/release/MeshbluConnectorInstaller*
+      - ls -la release
+      - chmod -R 777 $PWD/release/MeshbluConnectorInstaller*
       deploy:
-        - provider: releases
-          api_key:
-            secure: "nVIKNoMTbyHktn7wzEcjBm0GHtutZjZm7CbXNqJxNgYD+URdr0GX6j92nGtpOXhp1AN09iTNhrkRvpjFYLMy+B8zGFzmhQj1gIfN2g8U4H+tUxiKWON3B7VEh20s9iAPxWw5UD7PNhzBqoI8MjnDSzzdSzNPE9bGCnys0pl+wUvG+mKoOfM0hyUHmpyWEFVQJEmSIh8FC6EV+fyG2YR/TRdsTIrQDa87/0oEh0XZQJz8YZK2MZo5rBXL7Yse2GefYEnK0jE1Xu7xIi9dTnCcxD1SqjSjJ1xuZ7S5HytWqociAPzDQ1/85eo+F7PS3Wxvl8ac7I58UVoNcca671qRJ4vYOvPZyx9OgSvNTHmvkQds0l/MZY3TAyerDFp87a9PhLXk/O4/rtP/5dFxIhznOidCyxOjb85Ytms3Ns2BG7/S5vUkE9CRWqbL3WkLEmzYryo8uMyuUqxyFGC4BiOUHNKy4NJZBwBti1iey+JHkWwplchGIKB6x6/pBwvVEzyI3AvpA2cmQq44SXE1zjJeU3oI7QxAmRcykBlxzBHwBQO244kTHfKgVkuhKZ5FaDN6kkOkT2X/SOU5ZLFG0iqPZW6o+Jq4yIKWwbynIImPZ87NzaSxh9Agqg5s3qvoMFsX1qNFWFI54QbK2bhLY+lTTnmRwvrrW6UMXvfzcPuxawg="
-          file_glob: true
-          file:
-          - "release/MeshbluConnectorInstaller*"
-          skip_cleanup: true
-          # on:
-          #   tags: true
+      - provider: releases
+        api_key:
+          secure: "SZ41iBSzZGqtxyRi1w8pmdL6tXj56y0KrkbbLL8nA2QhZ1bBYqm6oiJCP01nffn1ScNTKCHi79vYJ0bsbfVjpV90X+mP5AL8MNiI3aoP251gYDd/I2uAKwk75zruUc+ChERkGqsXXGOb7LrDHVG82hRNs4nQ1HKo9KkBJgh3FdD5YMdl8fA4LmCNqC3EqKIJZOiwmzcn+LZAOqlM+VfcYQWb3VrQmZCjFTlRvH3FaUl1ENZJK0baFr5yZ0/eKjPJ5u3YJ3Xe+OZxmsDrylYxso4IlYeKcd+vbbQVcx100F4Ut8T1g2vCUzkNu9m1ZiaBtm2fAmuK0+SVOD9b3PK8BdvYWm/L70ZyhUA4PJTI5LnAkS4JrnPfeZiCfyVBRp1NTzY91jYuDTtdj0JqQXw5VnaW1r0C0vpwTZfIuIuAl1pCDkEJvCR7YgJx9bWj9+0imab8nnaqz3hj2vGf1XGwzmJqCPrEmGW+lEfSxOEezjLUF5I+cvAdsFgm0bcPnynHkbVAR62md86xJAV6tZghwHlpHSqoW++/OwjiZBsLv2AWnzhHUAIGjNDemyf3UERmyRs2O2N2JwldxcCNiIMxwzw021N716/o+FBu2LkzsSAPUq2QdpH/RlMa0aWuEd9vLKMllM7CJiMSaIWUKqG56MUQ+FMu7fgtlAzymgGqjy0="
+        file_glob: true
+        file:
+        - "release/MeshbluConnectorInstaller*"
+        skip_cleanup: true
+        # on:
+        #   tags: true
     - os: linux
       language: node_js
       node_js: '6'
