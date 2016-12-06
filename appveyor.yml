@@ -34,14 +34,14 @@ build_script:
   - ps: . .\deploy\build.ps1
 after_build:
   - ps: $root = Resolve-Path dpl_github; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName ConnectorInstaller }
-deploy:
-- provider: GitHub
-  description: 'Meshblu Connector Installer'
-  auth_token:
-    secure: p0bduMOKSsFF3iSAsZbDLwn5eSgZEUOqx9HEL62vNJwZEOEah3c1WcRN++A8QEYi
-  artifact: ConnectorInstaller
-  draft: false
-  prerelease: false
-  on:
-    branch: master
-    appveyor_repo_tag: true
+# deploy:
+# - provider: GitHub
+#   description: 'Meshblu Connector Installer'
+#   auth_token:
+#     secure: p0bduMOKSsFF3iSAsZbDLwn5eSgZEUOqx9HEL62vNJwZEOEah3c1WcRN++A8QEYi
+#   artifact: ConnectorInstaller
+#   draft: false
+#   prerelease: false
+#   on:
+#     branch: master
+#     appveyor_repo_tag: true
