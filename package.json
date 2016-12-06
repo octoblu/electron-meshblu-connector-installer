@@ -19,7 +19,7 @@
     "dev": "npm run hot-server -- --start-hot",
     "package": "npm run build && build --publish never",
     "package-mac": "npm run build && build --mac",
-    "package-win": "npm run build && build --win --x64",
+    "package-win": "npm run build && build --win",
     "package-linux": "npm run build && build --linux",
     "package-all": "npm run build && build -mwl",
     "cleanup": "mop -v"
