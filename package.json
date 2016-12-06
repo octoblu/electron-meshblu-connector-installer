@@ -21,7 +21,13 @@
     "package-mac": "npm run build && build --mac",
     "package-win": "npm run build && build --win",
     "package-linux": "npm run build && build --linux",
+    "package-linuxa-all": "npm run build && build --linux --armv7l --ia32 --x64",
     "package-all": "npm run build && build -mwl",
+    "release-mac": "build --mac --publish onTagOrDraft",
+    "release-win": "build --win --publish onTagOrDraft",
+    "release-linux": "build --linux --publish onTagOrDraft",
+    "release-linux-all": "build --linux --armv7l --ia32 --x64 --publish onTagOrDraft",
+    "release-all": "build --mac --win --linux --publish onTagOrDraft",
     "cleanup": "mop -v"
   },
   "build": {
@@ -69,12 +75,7 @@
         "deb",
         "AppImage"
       ]
-    },
-    "publish": [
-      {
-        "provider": "github"
-      }
-    ]
+    }
   },
   "directories": {
     "buildResources": "resources",

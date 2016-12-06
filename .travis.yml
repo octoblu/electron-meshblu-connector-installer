@@ -1,38 +1,35 @@
+osx_image: xcode8
 sudo: required
 dist: trusty
-language: c
+language: node_js
 matrix:
   fast_finish: true
-  include:
-    - os: osx
-    - os: linux
-      env: CC=clang CXX=clang++ npm_config_clang=1
-      compiler: clang
+os:
+  - osx
+  - linux
+node_js: 6
 cache:
   yarn: true
   directories:
-  - $HOME/.yarn-cache
   - $HOME/.electron
   - $HOME/.cache
 addons:
   apt:
     packages:
-    - g++-4.8
+    - gcc-multilib
+    - g++-multilib
     - libgnome-keyring-dev
     - icnsutils
     - graphicsmagick
     - xz-utils
     - xorriso
-env:
-  global:
-  - 'NODE_VERSION=6'
 # branches:
 #   only:
 #   - "/^v[0-9]/"
 before_install:
-- export CXX="g++-4.8"
-- nvm install $NODE_VERSION
-- nvm use --delete-prefix $NODE_VERSION
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+   brew update;
+ fi
 - npm install --global yarn
 install:
 - yarn install
@@ -51,17 +48,20 @@ script:
 after_success:
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    yarn run package-linux -- --x64 --publish always --draft || exit 1
-    yarn run package-linux -- --ia32 --publish always --draft || exit 1
-    yarn run package-linux -- --armv7l --publish always --draft || exit 1
+  echo "* releasing linux"
+    yarn run release-linux-all -- --draft || exit 1
   fi
 - |
   if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    security import deploy/cers/apple.cer -k ~/Library/Keychains/login.keychain -T /usr/bin/codesign
+  echo "* creating keychain"
+  security create-keychain -p travis mac-build.keychain
+  security import ./deploy/certs/apple.cer -k ~/Library/Keychains/mac-build.keychain -T /usr/bin/codesign
+  security import ./deploy/certs/app.p12 -k ~/Library/Keychains/mac-build.keychain -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild
   fi
 - |
   if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    yarn run package-mac -- --publish always --draft
+  echo "* releasing mac"
+    yarn run release-mac -- --draft
   fi
 deploy:
 - provider: npm
