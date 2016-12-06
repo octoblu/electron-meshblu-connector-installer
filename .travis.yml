@@ -1,10 +1,10 @@
-language: node_js
-node_js: '6'
 matrix:
-  fast_finish: true
   include:
     - os: osx
       osx_image: xcode8
+      language: node_js
+      node_js: '6'
+      dist: trusty
       cache:
         yarn: true
         directories:
@@ -14,9 +14,9 @@ matrix:
       - brew upgrade
       - npm install --global yarn
       script:
-        - yarn run test
-        - yarn run build
-        - yarn run test-e2e
+      - yarn run test
+      - yarn run build
+      - yarn run test-e2e
       after_success:
       - security create-keychain -p travis mac-build.keychain
       - security import ./deploy/certs/apple.cer -k "$HOME/Library/Keychains/$CSC_NAME" -T /usr/bin/codesign
@@ -24,8 +24,10 @@ matrix:
       - yarn run release-mac -- --draft
       - security delete-keychain "$CSC_NAME"
     - os: linux
+      language: node_js
+      node_js: '6'
       dist: trusty
-      sudo: required
+      sudo: false
       services:
       - docker
       before_install:
@@ -41,6 +43,8 @@ matrix:
       after_success:
       - yarn run release-win -- --draft
     - os: linux
+      language: node_js
+      node_js: '6'
       dist: trusty
       sudo: false
       cache:
@@ -72,6 +76,7 @@ matrix:
       - yarn run test-e2e
       after_success:
       - yarn run release-linux-all -- --draft
+
 # branches:
 #   only:
 #   - "/^v[0-9]/"
