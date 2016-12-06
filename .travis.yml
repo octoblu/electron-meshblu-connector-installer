@@ -12,8 +12,6 @@ matrix:
 cache:
   yarn: true
   directories:
-  - node_modules
-  - app/node_modules
   - $HOME/.electron
   - $HOME/.cache
 addons:
@@ -37,9 +35,7 @@ install:
 - export CXX="g++-4.8"
 - nvm install $NODE_VERSION
 - nvm use --delete-prefix $NODE_VERSION
-- mkdir -p ~/Library/Caches/Yarn
-- curl -o- -L https://yarnpkg.com/install.sh | bash
-- export PATH="$PATH:$HOME/.yarn/bin"
+- npm install --global yarnpkg
 - yarn install
 - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 before_script:
