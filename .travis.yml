@@ -42,14 +42,15 @@ matrix:
         - ls -la $PWD/release
         - provider: releases
       deploy:
-        api_key:
-          secure: "nVIKNoMTbyHktn7wzEcjBm0GHtutZjZm7CbXNqJxNgYD+URdr0GX6j92nGtpOXhp1AN09iTNhrkRvpjFYLMy+B8zGFzmhQj1gIfN2g8U4H+tUxiKWON3B7VEh20s9iAPxWw5UD7PNhzBqoI8MjnDSzzdSzNPE9bGCnys0pl+wUvG+mKoOfM0hyUHmpyWEFVQJEmSIh8FC6EV+fyG2YR/TRdsTIrQDa87/0oEh0XZQJz8YZK2MZo5rBXL7Yse2GefYEnK0jE1Xu7xIi9dTnCcxD1SqjSjJ1xuZ7S5HytWqociAPzDQ1/85eo+F7PS3Wxvl8ac7I58UVoNcca671qRJ4vYOvPZyx9OgSvNTHmvkQds0l/MZY3TAyerDFp87a9PhLXk/O4/rtP/5dFxIhznOidCyxOjb85Ytms3Ns2BG7/S5vUkE9CRWqbL3WkLEmzYryo8uMyuUqxyFGC4BiOUHNKy4NJZBwBti1iey+JHkWwplchGIKB6x6/pBwvVEzyI3AvpA2cmQq44SXE1zjJeU3oI7QxAmRcykBlxzBHwBQO244kTHfKgVkuhKZ5FaDN6kkOkT2X/SOU5ZLFG0iqPZW6o+Jq4yIKWwbynIImPZ87NzaSxh9Agqg5s3qvoMFsX1qNFWFI54QbK2bhLY+lTTnmRwvrrW6UMXvfzcPuxawg="
-        file_glob: true
-        file:
-        - "release/MeshbluConnectorInstaller*"
-        skip_cleanup: true
-        # on:
-        #   tags: true
+        - provider: releases
+          api_key:
+            secure: "nVIKNoMTbyHktn7wzEcjBm0GHtutZjZm7CbXNqJxNgYD+URdr0GX6j92nGtpOXhp1AN09iTNhrkRvpjFYLMy+B8zGFzmhQj1gIfN2g8U4H+tUxiKWON3B7VEh20s9iAPxWw5UD7PNhzBqoI8MjnDSzzdSzNPE9bGCnys0pl+wUvG+mKoOfM0hyUHmpyWEFVQJEmSIh8FC6EV+fyG2YR/TRdsTIrQDa87/0oEh0XZQJz8YZK2MZo5rBXL7Yse2GefYEnK0jE1Xu7xIi9dTnCcxD1SqjSjJ1xuZ7S5HytWqociAPzDQ1/85eo+F7PS3Wxvl8ac7I58UVoNcca671qRJ4vYOvPZyx9OgSvNTHmvkQds0l/MZY3TAyerDFp87a9PhLXk/O4/rtP/5dFxIhznOidCyxOjb85Ytms3Ns2BG7/S5vUkE9CRWqbL3WkLEmzYryo8uMyuUqxyFGC4BiOUHNKy4NJZBwBti1iey+JHkWwplchGIKB6x6/pBwvVEzyI3AvpA2cmQq44SXE1zjJeU3oI7QxAmRcykBlxzBHwBQO244kTHfKgVkuhKZ5FaDN6kkOkT2X/SOU5ZLFG0iqPZW6o+Jq4yIKWwbynIImPZ87NzaSxh9Agqg5s3qvoMFsX1qNFWFI54QbK2bhLY+lTTnmRwvrrW6UMXvfzcPuxawg="
+          file_glob: true
+          file:
+          - "release/MeshbluConnectorInstaller*"
+          skip_cleanup: true
+          # on:
+          #   tags: true
     - os: linux
       language: node_js
       node_js: '6'
@@ -85,8 +86,8 @@ matrix:
         email: serveradmin@octoblu.com
         api_key:
           secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
-        # on:
-        #   tags: true
+        on:
+          tags: true
 # branches:
 #   only:
 #   - "/^v[0-9]/"
