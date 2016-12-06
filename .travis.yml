@@ -33,10 +33,11 @@ matrix:
       install:
       - docker build --tag travis/electron-meshblu-connector-installer .
       script:
+      - mkdir output
       - |
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
-          --volume "$PWD:/project" \
+          --volume "$PWD/release:/project/release" \
           travis/electron-meshblu-connector-installer
       after_success:
       - ls -la release
