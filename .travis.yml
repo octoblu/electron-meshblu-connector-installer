@@ -1,37 +1,42 @@
 language: c
 os: osx
 cache:
+  yarn: true
   directories:
   - node_modules
   - $HOME/.electron
 env:
   global:
-    - 'NODE_VERSION=6'
-    - secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
-    - secure: c6Ltwt0N7oXk4IVEBOuMFYl6ueO62XHbeKT1lIuSEf5iD9LOouKLE7ol8crvibKktGVmdvdWCDoRhaolIT+iKDBF1wt0MSrhdaUkgh6m5Xy7GO7WUveYsUss8PWdo22+DYXoIPR/duJ5Y3SsgscDhSmoxu6TuddSdBVihMMA+vbS8TmAYQYvn+t5kx3dmPt5PTt/30uCY4LTnX1JI2nY11rNIfb7z3q1wBHbMrx2HBPPJG0CExGoEqkgxKQqHx88xaFilQ8po980ezVh4sZSJiF5sGCxommHL1MyqGcSmSZ71LfTfux4hVsp8JV+asyCN5jlPgWmUgb0uQDziLRPHDjjlQk0hNnQ0ugCfhBsjZCoES6PnkhJGgZY6Hdlg4pKyuXFuJ0jGAnSLZauYaptn8m8g0FSD0EOPvXkjzHY5JMQ7vQrk+cuuxUnxuQQwLAEpqSHqpfEjfvzSPROJFAmvrOvRH94wsLcWTa3o7SdJbLxIsVTjLoqY9iy5Yw8RVQn2xk45Lag+ko/c2GW4ubUx6cij79diCNVFmokfqzKA6pbVpIgDF1PtImnoPhYUo3uSVe3n3CQFRTV5bRd1I16yY/6VL7JK9JoZ1auS8POdO33d9eQcs54J7qhujdP/4igsdQN76Bh6cLqR85MBAi9XZX6vkrrym8sTomQiF+U3mk=
+  - 'NODE_VERSION=6'
+  - secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
+  - secure: c6Ltwt0N7oXk4IVEBOuMFYl6ueO62XHbeKT1lIuSEf5iD9LOouKLE7ol8crvibKktGVmdvdWCDoRhaolIT+iKDBF1wt0MSrhdaUkgh6m5Xy7GO7WUveYsUss8PWdo22+DYXoIPR/duJ5Y3SsgscDhSmoxu6TuddSdBVihMMA+vbS8TmAYQYvn+t5kx3dmPt5PTt/30uCY4LTnX1JI2nY11rNIfb7z3q1wBHbMrx2HBPPJG0CExGoEqkgxKQqHx88xaFilQ8po980ezVh4sZSJiF5sGCxommHL1MyqGcSmSZ71LfTfux4hVsp8JV+asyCN5jlPgWmUgb0uQDziLRPHDjjlQk0hNnQ0ugCfhBsjZCoES6PnkhJGgZY6Hdlg4pKyuXFuJ0jGAnSLZauYaptn8m8g0FSD0EOPvXkjzHY5JMQ7vQrk+cuuxUnxuQQwLAEpqSHqpfEjfvzSPROJFAmvrOvRH94wsLcWTa3o7SdJbLxIsVTjLoqY9iy5Yw8RVQn2xk45Lag+ko/c2GW4ubUx6cij79diCNVFmokfqzKA6pbVpIgDF1PtImnoPhYUo3uSVe3n3CQFRTV5bRd1I16yY/6VL7JK9JoZ1auS8POdO33d9eQcs54J7qhujdP/4igsdQN76Bh6cLqR85MBAi9XZX6vkrrym8sTomQiF+U3mk=
 # branches:
 #   only:
 #   - "/^v[0-9]/"
 before_install:
-  - curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
-  - chmod +x /tmp/7za
-  - curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
-  - /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
-  - brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
-  - brew install freetype graphicsmagick
-  - git-lfs pull
+- curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
+- chmod +x /tmp/7za
+- curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
+- /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
+- brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
+- brew install freetype graphicsmagick
+- git-lfs pull
 install:
 - nvm install $NODE_VERSION
 - nvm use --delete-prefix $NODE_VERSION
+- mkdir -p ~/Library/Caches/Yarn
+- curl -o- -L https://yarnpkg.com/install.sh | bash
+- export PATH="$PATH:$HOME/.yarn/bin"
+- yarn install --pure-lockfile
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 3
 script:
-- npm run test
-- npm run build
-- npm run test-e2e
-- npm run package
+- yarn run test
+- yarn run build
+- yarn run test-e2e
+- yarn run package
 deploy:
 - provider: npm
   email: serveradmin@octoblu.com
