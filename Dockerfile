@@ -10,7 +10,7 @@ COPY app/package.json app/yarn.lock /project/app/
 
 RUN npm install --silent --global yarn
 
-RUN yarn install --no-progres
+RUN yarn install
 
 COPY . /project
 
