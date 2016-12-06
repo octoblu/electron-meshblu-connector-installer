@@ -1,10 +1,33 @@
+osx_image: xcode7.3
+sudo: required
+dist: trusty
 language: c
 os: osx
+matrix:
+  include:
+    - os: osx
+    - os: linux
+      env: CC=clang CXX=clang++ npm_config_clang=1
+      compiler: clang
 cache:
   yarn: true
   directories:
   - node_modules
+  - app/node_modules
   - $HOME/.electron
+  - $HOME/.cache
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libgnome-keyring-dev
+      - icnsutils
+      - g++-4.8
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
+      - xorriso
 env:
   global:
   - 'NODE_VERSION=6'
@@ -22,20 +45,22 @@ before_install:
 - brew install freetype graphicsmagick
 - git-lfs pull
 install:
+- export CXX="g++-4.8"
 - nvm install $NODE_VERSION
 - nvm use --delete-prefix $NODE_VERSION
 - mkdir -p ~/Library/Caches/Yarn
 - curl -o- -L https://yarnpkg.com/install.sh | bash
 - export PATH="$PATH:$HOME/.yarn/bin"
 - yarn install --pure-lockfile
+ - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 3
 script:
 - yarn run test
-- yarn run build
 - yarn run test-e2e
+after_success:
 - yarn run package
 deploy:
 - provider: npm
