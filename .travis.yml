@@ -38,7 +38,8 @@ matrix:
       - |
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
-          --volume "$PWD/release:/project/release" \
+          --volume "$PWD:/project" \
+          --volume ${PWD##*/}-node-modules:/project/node_modules \
           travis/electron-meshblu-connector-installer
       after_success:
       - ls -la release
