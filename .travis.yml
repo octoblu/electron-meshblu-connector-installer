@@ -27,8 +27,6 @@ addons:
 env:
   global:
   - 'NODE_VERSION=6'
-  - secure: ND5Wqqu9CdJtZo9/ioLjLcFO0zt2iB0EvFRPI9BMbMOxT5SQwxvurxGMb1jjakAUJzSGRoaE1Yn0rRs2cDtqi9VLSVNIijIk/0HTfZ683dqZGfjWmcKTeY79ZKFXNdzDKCBdckP50lnGTmo1nxxp9r9DYzA7NTg3nPFDEG3O6mD6ju/SZ3IHP5l+3OiHqen5E+tdRQ2sd+lwzcn+jtzZ8vwPMF61223/vg0wx6EsbGTjlZnO+LD3N+lH0q4Bb9f5zEwPhO4uZkipONDGdh6/SBc9gnq55C9DdPqhU4+b9cUASFdEby2a+W6s3sPPUD0vBF0qhpN7+j3Ekf9vBjT24FZzCz9eyIyJnA5IsOxoT8fsbj/izxY2ve25X8yCn4ndWVdD/PANMls5094PJOHdCZvsDKgaG2YdV8WRsWQpCgHW0kc7sduMKzaeqWh30sTkUyUqtCO+WPAXJJyVGUbkt0DXJEDkHeQbV7ca6EuEBoAgwojhHelaPNdrES8hJW6fQzz+befJb9lODh/tIadMQmRJdkHxze5zLffJ9Lr5xAJ/rezkLCuCbAKXzYJMyrw8ddjNrEiXVl4blP1JWxLovtFVP8XOCroGj/VBVM/ANfDOzfDnjUuF9ak6ONoyGd3k3j9Xblx6vIRJ2BDJvAVSJW/X5lQU3LgQ6FldAdDAirY=
-  - secure: c6Ltwt0N7oXk4IVEBOuMFYl6ueO62XHbeKT1lIuSEf5iD9LOouKLE7ol8crvibKktGVmdvdWCDoRhaolIT+iKDBF1wt0MSrhdaUkgh6m5Xy7GO7WUveYsUss8PWdo22+DYXoIPR/duJ5Y3SsgscDhSmoxu6TuddSdBVihMMA+vbS8TmAYQYvn+t5kx3dmPt5PTt/30uCY4LTnX1JI2nY11rNIfb7z3q1wBHbMrx2HBPPJG0CExGoEqkgxKQqHx88xaFilQ8po980ezVh4sZSJiF5sGCxommHL1MyqGcSmSZ71LfTfux4hVsp8JV+asyCN5jlPgWmUgb0uQDziLRPHDjjlQk0hNnQ0ugCfhBsjZCoES6PnkhJGgZY6Hdlg4pKyuXFuJ0jGAnSLZauYaptn8m8g0FSD0EOPvXkjzHY5JMQ7vQrk+cuuxUnxuQQwLAEpqSHqpfEjfvzSPROJFAmvrOvRH94wsLcWTa3o7SdJbLxIsVTjLoqY9iy5Yw8RVQn2xk45Lag+ko/c2GW4ubUx6cij79diCNVFmokfqzKA6pbVpIgDF1PtImnoPhYUo3uSVe3n3CQFRTV5bRd1I16yY/6VL7JK9JoZ1auS8POdO33d9eQcs54J7qhujdP/4igsdQN76Bh6cLqR85MBAi9XZX6vkrrym8sTomQiF+U3mk=
 # branches:
 #   only:
 #   - "/^v[0-9]/"
@@ -52,7 +50,22 @@ script:
 - yarn run build
 - yarn run test-e2e
 after_success:
-- yarn run package
+- |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    yarn run package-linux
+	fi
+- |
+	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+		security delete-keychain mac-build.keychain
+	fi
+- |
+	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+		yarn run package-mac
+	fi
+- |
+	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+		security delete-keychain mac-build.keychain
+	fi
 deploy:
 - provider: npm
   email: serveradmin@octoblu.com

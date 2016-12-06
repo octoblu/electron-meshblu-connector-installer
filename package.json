@@ -72,8 +72,7 @@
     },
     "publish": [
       {
-        "provider": "github",
-        "onTag": true
+        "provider": "github"
       }
     ]
   },
