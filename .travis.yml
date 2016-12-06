@@ -1,72 +1,84 @@
-osx_image: xcode8
-sudo: required
-dist: trusty
 language: node_js
+node_js: '6'
 matrix:
   fast_finish: true
-os:
-  - osx
-  - linux
-node_js: 6
-cache:
-  yarn: true
-  directories:
-  - $HOME/.electron
-  - $HOME/.cache
-addons:
-  apt:
-    packages:
-    - gcc-multilib
-    - g++-multilib
-    - libgnome-keyring-dev
-    - icnsutils
-    - graphicsmagick
-    - xz-utils
-    - xorriso
+  include:
+    - os: osx
+      osx_image: xcode8
+      cache:
+        yarn: true
+        directories:
+        - $HOME/.electron
+        - $HOME/.cache
+      before_install:
+      - brew upgrade
+      - npm install --global yarn
+      script:
+        - yarn run test
+        - yarn run build
+        - yarn run test-e2e
+      after_success:
+      - security create-keychain -p travis mac-build.keychain
+      - security import ./deploy/certs/apple.cer -k "$HOME/Library/Keychains/$CSC_NAME" -T /usr/bin/codesign
+      - security import ./deploy/certs/app.p12 -k "$HOME/Library/Keychains/$CSC_NAME" -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild
+      - yarn run release-mac -- --draft
+      - security delete-keychain "$CSC_NAME"
+    - os: linux
+      dist: trusty
+      sudo: required
+      services:
+      - docker
+      before_install:
+      - docker pull electronuserland/electron-builder:wine
+      install:
+      - docker build --tag travis/electron-meshblu-connector-installer .
+      script:
+      - |
+        docker run --rm \
+          --volume "$HOME/.electron:/root/.electron" \
+          --volume "$PWD/release:/project/release" \
+          travis/electron-meshblu-connector-installer
+      after_success:
+      - yarn run release-win -- --draft
+    - os: linux
+      dist: trusty
+      sudo: false
+      cache:
+        yarn: true
+        directories:
+        - $HOME/.electron
+        - $HOME/.cache
+      addons:
+        apt:
+          packages:
+          - gcc-multilib
+          - g++-multilib
+          - libgnome-keyring-dev
+          - icnsutils
+          - graphicsmagick
+          - xz-utils
+          - xorriso
+      before_install:
+      - npm install --global yarn
+      install:
+      - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
+      before_script:
+      - export DISPLAY=:99.0
+      - sh -e /etc/init.d/xvfb start &
+      - sleep 3
+      script:
+      - yarn run test
+      - yarn run build
+      - yarn run test-e2e
+      after_success:
+      - yarn run release-linux-all -- --draft
 # branches:
 #   only:
 #   - "/^v[0-9]/"
-before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-   brew update;
- fi
-- npm install --global yarn
-install:
-- yarn install
-- |
-  if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    sh -c "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-  fi
-before_script:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start &
-- sleep 3
-script:
-- yarn run test
-- yarn run build
-- yarn run test-e2e
-after_success:
-- |
-  if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  echo "* releasing linux"
-    yarn run release-linux-all -- --draft || exit 1
-  fi
-- |
-  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-  echo "* creating keychain"
-  security create-keychain -p travis mac-build.keychain
-  security import ./deploy/certs/apple.cer -k ~/Library/Keychains/mac-build.keychain -T /usr/bin/codesign
-  security import ./deploy/certs/app.p12 -k ~/Library/Keychains/mac-build.keychain -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild
-  fi
-- |
-  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-  echo "* releasing mac"
-    yarn run release-mac -- --draft
-  fi
-deploy:
-- provider: npm
-  email: serveradmin@octoblu.com
-  api_key:
-    secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
-  on:
-    tags: true
+# deploy:
+# - provider: npm
+#   email: serveradmin@octoblu.com
+#   api_key:
+#     secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
+#   on:
+#     tags: true
