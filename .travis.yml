@@ -2,9 +2,9 @@ matrix:
   include:
     - os: osx
       osx_image: xcode8
+      dist: trusty
       language: node_js
       node_js: '6'
-      dist: trusty
       cache:
         yarn: true
         directories:
@@ -13,6 +13,8 @@ matrix:
       before_install:
       - brew upgrade
       - npm install --global yarn
+      install:
+      - yarn install
       script:
       - yarn run test
       - yarn run build
@@ -24,9 +26,9 @@ matrix:
       - yarn run release-mac -- --draft
       - security delete-keychain "$CSC_NAME"
     - os: linux
+      dist: trusty
       language: node_js
       node_js: '6'
-      dist: trusty
       sudo: false
       services:
       - docker
@@ -39,9 +41,10 @@ matrix:
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
           --volume "$PWD/release:/project/release" \
-          travis/electron-meshblu-connector-installer
+          travis/electron-meshblu-connector-installer \
+            --draft
       after_success:
-      - yarn run release-win -- --draft
+        - ls -la $PWD/release
     - os: linux
       language: node_js
       node_js: '6'
@@ -55,16 +58,12 @@ matrix:
       addons:
         apt:
           packages:
-          - gcc-multilib
           - g++-multilib
-          - libgnome-keyring-dev
-          - icnsutils
-          - graphicsmagick
           - xz-utils
-          - xorriso
       before_install:
       - npm install --global yarn
       install:
+      - yarn install
       - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
       before_script:
       - export DISPLAY=:99.0
@@ -76,7 +75,6 @@ matrix:
       - yarn run test-e2e
       after_success:
       - yarn run release-linux-all -- --draft
-
 # branches:
 #   only:
 #   - "/^v[0-9]/"
