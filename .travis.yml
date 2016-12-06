@@ -53,19 +53,19 @@ after_success:
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     yarn run package-linux
-	fi
+  fi
 - |
-	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-		security delete-keychain mac-build.keychain
-	fi
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    security delete-keychain mac-build.keychain
+  fi
 - |
-	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-		yarn run package-mac
-	fi
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    yarn run package-mac
+  fi
 - |
-	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-		security delete-keychain mac-build.keychain
-	fi
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    security delete-keychain mac-build.keychain
+  fi
 deploy:
 - provider: npm
   email: serveradmin@octoblu.com
