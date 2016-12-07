@@ -25,7 +25,7 @@ matrix:
       dist: trusty
       language: node_js
       node_js: '6'
-      sudo: false
+      sudo: required
       services:
       - docker
       before_install:
@@ -33,13 +33,16 @@ matrix:
       install:
       - docker build --tag travis/electron-meshblu-connector-installer .
       script:
-      - mkdir output
+      - ls -la release
       - |
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
           --volume "$PWD/release:/project/release" \
           travis/electron-meshblu-connector-installer
       after_success:
+      - ls -la release
+      - sudo chown -R travis:travis ./release
+      - sudo chmod -R 755 ./release
       - ls -la release
       deploy:
       - provider: releases
