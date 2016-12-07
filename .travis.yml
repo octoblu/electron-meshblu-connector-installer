@@ -1,3 +1,6 @@
+branches:
+  only:
+  - "/^v[0-9]/"
 matrix:
   include:
     - os: osx
@@ -18,6 +21,12 @@ matrix:
           - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/MeshbluConnectorMacCert.p12
       before_install:
       - npm install --global yarn
+      - |
+        if [ -n "$TRAVIS_TAG" ]; then
+          pushd ./app
+            npm version $TRAVIS_TAG
+          popd
+        fi
       install:
       - yarn install || exit 1
       script:
@@ -39,6 +48,12 @@ matrix:
       - docker
       before_install:
       - docker pull electronuserland/electron-builder:wine
+      - |
+        if [ -n "$TRAVIS_TAG" ]; then
+          pushd ./app
+            npm version $TRAVIS_TAG
+          popd
+        fi
       install:
       - docker build --file ./deploy/windows/Dockerfile --tag travis/electron-meshblu-connector-installer .
       script:
@@ -76,6 +91,12 @@ matrix:
           - xz-utils
       before_install:
       - npm install --global yarn
+      - |
+        if [ -n "$TRAVIS_TAG" ]; then
+          pushd ./app
+            npm version $TRAVIS_TAG
+          popd
+        fi
       install:
       - yarn install
       - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
@@ -96,13 +117,3 @@ matrix:
           secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
         on:
           tags: true
-# branches:
-#   only:
-#   - "/^v[0-9]/"
-# deploy:
-# - provider: npm
-#   email: serveradmin@octoblu.com
-#   api_key:
-#     secure: sgFLuz8Or6bk4fD1y0Lr2tkWE4E20YXrTBqDYrHvcpWFiUmgE4q5UckWYHk5v+EYO6Tf0xrGwU863P9mv7wJiaCuK6p0g7JWkvGidnve1stt9X532Xcudmw+VM/kmGxGw4lkmLTgmAU73P+EjoyGMr8hpFgPw3FBF2jy/JPDHXlBimOBxJvHSkzdByj7jPqSBW7nnYIL81CWkq2wKJUXcxU6FPulpelCosoJ7WfzqabqYYZfidQhSl9hlw52F/uEztkv5XrXmUt28swXOhUSQwhmyivtQCuRAe97eok6dHA7vgUzvx7+1erEcTAhX9qysCBPJ4Y5y9+jUVhXrASP6ng60fFPTXZTOdOQpq4XLgRdE0LCQQ5JmVTzkhKLU6SFPfLAFZN7nlBwfH4R8SAXJ9cNLk1ag3YtLk0x6SZFli2u7xi4DCsX/cD/gkpDMDO3jEmyK1OZmNb5wNyXp8c8if9PxxCs2hMXtmptJgJL8i5ZaeTAkUfI/NCV69QWd50NkqhOhwPLlbeJthR4CshODIabRy+D8XuOwDwnJATZSKya8yMBJ2ZCGA0zwxV6TLUBkmlVxcGSLXvhrPs2ODlgfXY+kzL2oZE0An7kk7IZumO5anvoBuvDknnq8NNrQKcvFIwUVTQyf1+NJZsCmTVin5vMuTAWiKZI6TME0Zo34ng=
-#   on:
-#     tags: true
