@@ -1,0 +1,6 @@
+app/node_modules
+node_modules
+release
+app/main.js*
+app/dist
+.git

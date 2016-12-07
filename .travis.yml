@@ -11,7 +11,7 @@ matrix:
         - $HOME/.electron
         - $HOME/.cache
       env:
-        build: 'osx-build'
+        build: 'osx'
         global:
           - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/MeshbluConnectorMac.p12
       before_install:
@@ -23,6 +23,9 @@ matrix:
       - yarn run build || exit 1
       - yarn run test-e2e || exit 1
       after_success:
+      - echo "CSC_LINK: $CSC_LINK"
+      - echo "CSC_NAME: $CSC_NAME"
+      - echo "CSC_IDENTITY_AUTO_DISCOVERY: $CSC_IDENTITY_AUTO_DISCOVERY"
       - yarn run package-mac -- --publish onTagOrDraft --draft || exit 1
     - os: linux
       dist: trusty
@@ -30,7 +33,7 @@ matrix:
       node_js: '6'
       sudo: required
       env:
-        build: 'win-build'
+        build: 'win'
         global:
           - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/CodeSigningCert.p12
       services:
@@ -48,7 +51,8 @@ matrix:
           --env "CSC_KEY_PASSWORD=$CSC_KEY_PASSWORD" \
           --env "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG" \
           --env "GH_TOKEN=$GH_TOKEN" \
-          travis/electron-meshblu-connector-installer
+          --env "CI=true" \
+          travis/electron-meshblu-connector-installer &> /dev/null
     - os: linux
       language: node_js
       node_js: '6'
@@ -60,7 +64,7 @@ matrix:
         - $HOME/.electron
         - $HOME/.cache
       env:
-        build: 'linux-build'
+        build: 'linux'
         global:
           - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/OtherCodeSigningCert.p12
       addons:

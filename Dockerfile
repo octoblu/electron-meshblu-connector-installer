@@ -1,6 +1,9 @@
 FROM electronuserland/electron-builder:wine
 MAINTAINER Octoblu <docker@octoblu.com>
 
+RUN apt-get update
+RUN apt-get install -y curl libssl-dev libcurl4-openssl-dev libgsf-1-dev autoconf build-essential
+
 ENV NPM_CONFIG_LOGLEVEL error
 
 RUN mkdir -p /project/app
@@ -15,4 +18,6 @@ RUN yarn install
 
 COPY . /project
 
-CMD [ "yarn", "run", "build-win-package" ]
+RUN yarn build
+
+CMD [ "./node_modules/.bin/build", "--win", "--publish", "onTagOrDraft", "--draft" ]
