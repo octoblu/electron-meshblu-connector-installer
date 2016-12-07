@@ -23,7 +23,7 @@
     "package-linux": "build --linux",
     "package-linux-all": "build --linux --armv7l --ia32 --x64",
     "package-all": "build --mac --win --linux",
-    "build-win-package": "npm run build && build --win --publish never",
+    "build-win-package": "npm run build && build --win --publish onTagOrDraft --draft",
     "cleanup": "mop -v"
   },
   "build": {
@@ -61,7 +61,6 @@
       "package.json"
     ],
     "mac": {
-      "identity": "Octoblu Inc. (JLSZ8Q5945)",
       "target": "dmg"
     },
     "win": {

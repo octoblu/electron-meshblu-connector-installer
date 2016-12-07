@@ -11,8 +11,9 @@ matrix:
         - $HOME/.electron
         - $HOME/.cache
       env:
+        build: 'osx-build'
         global:
-          - KEY_CHAIN=mac-build.keychain
+          - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/MeshbluConnectorMac.p12
       before_install:
       - npm install --global yarn
       install:
@@ -22,18 +23,16 @@ matrix:
       - yarn run build || exit 1
       - yarn run test-e2e || exit 1
       after_success:
-      - security create-keychain -p travis "$KEY_CHAIN" || exit 1
-      - security import "$PWD/deploy/certs/apple.cer" -k "$KEY_CHAIN" -T /usr/bin/codesign || exit 1
-      - security import "$PWD/deploy/certs/app.p12" -k "$KEY_CHAIN" -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild || exit 1
-      - security default-keychain -s "$KEY_CHAIN" || exit 1
-      - security unlock-keychain -p travis "$KEY_CHAIN" || exit 1
-      - security set-keychain-settings -t 3600 -u || exit 1
       - yarn run package-mac -- --publish onTagOrDraft --draft || exit 1
     - os: linux
       dist: trusty
       language: node_js
       node_js: '6'
       sudo: required
+      env:
+        build: 'win-build'
+        global:
+          - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/CodeSigningCert.p12
       services:
       - docker
       before_install:
@@ -41,28 +40,15 @@ matrix:
       install:
       - docker build --tag travis/electron-meshblu-connector-installer .
       script:
-      - mkdir -p release
-      - ls -la release
       - |
         docker run --rm \
           --volume "$HOME/.electron:/root/.electron" \
           --volume "$PWD/release:/project/release" \
+          --env "CSC_LINK=$CSC_LINK" \
+          --env "CSC_KEY_PASSWORD=$CSC_KEY_PASSWORD" \
+          --env "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG" \
+          --env "GH_TOKEN=$GH_TOKEN" \
           travis/electron-meshblu-connector-installer
-      after_success:
-      - ls -la release
-      - sudo chown -R travis:travis ./release
-      - sudo chmod -R 755 ./release
-      - ls -la release
-      deploy:
-      - provider: releases
-        api_key:
-          secure: "SZ41iBSzZGqtxyRi1w8pmdL6tXj56y0KrkbbLL8nA2QhZ1bBYqm6oiJCP01nffn1ScNTKCHi79vYJ0bsbfVjpV90X+mP5AL8MNiI3aoP251gYDd/I2uAKwk75zruUc+ChERkGqsXXGOb7LrDHVG82hRNs4nQ1HKo9KkBJgh3FdD5YMdl8fA4LmCNqC3EqKIJZOiwmzcn+LZAOqlM+VfcYQWb3VrQmZCjFTlRvH3FaUl1ENZJK0baFr5yZ0/eKjPJ5u3YJ3Xe+OZxmsDrylYxso4IlYeKcd+vbbQVcx100F4Ut8T1g2vCUzkNu9m1ZiaBtm2fAmuK0+SVOD9b3PK8BdvYWm/L70ZyhUA4PJTI5LnAkS4JrnPfeZiCfyVBRp1NTzY91jYuDTtdj0JqQXw5VnaW1r0C0vpwTZfIuIuAl1pCDkEJvCR7YgJx9bWj9+0imab8nnaqz3hj2vGf1XGwzmJqCPrEmGW+lEfSxOEezjLUF5I+cvAdsFgm0bcPnynHkbVAR62md86xJAV6tZghwHlpHSqoW++/OwjiZBsLv2AWnzhHUAIGjNDemyf3UERmyRs2O2N2JwldxcCNiIMxwzw021N716/o+FBu2LkzsSAPUq2QdpH/RlMa0aWuEd9vLKMllM7CJiMSaIWUKqG56MUQ+FMu7fgtlAzymgGqjy0="
-        file_glob: true
-        file:
-        - "release/MeshbluConnectorInstaller*"
-        skip_cleanup: true
-        # on:
-        #   tags: true
     - os: linux
       language: node_js
       node_js: '6'
@@ -73,6 +59,10 @@ matrix:
         directories:
         - $HOME/.electron
         - $HOME/.cache
+      env:
+        build: 'linux-build'
+        global:
+          - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/OtherCodeSigningCert.p12
       addons:
         apt:
           packages:
