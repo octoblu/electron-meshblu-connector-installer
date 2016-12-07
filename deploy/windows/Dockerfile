@@ -18,6 +18,6 @@ RUN yarn install
 
 COPY . /project
 
-RUN yarn build
+RUN yarn run build
 
-CMD [ "./node_modules/.bin/build", "--win", "--publish", "onTagOrDraft", "--draft" ]
+CMD [ "./node_modules/.bin/build", "--win", "--ia32", "--x64", "--publish", "onTagOrDraft", "--draft" ]

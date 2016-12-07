@@ -23,7 +23,7 @@ matrix:
       - yarn run build || exit 1
       - yarn run test-e2e || exit 1
       after_success:
-      - yarn run package-mac -- --publish onTagOrDraft --draft || exit 1
+      - yarn run package-mac -- --publish onTagOrDraft $DRAFT_ARG || exit 1
     - os: linux
       dist: trusty
       language: node_js
@@ -49,7 +49,7 @@ matrix:
           --env "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG" \
           --env "GH_TOKEN=$GH_TOKEN" \
           --env "CI=true" \
-          travis/electron-meshblu-connector-installer &> /dev/null
+          travis/electron-meshblu-connector-installer 2>&1 | grep -v 'pass'
     - os: linux
       language: node_js
       node_js: '6'
@@ -83,7 +83,7 @@ matrix:
       - yarn run build
       - yarn run test-e2e
       after_success:
-      - yarn run package-linux-all -- --publish onTagOrDraft --draft
+      - yarn run package-linux-all -- --publish onTagOrDraft $DRAFT_ARG
       deploy:
       - provider: npm
         email: serveradmin@octoblu.com

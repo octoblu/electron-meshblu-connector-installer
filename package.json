@@ -67,10 +67,9 @@
       "target": "zip"
     },
     "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
+      "target": "zip",
+      "category": "Utility",
+      "synopsis": "Cross-Platform Meshblu Connector Installer"
     }
   },
   "directories": {

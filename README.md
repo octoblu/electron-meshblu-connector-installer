@@ -1,4 +1,4 @@
-# electron-react-boilerplate
+# electron-meshblu-connector-installer
 
 [![Build Status][travis-image]][travis-url]
 [![Appveyor Build Status][appveyor-image]][appveyor-url]
