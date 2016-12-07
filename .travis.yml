@@ -38,7 +38,7 @@ matrix:
       before_install:
       - docker pull electronuserland/electron-builder:wine
       install:
-      - docker build --tag travis/electron-meshblu-connector-installer .
+      - docker build --file ./deploy/windows/Dockerfile --tag travis/electron-meshblu-connector-installer .
       script:
       - |
         docker run --rm \
