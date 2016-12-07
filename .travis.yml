@@ -10,17 +10,25 @@ matrix:
         directories:
         - $HOME/.electron
         - $HOME/.cache
+      env:
+        global:
+          - KEY_CHAIN=mac-build.keychain
       before_install:
       - npm install --global yarn
       install:
-      - yarn install
+      - yarn install || exit 1
       script:
-      - yarn run test
-      - yarn run build
-      - yarn run test-e2e
+      - yarn run test || exit 1
+      - yarn run build || exit 1
+      - yarn run test-e2e || exit 1
       after_success:
-      - security import ./deploy/certs/apple.cer -k ~/Library/Keychains/login.keychain -T /usr/bin/codesign
-      - yarn run package-mac -- --publish onTagOrDraft --draft
+      - security create-keychain -p travis "$KEY_CHAIN" || exit 1
+      - security import "$PWD/deploy/certs/apple.cer" -k "$KEY_CHAIN" -T /usr/bin/codesign || exit 1
+      - security import "$PWD/deploy/certs/app.p12" -k "$KEY_CHAIN" -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild || exit 1
+      - security default-keychain -s "$KEY_CHAIN" || exit 1
+      - security unlock-keychain -p travis "$KEY_CHAIN" || exit 1
+      - security set-keychain-settings -t 3600 -u || exit 1
+      - yarn run package-mac -- --publish onTagOrDraft --draft || exit 1
     - os: linux
       dist: trusty
       language: node_js
@@ -33,6 +41,7 @@ matrix:
       install:
       - docker build --tag travis/electron-meshblu-connector-installer .
       script:
+      - mkdir -p release
       - ls -la release
       - |
         docker run --rm \
