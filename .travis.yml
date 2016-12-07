@@ -13,7 +13,7 @@ matrix:
       env:
         build: 'osx'
         global:
-          - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/MeshbluConnectorMac.p12
+          - CSC_LINK=https://s3-us-west-2.amazonaws.com/meshblu-connector/certs/MeshbluConnectorMacCert.p12
       before_install:
       - npm install --global yarn
       install:
@@ -23,9 +23,6 @@ matrix:
       - yarn run build || exit 1
       - yarn run test-e2e || exit 1
       after_success:
-      - echo "CSC_LINK: $CSC_LINK"
-      - echo "CSC_NAME: $CSC_NAME"
-      - echo "CSC_IDENTITY_AUTO_DISCOVERY: $CSC_IDENTITY_AUTO_DISCOVERY"
       - yarn run package-mac -- --publish onTagOrDraft --draft || exit 1
     - os: linux
       dist: trusty
