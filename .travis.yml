@@ -8,6 +8,8 @@ matrix:
       cache:
         yarn: true
         directories:
+        - app/node_modules
+        - node_modules
         - $HOME/.electron
         - $HOME/.cache
       env:
@@ -49,6 +51,7 @@ matrix:
           --env "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG" \
           --env "GH_TOKEN=$GH_TOKEN" \
           --env "CI=true" \
+          --env "DRAFT_ARG=$DRAFT_ARG" \
           travis/electron-meshblu-connector-installer 2>&1 | grep -v 'pass'
     - os: linux
       language: node_js
@@ -58,6 +61,8 @@ matrix:
       cache:
         yarn: true
         directories:
+        - app/node_modules
+        - node_modules
         - $HOME/.electron
         - $HOME/.cache
       env:

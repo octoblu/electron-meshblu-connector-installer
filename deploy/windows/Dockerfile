@@ -20,4 +20,4 @@ COPY . /project
 
 RUN yarn run build
 
-CMD [ "./node_modules/.bin/build", "--win", "--ia32", "--x64", "--publish", "onTagOrDraft", "--draft" ]
+CMD [ "sh", "-c", "./node_modules/.bin/build", "--win", "--ia32", "--x64", "--publish", "onTagOrDraft", "$DRAFT_ARG" ]
