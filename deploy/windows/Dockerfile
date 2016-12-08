@@ -20,4 +20,4 @@ COPY . /project
 
 RUN yarn run build
 
-CMD [ "sh", "-c", "./node_modules/.bin/build", "--win", "--ia32", "--x64", "--publish", "onTag" ]
+CMD [ "./deploy/windows/deploy.sh" ]

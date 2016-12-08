@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "11.1.7",
+  "version": "11.1.8",
   "description": "Cross-Platform Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -19,7 +19,9 @@
     "dev": "npm run hot-server -- --start-hot",
     "package-mac": "build --mac",
     "package-win": "build --win",
-    "package-win-all": "build --win --x64 --ia32",
+    "package-win-x64": "build --win --x64",
+    "package-win-ia32": "build --win --ia32",
+    "package-win-all": "npm run package-win-x64 && npm run package-win-ia32",
     "package-linux": "build --linux",
     "package-linux-all": "build --linux --armv7l --ia32 --x64",
     "package-all": "build --mac --win --linux",
