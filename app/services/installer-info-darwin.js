@@ -1,5 +1,6 @@
 import { exec } from 'child_process'
 import fs from 'fs'
+import path from 'path'
 import _ from 'lodash'
 
 export function darwinGetAppName({ launchPath }, callback) {
@@ -25,28 +26,21 @@ export function darwinGetAppName({ launchPath }, callback) {
 }
 
 function getVolumePath({ launchPath }) {
-  const parts = launchPath.split('/')
-  if (parts[1] === 'Volumes') {
-    return `/${parts[1]}/${parts[2]}`
+  const dir = path.parse(launchPath).dir
+  const parts = dir.split(path.sep)
+  if (_.nth(parts, 1) === 'Volumes') {
+    return path.join('/Volumes', _.nth(parts, 2))
   }
-  return '/Volumes/MeshbluConnectorInstaller'
+  return path.join('/Volumes', 'MeshbluConnectorInstaller')
 }
-
-function getEscapedVolumePath({ launchPath }) {
-  const parts = launchPath.split('/')
-  if (parts[1] === 'Volumes') {
-    return `\\/${parts[1]}\\/${parts[2]}`
-  }
-  return '\\/Volumes\\/MeshbluConnectorInstaller'
-}
-
 
 function getImagePath(stdout, launchPath) {
   const sections = stdout.split(/={10,}/)
+  const escapedVolumePath = _.escapeRegExp(getVolumePath({ launchPath }))
   let imagePath
   _.some(sections, (section) => {
-    const escapedVolumePath = getEscapedVolumePath({ launchPath })
-    if (new RegExp(`\\s+${escapedVolumePath}\\s*$`).test(section)) {
+    if (imagePath) return
+    if (new RegExp(`\\s+${escapedVolumePath}`).test(section)) {
       imagePath = parseLines(section)
     }
   })
@@ -57,11 +51,13 @@ function parseLines(section) {
   const lines = section.split(/\r?\n/)
   let imagePath
   _.some(lines, (line) => {
+    if (imagePath) return
     const parts = line.split(':')
     const key = _.trim(parts[0])
     const value = _.trim(parts[1])
-    if (key === 'image-path' && value.indexOf('MeshbluConnectorInstaller-') > -1) {
+    if (key === 'image-path' && _.includes(value, 'MeshbluConnectorInstaller-')) {
       imagePath = value
+      return true
     }
   })
   return imagePath
@@ -70,6 +66,6 @@ function parseLines(section) {
 function getAppNameFromImagePath(imagePath) {
   const parts = imagePath.split('/')
   return _.find(parts, (part) => {
-    return /^MeshbluConnectorInstaller-.+\.dmg$/.test(part)
+    return /^MeshbluConnectorInstaller-\w+\.dmg$/.test(part)
   })
 }
