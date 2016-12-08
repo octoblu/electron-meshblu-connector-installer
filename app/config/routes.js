@@ -36,14 +36,21 @@ const platformHome = (nextState, replace, callback) => {
 }
 
 const needOTP = (nextState, replace, callback) => {
+  let otpKey = _.get(nextState, 'otpKey', _.get(nextState, 'location.query.otpKey'))
+  if (_.startsWith(_.get(nextState, 'location.hash'), '#/input-key')) {
+    replace({
+      pathname: '/input-key',
+      query: { otpKey }
+    })
+    callback()
+    return
+  }
+  if (otpKey) {
+    return callback()
+  }
   new GetOTPKey().getKey((error, response) => {
-    const otpKey = _.get(response, 'otpKey')
-    if (_.startsWith(_.get(nextState, 'location.hash'), '#/input-key')) {
-      replace({
-        pathname: '/input-key',
-        query: { otpKey }
-      })
-    } else if (otpKey) {
+    otpKey = _.get(response, 'otpKey')
+    if (otpKey) {
       replace({
         pathname: '/service-types',
         query: { otpKey },

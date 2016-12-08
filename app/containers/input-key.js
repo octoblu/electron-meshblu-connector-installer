@@ -6,7 +6,7 @@ export default class InputKeyPage extends Component {
   render() {
     const otpKey = _.get(this.props, 'location.query.otpKey')
     return (
-      <InputKey otpKey={otpKey} />
+      <InputKey otpKey={otpKey || ''} />
     )
   }
 }
