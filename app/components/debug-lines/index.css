@@ -10,3 +10,15 @@
   overflow-y: scroll;
   height: 300px;
 }
+
+.DebugLines--debug {
+  color: grey;
+  border-left: 2px grey solid;
+  padding-left: 6px;
+}
+
+.DebugLines--error {
+  font-weight: bold;
+  border-left: 2px red solid;
+  padding-left: 6px;
+}

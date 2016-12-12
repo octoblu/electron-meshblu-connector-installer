@@ -16,8 +16,9 @@ class InstallerInfo {
 
   getInfo({ otpKey, serviceType }, callback) {
     retrieveOTP({ otpKey }, (error, response) => {
-      if (error) return callback(new Error('Installer already used. Download a new one.'))
-
+      if (error) {
+        return callback(new Error('Installer already used. Download a new one.'))
+      }
       callback(null, this.getConfig({ otpKey, serviceType }, response))
     })
   }

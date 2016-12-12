@@ -1,6 +1,6 @@
+import _ from 'lodash'
 import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
-import _ from 'lodash'
 import './index.css'
 
 class DebugLines extends Component {
@@ -14,9 +14,13 @@ class DebugLines extends Component {
   }
 
   render() {
-    const { lines } = this.props
-    const theLines = _.map(lines, (line, key) => {
-      return <li key={key}>{line}</li>
+    let { lines } = this.props
+    lines = _.sortBy(lines, 'timestamp')
+    lines = _.map(lines, ({ line, timestamp, isError }, key) => {
+      if (isError) {
+        return <li className="DebugLines--error" key={key}>- {line}</li>
+      }
+      return <li className="DebugLines--debug" key={key}>- {line}</li>
     })
 
     _.delay(() => {
@@ -28,7 +32,7 @@ class DebugLines extends Component {
         <h3>Console:</h3>
         <div ref="thing" className="DebugLines--console">
           <ul>
-            {theLines}
+            {lines}
           </ul>
         </div>
       </div>

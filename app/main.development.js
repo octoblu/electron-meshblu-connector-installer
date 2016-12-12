@@ -3,11 +3,18 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 let menu;
 let template;
 let mainWindow = null;
+
 const enableDebug = process.env.ENABLE_DEBUG === 'true' || process.env.NODE_ENV === 'development'
 
 if (!enableDebug) {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
   sourceMapSupport.install();
+}
+
+if (process.env.NODE_ENV === 'development') {
+  global.appPath = __dirname
+} else {
+  global.appPath = app.getAppPath()
 }
 
 if (enableDebug) {

@@ -34,7 +34,7 @@ class InstallConnector {
     this.emitDebug(`Installing connector ${connector}`)
     process.nextTick(() => {
       this.execute.do({ executable, args, cwd: binPath }, (error) => {
-        if (error) this.emitDebug(`Connector install error: ${error.message}`)
+        if (error) this.emitDebug(`Connector install error: ${error.message}`, true)
         if (error) return callback(new Error('Connector Install Failure'))
         callback()
       })

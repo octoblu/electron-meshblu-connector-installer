@@ -29,7 +29,7 @@ class DependencyDownloader {
       .on('error', callback)
       .on('response', (response) => {
         if (response.statusCode >= 400) {
-          this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`)
+          this.emitDebug(`Invalid statusCode ${response.statusCode} downloading ${uri}`, true)
           return callback(new Error('Invalid Dependency Download'))
         }
       })

@@ -1,12 +1,10 @@
+import _ from 'lodash'
 import React, { Component, PropTypes } from 'react'
 import FaBug from 'react-icons/lib/fa/bug'
-import {
-  ProgressBar,
-} from 'zooid-ui'
 
 import Spinner from 'zooid-spinner'
 
-import ZooidOctobluIntercom from 'zooid-octoblu-intercom'
+import InstallerInfo from '../../services/installer-info'
 import DebugConfig from '../debug-config'
 import DebugLines from '../debug-lines'
 import ErrorState from '../error-state'
@@ -14,20 +12,23 @@ import InstallerMaster from './installer-master'
 
 import './index.css'
 
-const MAX_STEPS = 5
-
 class Installer extends Component {
   static propTypes = {
     otpKey: PropTypes.string.isRequired,
     serviceType: PropTypes.string.isRequired,
-    platform: PropTypes.string.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.start = this.start.bind(this)
+    this.stop = this.stop.bind(this)
   }
 
   state = {
     error: null,
     config: null,
     configLoading: true,
-    step: 0,
+    started: false,
     showDebug: false,
     lines: [],
     message: 'Loading...',
@@ -35,57 +36,37 @@ class Installer extends Component {
 
   componentDidMount() {
     const { otpKey, serviceType } = this.props
-    this.installer = new InstallerMaster({ otpKey, serviceType })
-    this.installer.on('debug', (line) => {
-      const { lines } = this.state
-      lines.push(`-- ${line}`)
-      this.setState({ lines })
-    })
-    this.installer.on('step', (message) => {
-      const { step, lines } = this.state
-      const newStep = step + 1
-      lines.push(`[Step ${newStep}]: ${message}`)
-      this.setState({ message, step: newStep })
-    })
-    this.installer.on('config', (config) => {
-      this.setState({ config, configLoading: false })
-    })
-    this.installer.on('error', (error) => {
-      this.setState({ error })
-    })
-    this.installer.start(() => {
-      this.setState({ done: true, step: 5, message: 'done' })
-    })
+    new InstallerInfo({ emitDebug: this.emitDebug })
+      .getInfo({ otpKey, serviceType }, (infoError, config) => {
+        if (infoError) {
+          this.setState({ error: infoError })
+          return
+        }
+        this.setState({ config, configLoading: false })
+        this.start(config)
+      })
   }
 
   componentWillUnmount() {
-    this.installer.removeAllListeners()
-    this.installer.stop()
-  }
-
-  getIntercom({ uuid, token } = {}) {
-    if (!uuid || !token) {
-      return null
-    }
-    return <ZooidOctobluIntercom appId="ux5bbkjz" uuid={uuid} token={token} />
+    this.stop()
   }
 
   getDebug = () => {
-    const { config, lines, showDebug } = this.state
-    if (!showDebug) {
+    const { error, config, lines, showDebug } = this.state
+    if (!showDebug && !error) {
       return (
-        <div
+        <button
           onClick={this.toggleDebug}
           className="Button Button--hollow-neutral Installer--button"
         >
           <FaBug size="1rem" /> Show Debug
-        </div>
+        </button>
       )
     }
     return (
       <div className="Installer--split">
         <div className="Installer--split-item Installer-split-small">
-          <DebugConfig config={config} />
+          <DebugConfig config={config || {}} />
         </div>
         <div className="Installer--split-item">
           <DebugLines lines={lines} />
@@ -94,11 +75,38 @@ class Installer extends Component {
     )
   }
 
-  exitApp = () => {
-  }
-
   toggleDebug = () => {
     this.setState({ showDebug: !this.state.showDebug })
+  }
+
+  start(config) {
+    if (_.isEmpty(config)) {
+      this.setState({ error: new Error('Missing configuration') })
+      return
+    }
+    const installer = new InstallerMaster()
+    installer.on('debug', (line, isError) => {
+      const { lines } = this.state
+      lines.push({ line, isError, timestamp: Date.now() })
+      this.setState({ lines })
+    })
+    installer.on('error', (error) => {
+      this.setState({ error })
+    })
+    installer.on('done', () => {
+      this.setState({ done: true, message: 'done' })
+    })
+    installer.start(config)
+    this.setState({ started: true })
+    this.installer = installer
+  }
+
+  stop() {
+    if (this.installer == null) {
+      return
+    }
+    this.installer.removeAllListeners()
+    this.installer.stop()
   }
 
   renderContent = (content) => {
@@ -121,21 +129,18 @@ class Installer extends Component {
       return this.renderContent(
         <div className="Installer--done">
           Success! Please Close. <br />
-          <small>* Sorry I currently can't do it for you *</small>
+          <small>* Sorry I currently can&rsquo;t do it for you *</small>
         </div>
       )
     }
 
-    const { config, message, step } = this.state
-    const { connector, octoblu } = config
-    const percentage = (step / MAX_STEPS) * 100
+    const { config } = this.state
+    const { connector } = config
 
     return this.renderContent(
       <div>
         <h2>Installing: <strong>{connector}</strong></h2>
-        <ProgressBar completed={percentage} />
-        <h3>Step: {step} / {MAX_STEPS} {message}</h3>
-        {this.getIntercom(octoblu)}
+        <Spinner size="large" />
       </div>
     )
   }

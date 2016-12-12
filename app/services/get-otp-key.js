@@ -21,10 +21,8 @@ export default class GetOTPKey {
     })
   }
 
-  getKeyFromAppName(appName) {
-    appName = appName || ''
-    let part = appName.replace('MeshbluConnectorInstaller-', '')
-    part = part || ''
+  getKeyFromAppName(appName = '') {
+    const part = appName.replace('MeshbluConnectorInstaller-', '') || ''
     const smallerPart = part.replace(/\.\w+$/, '')
     const lastParts = smallerPart.split(/[^\w]+/)
     return _.first(lastParts)
