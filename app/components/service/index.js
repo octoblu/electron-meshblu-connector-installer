@@ -9,26 +9,24 @@ import './index.css'
 class Service extends Component {
   static propTypes = {
     otpKey: PropTypes.string.isRequired,
-    serviceType: PropTypes.string.isRequired,
-    platform: PropTypes.string.isRequired,
   }
 
-  goInstall() {
-    const { otpKey, serviceType, platform } = this.props || {}
+  goToInstall() {
+    const { otpKey } = this.props
+    console.log('user-service')
 
     hashHistory.push({
       pathname: '/install',
-      query: { otpKey, serviceType, platform },
+      query: { otpKey, serviceType: 'user-service' },
     })
   }
 
-  goAdminInstall() {
-    const { otpKey, platform } = this.props || {}
-    const serviceType = 'service'
+  goToAdminInstall() {
+    const { otpKey } = this.props
 
     hashHistory.push({
       pathname: '/install',
-      query: { otpKey, serviceType, platform },
+      query: { otpKey, serviceType: 'service' },
     })
   }
 
@@ -42,7 +40,7 @@ class Service extends Component {
           title="Ready to install!"
           description="Your connector will be installed as the current user."
           buttonText="Begin Install"
-          onClick={() => this.goInstall()}
+          onClick={() => this.goToInstall()}
         />
         <hr className="Divider" />
         <ErrorState
@@ -51,7 +49,7 @@ class Service extends Component {
           buttonText="Admin Install"
           buttonKind="danger"
           className="AdminInstall"
-          onClick={() => this.goAdminInstall()}
+          onClick={() => this.goToAdminInstall()}
         />
       </div>
     )

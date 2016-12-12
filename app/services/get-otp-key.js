@@ -15,6 +15,7 @@ export default class GetOTPKey {
     const launchPath = process.execPath
     console.log('launchPath', { launchPath })
     this.getAppName({ launchPath }, (error, appName) => {
+      this.running = false
       if (error) {
         console.error('getKey error', error)
         return callback(error)

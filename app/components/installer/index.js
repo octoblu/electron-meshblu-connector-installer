@@ -102,7 +102,7 @@ class Installer extends Component {
   }
 
   stop() {
-    if (this.installer == null) {
+    if (!this.installer) {
       return
     }
     this.installer.removeAllListeners()

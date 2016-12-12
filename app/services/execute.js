@@ -19,7 +19,7 @@ export default class Execute {
 
   async createSpawn({ executable, args, cwd, env }) {
     let child
-    this.emitDebug(`Executing: ${executable} ${args}`)
+    this.emitDebug(`Executing: ${executable} ${args.join(' ')}`)
     if (this.serviceType === 'service') {
       child = await this.sudoer.spawn(executable, args, { cwd, env })
     } else {

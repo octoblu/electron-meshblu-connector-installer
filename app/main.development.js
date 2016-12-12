@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { app, BrowserWindow, Menu, shell } from 'electron'
+import electronDebug from 'electron-debug'
+import path from 'path'
 
 let menu;
 let template;
@@ -18,29 +20,24 @@ if (process.env.NODE_ENV === 'development') {
   global.appPath = app.getAppPath()
 }
 
-require('electron-debug')(); // eslint-disable-line global-require
-const path = require('path'); // eslint-disable-line
-const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
-require('module').globalPaths.push(p); // eslint-disable-line
+electronDebug({ enabled: true })
+require('module').globalPaths.push(path.join(__dirname, '..', 'app', 'node_modules')); // eslint-disable-line
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
 const installExtensions = async () => {
-  if (isDev) {
-    const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
-
-    const extensions = [
-      'REACT_DEVELOPER_TOOLS',
-      'REDUX_DEVTOOLS'
-    ];
-    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    for (const name of extensions) { // eslint-disable-line
-      try {
-        await installer.default(installer[name], forceDownload);
-      } catch (e) {} // eslint-disable-line
-    }
+  const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+  const extensions = [
+    'REACT_DEVELOPER_TOOLS',
+    'REDUX_DEVTOOLS'
+  ];
+  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+  for (const name of extensions) { // eslint-disable-line
+    try {
+      await installer.default(installer[name], forceDownload);
+    } catch (e) {} // eslint-disable-line
   }
 };
 
