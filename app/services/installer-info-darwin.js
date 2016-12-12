@@ -39,9 +39,9 @@ function getImagePath(stdout, launchPath) {
   const escapedVolumePath = _.escapeRegExp(getVolumePath({ launchPath }))
   let imagePath
   _.some(sections, (section) => {
-    if (imagePath) return
     if (new RegExp(`\\s+${escapedVolumePath}`).test(section)) {
       imagePath = parseLines(section)
+      return true
     }
   })
   return imagePath
@@ -51,10 +51,9 @@ function parseLines(section) {
   const lines = section.split(/\r?\n/)
   let imagePath
   _.some(lines, (line) => {
-    if (imagePath) return
     const parts = line.split(':')
-    const key = _.trim(parts[0])
-    const value = _.trim(parts[1])
+    const key = _.trim(_.nth(parts, 0))
+    const value = _.trim(_.nth(parts, 1))
     if (key === 'image-path' && _.includes(value, 'MeshbluConnectorInstaller-')) {
       imagePath = value
       return true

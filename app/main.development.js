@@ -1,12 +1,13 @@
+/* eslint-disable no-console */
 import { app, BrowserWindow, Menu, shell } from 'electron';
 
 let menu;
 let template;
 let mainWindow = null;
 
-const enableDebug = process.env.ENABLE_DEBUG === 'true' || process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV === 'development'
 
-if (!enableDebug) {
+if (!isDev) {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
   sourceMapSupport.install();
 }
@@ -17,19 +18,17 @@ if (process.env.NODE_ENV === 'development') {
   global.appPath = app.getAppPath()
 }
 
-if (enableDebug) {
-  require('electron-debug')(); // eslint-disable-line global-require
-  const path = require('path'); // eslint-disable-line
-  const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
-  require('module').globalPaths.push(p); // eslint-disable-line
-}
+require('electron-debug')(); // eslint-disable-line global-require
+const path = require('path'); // eslint-disable-line
+const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
+require('module').globalPaths.push(p); // eslint-disable-line
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
 const installExtensions = async () => {
-  if (enableDebug) {
+  if (isDev) {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
 
     const extensions = [
@@ -57,9 +56,6 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
-    if (process.env.ENABLE_DEBUG === 'true') {
-      mainWindow.toggleDevTools()
-    }
     mainWindow.show();
     mainWindow.focus();
   });
@@ -68,19 +64,19 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  if (enableDebug) {
+  if (isDev) {
     mainWindow.openDevTools();
-    mainWindow.webContents.on('context-menu', (e, props) => {
-      const { x, y } = props;
-
-      Menu.buildFromTemplate([{
-        label: 'Inspect element',
-        click() {
-          mainWindow.inspectElement(x, y);
-        }
-      }]).popup(mainWindow);
-    });
   }
+  mainWindow.webContents.on('context-menu', (e, props) => {
+    const { x, y } = props;
+
+    Menu.buildFromTemplate([{
+      label: 'Inspect element',
+      click() {
+        mainWindow.inspectElement(x, y);
+      }
+    }]).popup(mainWindow);
+  });
 
   if (process.platform === 'darwin') {
     template = [{
@@ -116,37 +112,8 @@ app.on('ready', async () => {
         }
       }]
     }, {
-      label: 'Edit',
-      submenu: [{
-        label: 'Undo',
-        accelerator: 'Command+Z',
-        selector: 'undo:'
-      }, {
-        label: 'Redo',
-        accelerator: 'Shift+Command+Z',
-        selector: 'redo:'
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Cut',
-        accelerator: 'Command+X',
-        selector: 'cut:'
-      }, {
-        label: 'Copy',
-        accelerator: 'Command+C',
-        selector: 'copy:'
-      }, {
-        label: 'Paste',
-        accelerator: 'Command+V',
-        selector: 'paste:'
-      }, {
-        label: 'Select All',
-        accelerator: 'Command+A',
-        selector: 'selectAll:'
-      }]
-    }, {
       label: 'View',
-      submenu: (enableDebug) ? [{
+      submenu: [{
         label: 'Reload',
         accelerator: 'Command+R',
         click() {
@@ -163,12 +130,6 @@ app.on('ready', async () => {
         accelerator: 'Alt+Command+I',
         click() {
           mainWindow.toggleDevTools();
-        }
-      }] : [{
-        label: 'Toggle Full Screen',
-        accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
         }
       }]
     }, {
@@ -192,26 +153,20 @@ app.on('ready', async () => {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('http://electron.atom.io');
+          shell.openExternal('https://meshblu-connectors.readme.io/');
         }
       }, {
         label: 'Documentation',
         click() {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+          shell.openExternal('https://meshblu-connectors.readme.io/');
         }
       }, {
         label: 'Community Discussions',
         click() {
-          shell.openExternal('https://discuss.atom.io/c/electron');
-        }
-      }, {
-        label: 'Search Issues',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/issues');
+          shell.openExternal('https://octoblu-community.slack.com/');
         }
       }]
     }];
-
     menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
@@ -229,7 +184,7 @@ app.on('ready', async () => {
       }]
     }, {
       label: '&View',
-      submenu: (enableDebug) ? [{
+      submenu: [{
         label: '&Reload',
         accelerator: 'Ctrl+R',
         click() {
@@ -247,34 +202,23 @@ app.on('ready', async () => {
         click() {
           mainWindow.toggleDevTools();
         }
-      }] : [{
-        label: 'Toggle &Full Screen',
-        accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
       }]
     }, {
       label: 'Help',
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('http://electron.atom.io');
+          shell.openExternal('https://meshblu-connectors.readme.io/');
         }
       }, {
         label: 'Documentation',
         click() {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+          shell.openExternal('https://meshblu-connectors.readme.io/');
         }
       }, {
         label: 'Community Discussions',
         click() {
-          shell.openExternal('https://discuss.atom.io/c/electron');
-        }
-      }, {
-        label: 'Search Issues',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/issues');
+          shell.openExternal('https://octoblu-community.slack.com/');
         }
       }]
     }];

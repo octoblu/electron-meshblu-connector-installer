@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import _ from 'lodash'
 import React from 'react'
 import { Route, IndexRoute } from 'react-router'
@@ -37,11 +38,11 @@ const needOTP = (nextState, replace, callback) => {
   }
   new GetOTPKey().getKey((error, response) => {
     if (error) {
-      callback(error)
-      return
+      console.error('Get OTP error in routes.js', error)
     }
     otpKey = _.get(response, 'otpKey')
     if (otpKey) {
+      console.log('found otp', otpKey)
       replace({
         pathname: '/service-types',
         query: { otpKey },
