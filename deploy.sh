@@ -135,6 +135,9 @@ main() {
   install_deps || fatal 'unable to install dependencies'
 	env SKIP_CREATE_RELEASE='true' gump "$message" $bump_arg
 	local version="$(cat package.json | jq --raw-output '.version')"
+  pushd ./app
+    npm version "v$version"
+  popd
 	hub release create -d -m "v${version} $message" "v${version}"
   yarn install || fatal 'unable to yarn install'
   yarn run build || fatal 'unable to yarn build'

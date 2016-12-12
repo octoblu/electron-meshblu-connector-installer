@@ -8,31 +8,18 @@ import Installer from '../containers/installer'
 import NoMatch from '../components/no-match'
 import GetOTPKey from '../services/get-otp-key'
 
-const checkIfPrivileged = (callback) => {
-  callback(null, false)
-}
-
 const platformHome = (nextState, replace, callback) => {
   const { platform } = process
   const otpKey = _.get(nextState, 'location.query.otpKey')
   let pathname
-  checkIfPrivileged((error, admin) => {
-    if (error) return callback(error)
-    if (admin) {
-      if (platform === 'darwin') pathname = '/service/darwin/service'
-      if (platform === 'win32') pathname = '/service/win32/service'
-      if (platform === 'linux') pathname = '/service/linux/service'
-    } else {
-      if (platform === 'darwin') pathname = '/service/darwin/user-service'
-      if (platform === 'win32') pathname = '/service/win32/user-login'
-      if (platform === 'linux') pathname = '/service/linux/user-service'
-    }
-    replace({
-      pathname,
-      query: { otpKey },
-    })
-    callback()
+  if (platform === 'darwin') pathname = '/service/darwin/service'
+  if (platform === 'win32') pathname = '/service/win32/service'
+  if (platform === 'linux') pathname = '/service/linux/service'
+  replace({
+    pathname,
+    query: { otpKey },
   })
+  callback()
 }
 
 const needOTP = (nextState, replace, callback) => {
@@ -49,6 +36,10 @@ const needOTP = (nextState, replace, callback) => {
     return callback()
   }
   new GetOTPKey().getKey((error, response) => {
+    if (error) {
+      callback(error)
+      return
+    }
     otpKey = _.get(response, 'otpKey')
     if (otpKey) {
       replace({
