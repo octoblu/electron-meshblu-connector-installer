@@ -2,7 +2,7 @@
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
   "description": "Cross-Platform Meshblu Connector Installer",
-  "version": "11.1.10",
+  "version": "11.2.0",
   "main": "./main.js",
   "repository": {
     "type": "git",
