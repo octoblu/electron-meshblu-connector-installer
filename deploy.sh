@@ -85,9 +85,9 @@ assert_required_params() {
 }
 
 install_deps() {
-  brew install wine --without-x11
-  brew install mono
-  brew install gnu-tar graphicsmagick xz
+  # brew install wine --without-x11
+  # brew install mono
+  # brew install gnu-tar graphicsmagick xz
 	brew install gump || brew upgrade gump
 }
 
@@ -139,9 +139,9 @@ main() {
     npm version "v$version"
   popd
 	hub release create -d -m "v${version} $message" "v${version}"
-  yarn install || fatal 'unable to yarn install'
-  yarn run build || fatal 'unable to yarn build'
-  yarn run publish-all || fatal 'unable to publish all'
+  # yarn install || fatal 'unable to yarn install'
+  # yarn run build || fatal 'unable to yarn build'
+  # yarn run publish-all || fatal 'unable to publish all'
 	echo "IMPORTANT: only a draft was created. You'll need to mark it as a release"
 }
 
