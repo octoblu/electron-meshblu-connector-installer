@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { app, BrowserWindow, Menu, shell } from 'electron'
-import electronDebug from 'electron-debug'
 import path from 'path'
 
 let menu;
@@ -20,8 +19,12 @@ if (process.env.NODE_ENV === 'development') {
   global.appPath = app.getAppPath()
 }
 
-electronDebug({ enabled: true })
-require('module').globalPaths.push(path.join(__dirname, '..', 'app', 'node_modules')); // eslint-disable-line
+require('electron-debug')({ enabled: true }) // eslint-disable-line
+if (isDev) {
+  require('module').globalPaths.push(path.join(__dirname, '..', 'app', 'node_modules')); // eslint-disable-line
+} else {
+  require('module').globalPaths.push(path.join(app.getAppPath(), '..', 'app', 'node_modules')); // eslint-disable-line
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
