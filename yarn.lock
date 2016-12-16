@@ -8229,7 +8229,7 @@ zip-stream@^1.0.0, zip-stream@^1.1.0:
     lodash "^4.8.0"
     readable-stream "^2.0.0"
 
-zooid-button@^1.1.3:
+zooid-button@^1.1.3, zooid-button@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/zooid-button/-/zooid-button-1.2.3.tgz#28bb130c5d1decc85e27f2e54f755e284d5aa7c4"
   dependencies:
@@ -8244,7 +8244,7 @@ zooid-button@^1.1.3:
     sinon "^1.17.6"
     sinon-chai "^2.8.0"
 
-zooid-error-state@^1.2.1:
+zooid-error-state@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/zooid-error-state/-/zooid-error-state-1.3.0.tgz#600f1364e5a748fde642b7b07d8d9069e41ffa8e"
   dependencies:
@@ -8252,9 +8252,9 @@ zooid-error-state@^1.2.1:
     react "^15.0.1"
     zooid-button "^1.1.3"
 
-zooid-spinner@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/zooid-spinner/-/zooid-spinner-1.0.1.tgz#1b74d7a7a35a5be1c3bc50527f1f676fbf965acb"
+zooid-spinner@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/zooid-spinner/-/zooid-spinner-1.0.2.tgz#41ac5729f4d2999891da669e85527c37bd287c17"
   dependencies:
     classnames "^2.2.5"
     react "^15.0.1"
@@ -8274,9 +8274,9 @@ zooid-ui-toast@^1.1.1:
     classnames "^2.2.5"
     react "^15.0.1"
 
-zooid-ui@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/zooid-ui/-/zooid-ui-8.0.0.tgz#2a30001f09fbebd7867a6e7bbcb22410f50fe58b"
+zooid-ui@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/zooid-ui/-/zooid-ui-8.0.2.tgz#dba3d5aa093f39771446264c19f690266d6cc6aa"
   dependencies:
     blacklist "^1.1.2"
     classnames "^2.2.5"
