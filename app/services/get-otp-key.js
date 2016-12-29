@@ -17,7 +17,6 @@ export default class GetOTPKey {
     this.getAppName({ launchPath }, (error, appName) => {
       this.running = false
       if (error) {
-        console.error('getKey error', error)
         return callback(error)
       }
       const otpKey = this.getKeyFromAppName(appName)

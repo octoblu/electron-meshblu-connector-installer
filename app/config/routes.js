@@ -24,17 +24,20 @@ const needOTP = (nextState, replace, callback) => {
   }
   new GetOTPKey().getKey((error, response) => {
     if (error) {
-      console.error('Get OTP error in routes.js', error)
+      console.error('Get OTP error', error)
     }
     otpKey = _.get(response, 'otpKey')
     if (otpKey) {
       console.log('found otp', otpKey)
       replace({
         pathname: '/service-types',
-        query: { otpKey },
+        query: { otpKey, errorMessage: _.get(error, 'message') },
       })
     } else {
-      replace('/input-key')
+      replace({
+        pathname: '/input-key',
+        query: { errorMessage: _.get(error, 'message') }
+      })
     }
     callback()
   })

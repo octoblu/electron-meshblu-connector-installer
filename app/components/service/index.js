@@ -9,11 +9,11 @@ import './index.css'
 class Service extends Component {
   static propTypes = {
     otpKey: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string,
   }
 
   goToInstall() {
     const { otpKey } = this.props
-    console.log('user-service')
 
     hashHistory.push({
       pathname: '/install',
@@ -32,8 +32,10 @@ class Service extends Component {
 
   render() {
     const { error } = this.state || {}
+    const { errorMessage } = this.props
 
     if (error) return (<CustomErrorState message={error.message} />)
+    if (errorMessage) return (<CustomErrorState message={errorMessage} />)
     return (
       <div>
         <ErrorState

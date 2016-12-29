@@ -1,0 +1,9 @@
+.WarningMessage {
+  /*font-size: 1rem;*/
+  padding: 1rem;
+}
+
+.WarningMessage--message {
+  padding-left: 0.5rem;
+  font-style: italic;
+}

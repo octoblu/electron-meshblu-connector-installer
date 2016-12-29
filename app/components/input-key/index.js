@@ -11,11 +11,13 @@ import {
 } from 'zooid-ui'
 
 import ErrorState from '../error-state'
+import WarningMessage from '../warning-message'
 import './index.css'
 
 export default class InputKey extends Component {
   static propTypes = {
     otpKey: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string,
   }
 
   constructor(props) {
@@ -62,6 +64,7 @@ export default class InputKey extends Component {
 
   render() {
     const { error, otpKey, message } = this.state
+    const { errorMessage } = this.props
 
     if (error) return this.renderContent(<ErrorState message={error.message} />)
     return this.renderContent(
@@ -73,6 +76,7 @@ export default class InputKey extends Component {
         <FormActions>
           <Button onClick={this.handleKeySubmit} kind="primary">Use Key</Button>
         </FormActions>
+        <WarningMessage message={errorMessage} />
       </div>
     )
   }

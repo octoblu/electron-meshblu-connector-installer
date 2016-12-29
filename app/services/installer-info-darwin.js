@@ -1,17 +1,17 @@
-import { exec } from 'child_process'
-import fs from 'fs'
-import path from 'path'
 import _ from 'lodash'
+import path from 'path'
+import glob from 'glob'
+import { exec } from 'child_process'
 
 export function darwinGetAppName({ launchPath }, callback) {
-  const volumePath = getVolumePath({ launchPath })
-  fs.exists(volumePath, (exists) => {
-    if (!exists) {
-      if (process.env.NODE_ENV === 'development') {
-        return callback(null, 'thisissampleotp') // sample-otp
-      }
-      return callback(new Error('Volume Doesn\'t Exist'))
+  glob(path.join('/Volumes', 'MeshbluConnectorInstaller*'), (error, matches) => {
+    if (error) {
+      return callback(error)
     }
+    if (_.size(matches) > 1) {
+      return callback(new Error('Too many installer volumes mounted to determine OTP'))
+    }
+    const volumePath = _.first(matches)
     exec('hdiutil info', { cwd: volumePath }, (error, stdout) => {
       if (error) {
         return callback(error)
