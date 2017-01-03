@@ -27,8 +27,12 @@ class InstallerInfo {
     const os = process.platform
     const arc = process.arch
     const goOS = os === 'win32' ? 'windows' : os
-    const goArch = arc === 'ia32' ? '386' : 'amd64'
-    return `${goOS}-${goArch}`
+    if (arc === 'arm') {
+      return `${goOS}-arm`
+    } else if (arc === 'ia32') {
+      return `${goOS}-386`
+    }
+    return `${goOS}-amd64`
   }
 
   getConfig({ otpKey, serviceType }, response) {
