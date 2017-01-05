@@ -14,10 +14,13 @@ class Service extends Component {
 
   goToInstall() {
     const { otpKey } = this.props
-
+    let serviceType = 'user-service'
+    if (process.platform === 'win32') {
+      serviceType = 'user-login'
+    }
     hashHistory.push({
       pathname: '/install',
-      query: { otpKey, serviceType: 'user-service' },
+      query: { otpKey, serviceType },
     })
   }
 
