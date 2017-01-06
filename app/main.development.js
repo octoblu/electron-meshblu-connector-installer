@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {app, BrowserWindow, Menu, shell} from 'electron'
+import { app, BrowserWindow, Menu, shell } from 'electron'
 import path from 'path'
 
 let menu;
@@ -27,12 +27,13 @@ if (isDev) {
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin')
+  if (process.platform !== 'darwin') {
     app.quit();
   }
+}
 );
 
-const installExtensions = async() => {
+const installExtensions = async () => {
   if (isDev) {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
     const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
@@ -45,10 +46,10 @@ const installExtensions = async() => {
   }
 };
 
-app.on('ready', async() => {
+app.on('ready', async () => {
   await installExtensions();
 
-  mainWindow = new BrowserWindow({show: false, width: 1024, height: 728});
+  mainWindow = new BrowserWindow({ show: false, width: 1024, height: 728 });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
@@ -65,7 +66,7 @@ app.on('ready', async() => {
     mainWindow.openDevTools();
   }
   mainWindow.webContents.on('context-menu', (e, props) => {
-    const {x, y} = props;
+    const { x, y } = props;
 
     Menu.buildFromTemplate([
       {
