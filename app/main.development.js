@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { app, BrowserWindow, Menu, shell } from 'electron'
+import {app, BrowserWindow, Menu, shell} from 'electron'
 import path from 'path'
 
 let menu;
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   global.appPath = app.getAppPath()
 }
 
-require('electron-debug')({ enabled: true }) // eslint-disable-line
+require('electron-debug')({enabled: true}) // eslint-disable-line
 if (isDev) {
   require('module').globalPaths.push(path.join(__dirname, '..', 'app', 'node_modules')); // eslint-disable-line
 } else {
@@ -27,16 +27,15 @@ if (isDev) {
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+  if (process.platform !== 'darwin')
+    app.quit();
+  }
+);
 
-const installExtensions = async () => {
+const installExtensions = async() => {
   if (isDev) {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
-    const extensions = [
-      'REACT_DEVELOPER_TOOLS',
-      'REDUX_DEVTOOLS'
-    ];
+    const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     for (const name of extensions) { // eslint-disable-line
       try {
@@ -46,14 +45,10 @@ const installExtensions = async () => {
   }
 };
 
-app.on('ready', async () => {
+app.on('ready', async() => {
   await installExtensions();
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728
-  });
+  mainWindow = new BrowserWindow({show: false, width: 1024, height: 728});
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
@@ -70,161 +65,241 @@ app.on('ready', async () => {
     mainWindow.openDevTools();
   }
   mainWindow.webContents.on('context-menu', (e, props) => {
-    const { x, y } = props;
+    const {x, y} = props;
 
-    Menu.buildFromTemplate([{
-      label: 'Inspect element',
-      click() {
-        mainWindow.inspectElement(x, y);
+    Menu.buildFromTemplate([
+      {
+        label: 'Inspect element',
+        click() {
+          mainWindow.inspectElement(x, y);
+        }
       }
-    }]).popup(mainWindow);
+    ]).popup(mainWindow);
   });
 
   if (process.platform === 'darwin') {
-    template = [{
-      label: 'Connector Installer',
-      submenu: [{
-        label: 'About Connector Installer',
-        selector: 'orderFrontStandardAboutPanel:'
+    template = [
+      {
+        label: 'Connector Installer',
+        submenu: [
+          {
+            label: 'About Connector Installer',
+            selector: 'orderFrontStandardAboutPanel:'
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Services',
+            submenu: []
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Hide Connector Installer',
+            accelerator: 'Command+H',
+            selector: 'hide:'
+          }, {
+            label: 'Hide Others',
+            accelerator: 'Command+Shift+H',
+            selector: 'hideOtherApplications:'
+          }, {
+            label: 'Show All',
+            selector: 'unhideAllApplications:'
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Quit',
+            accelerator: 'Command+Q',
+            click() {
+              app.quit();
+            }
+          }
+        ]
       }, {
-        type: 'separator'
+        label: 'Edit',
+        submenu: [
+          {
+            label: 'Undo',
+            accelerator: 'Cmd+Z',
+            selector: 'undo:'
+          }, {
+            label: 'Redo',
+            accelerator: 'Shift+Cmd+Z',
+            selector: 'redo:'
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Cut',
+            accelerator: 'Cmd+X',
+            selector: 'cut:'
+          }, {
+            label: 'Copy',
+            accelerator: 'Cmd+C',
+            selector: 'copy:'
+          }, {
+            label: 'Paste',
+            accelerator: 'Cmd+V',
+            selector: 'paste:'
+          }, {
+            label: 'Select All',
+            accelerator: 'Cmd+A',
+            selector: 'selectAll:'
+          }
+        ]
       }, {
-        label: 'Services',
-        submenu: []
+        label: 'View',
+        submenu: [
+          {
+            label: 'Reload',
+            accelerator: 'Command+R',
+            click() {
+              mainWindow.webContents.reload();
+            }
+          }, {
+            label: 'Toggle Full Screen',
+            accelerator: 'Ctrl+Command+F',
+            click() {
+              mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            }
+          }, {
+            label: 'Toggle Developer Tools',
+            accelerator: 'Alt+Command+I',
+            click() {
+              mainWindow.toggleDevTools();
+            }
+          }
+        ]
       }, {
-        type: 'separator'
+        label: 'Window',
+        submenu: [
+          {
+            label: 'Minimize',
+            accelerator: 'Command+M',
+            selector: 'performMiniaturize:'
+          }, {
+            label: 'Close',
+            accelerator: 'Command+W',
+            selector: 'performClose:'
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Bring All to Front',
+            selector: 'arrangeInFront:'
+          }
+        ]
       }, {
-        label: 'Hide Connector Installer',
-        accelerator: 'Command+H',
-        selector: 'hide:'
-      }, {
-        label: 'Hide Others',
-        accelerator: 'Command+Shift+H',
-        selector: 'hideOtherApplications:'
-      }, {
-        label: 'Show All',
-        selector: 'unhideAllApplications:'
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Quit',
-        accelerator: 'Command+Q',
-        click() {
-          app.quit();
-        }
-      }]
-    }, {
-      label: 'View',
-      submenu: [{
-        label: 'Reload',
-        accelerator: 'Command+R',
-        click() {
-          mainWindow.webContents.reload();
-        }
-      }, {
-        label: 'Toggle Full Screen',
-        accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }, {
-        label: 'Toggle Developer Tools',
-        accelerator: 'Alt+Command+I',
-        click() {
-          mainWindow.toggleDevTools();
-        }
-      }]
-    }, {
-      label: 'Window',
-      submenu: [{
-        label: 'Minimize',
-        accelerator: 'Command+M',
-        selector: 'performMiniaturize:'
-      }, {
-        label: 'Close',
-        accelerator: 'Command+W',
-        selector: 'performClose:'
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Bring All to Front',
-        selector: 'arrangeInFront:'
-      }]
-    }, {
-      label: 'Help',
-      submenu: [{
-        label: 'Learn More',
-        click() {
-          shell.openExternal('https://meshblu-connectors.readme.io/');
-        }
-      }, {
-        label: 'Documentation',
-        click() {
-          shell.openExternal('https://meshblu-connectors.readme.io/');
-        }
-      }, {
-        label: 'Community Discussions',
-        click() {
-          shell.openExternal('https://octoblu-community.slack.com/');
-        }
-      }]
-    }];
-    menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Learn More',
+            click() {
+              shell.openExternal('https://meshblu-connectors.readme.io/');
+            }
+          }, {
+            label: 'Documentation',
+            click() {
+              shell.openExternal('https://meshblu-connectors.readme.io/');
+            }
+          }, {
+            label: 'Community Discussions',
+            click() {
+              shell.openExternal('https://octoblu-community.slack.com/');
+            }
+          }
+        ]
+      }
+    ];
   } else {
-    template = [{
-      label: '&File',
-      submenu: [{
-        label: '&Open',
-        accelerator: 'Ctrl+O'
+    template = [
+      {
+        label: '&File',
+        submenu: [
+          {
+            label: '&Open',
+            accelerator: 'Ctrl+O'
+          }, {
+            label: '&Close',
+            accelerator: 'Ctrl+W',
+            click() {
+              mainWindow.close();
+            }
+          }
+        ]
       }, {
-        label: '&Close',
-        accelerator: 'Ctrl+W',
-        click() {
-          mainWindow.close();
-        }
-      }]
-    }, {
-      label: '&View',
-      submenu: [{
-        label: '&Reload',
-        accelerator: 'Ctrl+R',
-        click() {
-          mainWindow.webContents.reload();
-        }
+        label: '&Edit',
+        submenu: [
+          {
+            label: '&Undo',
+            accelerator: 'Ctrl+Z',
+            selector: 'undo:'
+          }, {
+            label: '&Redo',
+            accelerator: 'Shift+Ctrl+Z',
+            selector: 'redo:'
+          }, {
+            type: 'separator'
+          }, {
+            label: '&Cut',
+            accelerator: 'Ctrl+X',
+            selector: 'cut:'
+          }, {
+            label: '&Copy',
+            accelerator: 'Ctrl+C',
+            selector: 'copy:'
+          }, {
+            label: '&Paste',
+            accelerator: 'Ctrl+V',
+            selector: 'paste:'
+          }, {
+            label: 'Select All',
+            accelerator: 'Ctrl+A',
+            selector: 'selectAll:'
+          }
+        ]
       }, {
-        label: 'Toggle &Full Screen',
-        accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
+        label: '&View',
+        submenu: [
+          {
+            label: '&Reload',
+            accelerator: 'Ctrl+R',
+            click() {
+              mainWindow.webContents.reload();
+            }
+          }, {
+            label: 'Toggle &Full Screen',
+            accelerator: 'F11',
+            click() {
+              mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            }
+          }, {
+            label: 'Toggle &Developer Tools',
+            accelerator: 'Alt+Ctrl+I',
+            click() {
+              mainWindow.toggleDevTools();
+            }
+          }
+        ]
       }, {
-        label: 'Toggle &Developer Tools',
-        accelerator: 'Alt+Ctrl+I',
-        click() {
-          mainWindow.toggleDevTools();
-        }
-      }]
-    }, {
-      label: 'Help',
-      submenu: [{
-        label: 'Learn More',
-        click() {
-          shell.openExternal('https://meshblu-connectors.readme.io/');
-        }
-      }, {
-        label: 'Documentation',
-        click() {
-          shell.openExternal('https://meshblu-connectors.readme.io/');
-        }
-      }, {
-        label: 'Community Discussions',
-        click() {
-          shell.openExternal('https://octoblu-community.slack.com/');
-        }
-      }]
-    }];
-    menu = Menu.buildFromTemplate(template);
-    mainWindow.setMenu(menu);
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Learn More',
+            click() {
+              shell.openExternal('https://meshblu-connectors.readme.io/');
+            }
+          }, {
+            label: 'Documentation',
+            click() {
+              shell.openExternal('https://meshblu-connectors.readme.io/');
+            }
+          }, {
+            label: 'Community Discussions',
+            click() {
+              shell.openExternal('https://octoblu-community.slack.com/');
+            }
+          }
+        ]
+      }
+    ];
   }
+  menu = Menu.buildFromTemplate(template);
+  mainWindow.setMenu(menu);
 });

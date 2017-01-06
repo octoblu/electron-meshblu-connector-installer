@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import React, { PropTypes, Component } from 'react'
-import ReactDOM from 'react-dom'
 import { hashHistory } from 'react-router'
 
 import {
@@ -46,9 +45,8 @@ export default class InputKey extends Component {
     })
   }
 
-  handleKeyChange() {
-    const ref = _.get(this.refs, 'otpKey')
-    const otpKey = ReactDOM.findDOMNode(ref).value
+  handleKeyChange(event) {
+    const otpKey = _.get(event, 'target.value')
     this.setState({ otpKey })
   }
 
@@ -71,7 +69,7 @@ export default class InputKey extends Component {
       <div className="InputKey--change-key">
         <div className="InputKey--warning-message">{message}</div>
         <FormField className="InputKey--form-field" label="Enter One Time Password" name="otpKey">
-          <FormInput onChange={this.handleKeyChange} type="text" ref="otpKey" name="otpKey" value={otpKey || ''} />
+          <FormInput onInput={this.handleKeyChange} type="text" name="otpKey" value={otpKey || ''} />
         </FormField>
         <FormActions>
           <Button onClick={this.handleKeySubmit} kind="primary">Use Key</Button>

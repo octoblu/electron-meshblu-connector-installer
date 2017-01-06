@@ -20,7 +20,7 @@
   "homepage": "https://github.com/octoblu/electron-meshblu-connector-installer#readme",
   "dependencies": {
     "cross-spawn": "^5.0.1",
-    "electron-sudo": "^4.0.12",
+    "electron-sudo": "mycard/electron-sudo#e458ef2",
     "fs-extra": "^1.0.0",
     "temp": "^0.8.3"
   }
