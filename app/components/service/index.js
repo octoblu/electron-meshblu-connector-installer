@@ -42,16 +42,16 @@ class Service extends Component {
     return (
       <div>
         <ErrorState
-          title="Ready to install!"
+          title="Install as Current User"
           description="Your connector will be installed as the current user."
-          buttonText="Begin Install"
+          buttonText="Install"
           onClick={() => this.goToInstall()}
         />
         <hr className="Divider" />
         <ErrorState
           title="Install as Administrator"
           description="Install the connector as a system-level service. You will be asked to provide administrator credentials before the install process begins."
-          buttonText="Admin Install"
+          buttonText="Install"
           buttonKind="danger"
           className="AdminInstall"
           onClick={() => this.goToAdminInstall()}
