@@ -21,10 +21,22 @@
   font-family: 'citrixsans-semibold', sans-serif;
   font-size: 32px;
   white-space: nowrap;
+  color: black;
 }
 
 .description {
   font-family: 'citrixsans-regular', sans-serif;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.5rem;
   letter-spacing: 0.7px;
+  color: black;
+}
+
+.choice {
+  border: 1px black solid;
+  padding: 1rem;
+}
+
+.choice:hover {
+  border: 1px #bbb solid;
+  background: #bbb;
 }

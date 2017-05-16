@@ -1,10 +1,11 @@
-import React, { PropTypes, Component } from 'react'
-import { hashHistory } from 'react-router'
+import React, { PropTypes, Component } from "react"
+import { hashHistory } from "react-router"
 
-import ErrorState from 'zooid-error-state'
-import CustomErrorState from '../error-state'
+import ErrorState from "zooid-error-state"
+import CustomErrorState from "../error-state"
+import Button from "zooid-button"
 
-import './index.css'
+import "./index.css"
 
 class Service extends Component {
   static propTypes = {
@@ -12,24 +13,24 @@ class Service extends Component {
     errorMessage: PropTypes.string,
   }
 
-  goToInstall() {
+  goToInstall = () => {
     const { otpKey } = this.props
-    let serviceType = 'user-service'
-    if (process.platform === 'win32') {
-      serviceType = 'user-login'
+    let serviceType = "user-service"
+    if (process.platform === "win32") {
+      serviceType = "user-login"
     }
     hashHistory.push({
-      pathname: '/install',
+      pathname: "/install",
       query: { otpKey, serviceType },
     })
   }
 
-  goToAdminInstall() {
+  goToAdvancedInstall = () => {
     const { otpKey } = this.props
 
     hashHistory.push({
-      pathname: '/install',
-      query: { otpKey, serviceType: 'service' },
+      pathname: "/advanced",
+      query: { otpKey },
     })
   }
 
@@ -37,25 +38,19 @@ class Service extends Component {
     const { error } = this.state || {}
     const { errorMessage } = this.props
 
-    if (error) return (<CustomErrorState message={error.message} />)
-    if (errorMessage) return (<CustomErrorState message={errorMessage} />)
+    if (error) return <CustomErrorState message={error.message} />
+    if (errorMessage) return <CustomErrorState message={errorMessage} />
     return (
-      <div>
-        <ErrorState
-          title="Install as Current User"
-          description="Your connector will be installed as the current user."
-          buttonText="Install"
-          onClick={() => this.goToInstall()}
-        />
-        <hr className="Divider" />
-        <ErrorState
-          title="Install as Administrator"
-          description="Install the connector as a system-level service. You will be asked to provide administrator credentials before the install process begins."
-          buttonText="Install"
-          buttonKind="danger"
-          className="AdminInstall"
-          onClick={() => this.goToAdminInstall()}
-        />
+      <div className="wrapper">
+        <div className="card">
+          <h1 className="title">Ready to install</h1>
+          <p className="description">Your connector will be installed as the current user.</p>
+          <Button kind="primary" block onClick={this.goToInstall}>Install</Button>
+        </div>
+
+        <Button kind="no-style" onClick={this.goToAdvancedInstall}>
+          Advanced Install Options
+        </Button>
       </div>
     )
   }

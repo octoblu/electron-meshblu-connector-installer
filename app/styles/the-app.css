@@ -1,3 +1,11 @@
+html,
+body,
+#root,
+#root > div {
+  height: 100%;
+  min-height: 100%;
+}
+
 .TopBar--link {
   padding: 0 1rem;
 }
@@ -44,4 +52,10 @@
 .Button {
   padding: 1rem 1.5rem;
   border-width: 0.2rem;
+}
+
+.Container {
+  display: flex;
+  height: 100%;
+  min-height: 100%;
 }
