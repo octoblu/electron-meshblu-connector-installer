@@ -32,7 +32,6 @@ matrix:
       script:
       - yarn run test || exit 1
       - yarn run build || exit 1
-      - yarn run test-e2e || exit 1
       after_success:
       - yarn run package-mac -- --publish onTag || exit 1
     - os: linux
@@ -106,7 +105,6 @@ matrix:
       script:
       - yarn run test
       - yarn run build
-      - yarn run test-e2e
       after_success:
       - yarn run package-linux-all -- --publish onTag
       deploy:
