@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "11.3.0",
+  "version": "11.3.1",
   "description": "Cross-Platform Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,10 @@
   },
   "build": {
     "appId": "com.octoblu.MeshbluConnectorInstaller",
-    "category": "public.app-category.tools",
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
     "dmg": {
       "background": "resources/background.png",
       "icon": "resources/drive-icon.icns",
@@ -64,7 +67,8 @@
       "package.json"
     ],
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "category": "public.app-category.tools"
     },
     "win": {
       "target": "zip"
@@ -74,10 +78,6 @@
       "category": "Utility",
       "synopsis": "Cross-Platform Meshblu Connector Installer"
     }
-  },
-  "directories": {
-    "buildResources": "resources",
-    "output": "release"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
