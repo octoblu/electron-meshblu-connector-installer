@@ -1,16 +1,16 @@
-import _ from 'lodash'
-import React, { Component, PropTypes } from 'react'
-import FaBug from 'react-icons/lib/fa/bug'
+import _ from "lodash"
+import React, { Component, PropTypes } from "react"
+import FaBug from "react-icons/lib/fa/bug"
 
-import Spinner from 'zooid-spinner'
+import Spinner from "zooid-spinner"
 
-import InstallerInfo from '../../services/installer-info'
-import DebugConfig from '../debug-config'
-import DebugLines from '../debug-lines'
-import ErrorState from '../error-state'
-import InstallerMaster from './installer-master'
+import InstallerInfo from "../../services/installer-info"
+import DebugConfig from "../debug-config"
+import DebugLines from "../debug-lines"
+import ErrorState from "../error-state"
+import InstallerMaster from "./installer-master"
 
-import './index.css'
+import "./index.css"
 
 class Installer extends Component {
   static propTypes = {
@@ -31,20 +31,19 @@ class Installer extends Component {
     started: false,
     showDebug: false,
     lines: [],
-    message: 'Loading...',
+    message: "Loading...",
   }
 
   componentDidMount() {
     const { otpKey, serviceType } = this.props
-    new InstallerInfo({ emitDebug: this.emitDebug })
-      .getInfo({ otpKey, serviceType }, (infoError, config) => {
-        if (infoError) {
-          this.setState({ error: infoError })
-          return
-        }
-        this.setState({ config, configLoading: false })
-        this.start(config)
-      })
+    new InstallerInfo({ emitDebug: this.emitDebug }).getInfo({ otpKey, serviceType }, (infoError, config) => {
+      if (infoError) {
+        this.setState({ error: infoError })
+        return
+      }
+      this.setState({ config, configLoading: false })
+      this.start(config)
+    })
   }
 
   componentWillUnmount() {
@@ -55,10 +54,7 @@ class Installer extends Component {
     const { error, config, lines, showDebug } = this.state
     if (!showDebug && !error) {
       return (
-        <button
-          onClick={this.toggleDebug}
-          className="Button Button--hollow-neutral Installer--button"
-        >
+        <button onClick={this.toggleDebug} className="Button Button--hollow-neutral Installer--button">
           <FaBug size="1rem" /> Show Debug
         </button>
       )
@@ -81,20 +77,20 @@ class Installer extends Component {
 
   start(config) {
     if (_.isEmpty(config)) {
-      this.setState({ error: new Error('Missing configuration') })
+      this.setState({ error: new Error("Missing configuration") })
       return
     }
     const installer = new InstallerMaster()
-    installer.on('debug', (line, isError) => {
+    installer.on("debug", (line, isError) => {
       const { lines } = this.state
       lines.push({ line, isError, timestamp: Date.now() })
       this.setState({ lines })
     })
-    installer.on('error', (error) => {
+    installer.on("error", error => {
       this.setState({ error })
     })
-    installer.on('done', () => {
-      this.setState({ done: true, message: 'done' })
+    installer.on("done", () => {
+      this.setState({ done: true, message: "done" })
     })
     installer.start(config)
     this.setState({ started: true })
@@ -109,7 +105,7 @@ class Installer extends Component {
     this.installer.stop()
   }
 
-  renderContent = (content) => {
+  renderContent = content => {
     return (
       <div className="Installer">
         <div className="Installer--content">
@@ -128,8 +124,8 @@ class Installer extends Component {
     if (done) {
       return this.renderContent(
         <div className="Installer--done">
-          Success! Please Close. <br />
-          <small>* Sorry I currently can&rsquo;t do it for you *</small>
+          Success!<br />
+          <small>Please close the installer.</small>
         </div>
       )
     }
