@@ -21,9 +21,11 @@ skip_non_tags: true
 install:
   - ps: Install-Product node $env:nodejs_version $env:Platform
   - npm install -g npm@latest
+  - choco install -i yarn
+  - refreshenv
   - node -e "console.log(process.arch);"
   - set PATH=%APPDATA%\npm;%PATH%
-  - npm install
+  - yarn install  
 test_script:
 - node --version
 - npm run lint
