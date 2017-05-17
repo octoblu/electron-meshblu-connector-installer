@@ -28,14 +28,11 @@ install:
   - yarn install  
 test_script:
 - node --version
-- npm run lint
-- npm run test
-- npm run build
-- npm run test-e2e
-- npm run package
+- yarn run test
+- yarn run build
 build_script:
-  - yarn package
-  - ps: . .\deploy\build.ps1
+  - if "%PLATFORM%" == "x64" yarn run package-win-x64 -- --publish onTag
+  - if "%PLATFORM%" == "x86" yarn run package-win-ia32 -- --publish onTag
 after_build:
   - ps: $root = Resolve-Path dpl_github; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName ConnectorInstaller }
 # deploy:
