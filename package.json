@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "11.3.6",
+  "version": "11.3.7",
   "description": "Cross-Platform Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -38,7 +38,7 @@
       "background": "resources/background.png",
       "icon": "resources/drive-icon.icns",
       "iconSize": 128,
-      "format": "UDRW",
+      "format": "UDZO",
       "window": {
         "width": 512,
         "height": 512
