@@ -33,7 +33,7 @@ matrix:
       - yarn run test || exit 1
       - yarn run build || exit 1
       after_success:
-      - yarn run package-mac -- --publish onTag || exit 1
+      - yarn run package-mac -- --publish onTagOrDraft || exit 1
     - os: linux
       dist: trusty
       language: node_js
@@ -106,7 +106,7 @@ matrix:
       - yarn run test
       - yarn run build
       after_success:
-      - yarn run package-linux-all -- --publish onTag
+      - yarn run package-linux-all -- --publish onTagOrDraft
       deploy:
       - provider: npm
         email: serveradmin@octoblu.com

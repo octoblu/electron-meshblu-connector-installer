@@ -1,7 +1,7 @@
 {
   "name": "electron-meshblu-connector-installer",
   "productName": "MeshbluConnectorInstaller",
-  "version": "11.3.5",
+  "version": "11.3.6",
   "description": "Cross-Platform Meshblu Connector Installer",
   "main": "main.js",
   "scripts": {
@@ -68,13 +68,22 @@
     ],
     "mac": {
       "target": "dmg",
+      "publish": [
+        "github"
+      ],
       "category": "public.app-category.tools"
     },
     "win": {
-      "target": "zip"
+      "target": "zip",
+      "publish": [
+        "github"
+      ]
     },
     "linux": {
       "target": "zip",
+      "publish": [
+        "github"
+      ],
       "category": "Utility",
       "synopsis": "Cross-Platform Meshblu Connector Installer"
     }
